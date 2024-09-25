@@ -1,1 +1,1 @@
-*Gradution thresis - Comprehensive management of urban trees
+*Graduation thesis - Comprehensive management of urban trees
