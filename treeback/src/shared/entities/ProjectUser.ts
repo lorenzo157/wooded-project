@@ -1,11 +1,4 @@
-import {
-    Column,
-    Entity,
-    Index,
-    JoinColumn,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Projects } from '../../project/entities/Projects';
 import { Users } from '../../user/entities/Users';
 
@@ -13,20 +6,20 @@ import { Users } from '../../user/entities/Users';
 @Index('unique_user_project', ['projectId', 'userId'], { unique: true })
 @Entity('project_user', { schema: 'public' })
 export class ProjectUser {
-    @PrimaryGeneratedColumn({ type: 'integer', name: 'id_project_user' })
-    idProjectUser: number;
+  @PrimaryGeneratedColumn({ type: 'integer', name: 'id_project_user' })
+  idProjectUser: number;
 
-    @Column('integer', { name: 'user_id', unique: true })
-    userId: number;
+  @Column('integer', { name: 'user_id', unique: true })
+  userId: number;
 
-    @Column('integer', { name: 'project_id', unique: true })
-    projectId: number;
+  @Column('integer', { name: 'project_id', unique: true })
+  projectId: number;
 
-    @ManyToOne(() => Projects, (projects) => projects.projectUsers)
-    @JoinColumn([{ name: 'project_id', referencedColumnName: 'idProject' }])
-    project: Projects;
+  @ManyToOne(() => Projects, (projects) => projects.projectUsers)
+  @JoinColumn([{ name: 'project_id', referencedColumnName: 'idProject' }])
+  project: Projects;
 
-    @ManyToOne(() => Users, (users) => users.projectUsers)
-    @JoinColumn([{ name: 'user_id', referencedColumnName: 'idUser' }])
-    user: Users;
+  @ManyToOne(() => Users, (users) => users.projectUsers)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'idUser' }])
+  user: Users;
 }

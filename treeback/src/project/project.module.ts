@@ -12,20 +12,9 @@ import { Neighborhoods } from '../shared/entities/Neighborhoods';
 import { Provinces } from '../shared/entities/Provinces';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Projects,
-            Trees,
-            Users,
-            ProjectUser,
-            Cities,
-            UnitWork,
-            Neighborhoods,
-            Provinces,
-        ]),
-    ], // Importa el repositorio
-    providers: [ProjectService],
-    controllers: [ProjectController],
-    exports: [ProjectService], // Si lo necesitas fuera de este módulo
+  imports: [TypeOrmModule.forFeature([Projects, Trees, Users, ProjectUser, Cities, UnitWork, Neighborhoods, Provinces])], // Importa el repositorio
+  providers: [ProjectService],
+  controllers: [ProjectController],
+  exports: [ProjectService], // Si lo necesitas fuera de este módulo
 })
 export class ProjectModule {}

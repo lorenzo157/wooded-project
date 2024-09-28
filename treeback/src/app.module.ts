@@ -10,19 +10,19 @@ import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { DatabaseModule } from './database/database.module';
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-            envFilePath: path.resolve(__dirname, '..', '.env'),
-        }),
-        DatabaseModule,
-        TreeModule,
-        ProjectModule,
-        UserModule,
-        //AuthModule,
-        UnitWorkModule,
-    ],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: path.resolve(__dirname, '..', '.env'),
+    }),
+    DatabaseModule,
+    TreeModule,
+    ProjectModule,
+    UserModule,
+    //AuthModule,
+    UnitWorkModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

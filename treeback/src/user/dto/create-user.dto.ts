@@ -1,14 +1,14 @@
 export class CreateUserDto {
-    idUser: number;
-    userName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    phonenumber: string | null;
-    address: string | null;
-    cityName: string;
-    provinceName: string;
-    //projects: ProjectUserDto[] | [];
-    city: any;
-    projectUsers: any;
+  idUser: number;
+  userName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phonenumber: string | null;
+  address: string | null;
+  cityName: string;
+  provinceName: string;
+  //projects: ProjectUserDto[] | [];
+  city: any;
+  projectUsers: any;
 }

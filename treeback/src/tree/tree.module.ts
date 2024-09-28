@@ -20,28 +20,28 @@ import { Neighborhoods } from '../shared/entities/Neighborhoods';
 import { NeighborhoodCoordinate } from '../shared/entities/NeighborhoodCoordinate';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            Conflicts,
-            ConflictTree,
-            Coordinates,
-            Defects,
-            DefectTree,
-            Diseases,
-            DiseaseTree,
-            Interventions,
-            InterventionTree,
-            Pests,
-            PestTree,
-            Trees,
-            TreeTypes,
-            Projects,
-            Neighborhoods,
-            NeighborhoodCoordinate,
-        ]),
-    ], // Importa el repositorio
-    providers: [TreeService],
-    controllers: [TreeController],
-    exports: [TreeService], // Si lo necesitas fuera de este módulo
+  imports: [
+    TypeOrmModule.forFeature([
+      Conflicts,
+      ConflictTree,
+      Coordinates,
+      Defects,
+      DefectTree,
+      Diseases,
+      DiseaseTree,
+      Interventions,
+      InterventionTree,
+      Pests,
+      PestTree,
+      Trees,
+      TreeTypes,
+      Projects,
+      Neighborhoods,
+      NeighborhoodCoordinate,
+    ]),
+  ], // Importa el repositorio
+  providers: [TreeService],
+  controllers: [TreeController],
+  exports: [TreeService], // Si lo necesitas fuera de este módulo
 })
 export class TreeModule {}
