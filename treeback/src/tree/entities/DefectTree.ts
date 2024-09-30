@@ -13,7 +13,7 @@ export class DefectTree {
   treeId: number;
 
   @Column('integer', { name: 'defect_id', unique: true })
-  defectId: number;
+    defectId: number;
 
   @Column('smallint', { name: 'defect_value' })
   defectValue: number;

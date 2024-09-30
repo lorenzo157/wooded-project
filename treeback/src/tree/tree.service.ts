@@ -16,31 +16,46 @@ import { DefectTree } from './entities/DefectTree';
 import { Defects } from './entities/Defects';
 import { ConflictTree } from './entities/ConflictTree';
 import { Conflicts } from './entities/Conflicts';
+import { Diseases } from './entities/Diseases';
+import { DiseaseTree } from './entities/DiseaseTree';
 @Injectable()
 export class TreeService {
   constructor(
     @InjectRepository(Trees)
     private readonly treeRepository: Repository<Trees>,
+    @InjectRepository(Coordinates)
     private readonly coordinatesRepository: Repository<Coordinates>,
+    @InjectRepository(TreeTypes)
     private readonly treeTypeRepository: Repository<TreeTypes>,
-    //private readonly neighboorhoodRepository: Repository<Neighborhoods>,
-    private readonly projectService: ProjectService,
+    // @InjectRepository(Neighborhoods)
+    // private readonly neighborhoodRepository: Repository<Neighborhoods>,
+    private readonly projectService: ProjectService, // Inyección del servicio
+    @InjectRepository(Conflicts)
     private readonly conflictRepository: Repository<Conflicts>,
+    @InjectRepository(ConflictTree)
     private readonly conflictTreeRepository: Repository<ConflictTree>,
+    @InjectRepository(Defects)
     private readonly defectRepository: Repository<Defects>,
+    @InjectRepository(DefectTree)
     private readonly defectTreeRepository: Repository<DefectTree>,
-    private readonly diseaseRepository: Repository<Defects>,
-    private readonly diseaseTreeRepository: Repository<DefectTree>,
+    @InjectRepository(Diseases)
+    private readonly diseaseRepository: Repository<Diseases>,
+    @InjectRepository(DiseaseTree)
+    private readonly diseaseTreeRepository: Repository<DiseaseTree>,
+    @InjectRepository(Interventions)
     private readonly interventionRepository: Repository<Interventions>,
+    @InjectRepository(InterventionTree)
     private readonly interventionTreeRepository: Repository<InterventionTree>,
+    @InjectRepository(Pests)
     private readonly pestRepository: Repository<Pests>,
+    @InjectRepository(PestTree)
     private readonly pestTreeRepository: Repository<PestTree>,
-  ) {}
+  ) {} 
 
   async createTree(createTreeDto: CreateTreeDto) {
     const {
       conflictsNames,
-      defectsNames,
+      defectsDtos,
       diseasesNames,
       interventionsNames,
       pestsNames,
@@ -75,11 +90,32 @@ export class TreeService {
     await this.treeRepository.save(newTree);
 
     await this.saveManyToManyRelations(conflictsNames, this.conflictRepository, this.conflictTreeRepository, newTree, 'conflict');
-    await this.saveManyToManyRelations(defectsNames, this.defectRepository, this.defectTreeRepository, newTree, 'defect');
     await this.saveManyToManyRelations(diseasesNames, this.diseaseRepository, this.diseaseTreeRepository, newTree, 'disease');
-    await this.saveManyToManyRelations(interventionsNames, this.interventionRepository, this.interventionTreeRepository, newTree, 'intervention');
+    await this.saveManyToManyRelations(
+      interventionsNames,
+      this.interventionRepository,
+      this.interventionTreeRepository,
+      newTree,
+      'intervention',
+    );
     await this.saveManyToManyRelations(pestsNames, this.pestRepository, this.pestTreeRepository, newTree, 'pest');
 
+    if (defectsDtos && defectsDtos.length > 0) {
+      for (const defectDto of defectsDtos) {
+        let entity = await this.defectRepository.findOne({
+          where: { defectName: defectDto.defectName },
+        });
+
+        const defectTree = this.defectTreeRepository.create({
+          tree: newTree,
+          defect: entity,
+          defectValue: defectDto.defectValue,
+          textDefectValue: defectDto.textDefectValue,
+          branches: defectDto.branches,
+        });
+        await this.defectTreeRepository.save(defectTree);
+      }
+    }
   }
   // private async determineNeigboorhood(latitude: number, longitude: number): Promise<Neighborhoods> {
   //   throw new Error('Method not implemented.');
@@ -90,21 +126,14 @@ export class TreeService {
     entityRepository: Repository<any>, // Repository for the main entity (e.g., pestRepository, diseaseRepository)
     relationRepository: Repository<any>, // Repository for the relation (e.g., pestTreeRepository)
     tree: Trees, // The tree entity being associated
-    entityField: keyof any, // The field name in the relation entity (e.g., 'pest' or 'disease')
+    entityField: string, // The field name in the relation entity (e.g., 'pest' or 'disease')
   ) {
     if (names && names.length > 0) {
       for (const name of names) {
         let entity = await entityRepository.findOne({
-          where: { name },
+          where: { [entityField + 'Name']: name },
         });
 
-        if (!entity) {
-          // If the entity doesn't exist, create it
-          entity = entityRepository.create({ name });
-          await entityRepository.save(entity);
-        }
-
-        // Create the relation (e.g., TreePest or TreeDisease)
         const relation = relationRepository.create({
           tree: tree,
           [entityField]: entity, // Dynamically set the field (e.g., 'pest', 'disease')

@@ -12,7 +12,7 @@ export class TreeController {
   async createTree(@Body() createTreeDto: CreateTreeDto) {
     return this.treeService.createTree(createTreeDto);
   }
-
+ 
   // READ, Fetch all trees associated with a specific project, but only general atributes not specific
   @Get()
   async findAllTreesByIdProject(@Param('idProject') idProject: number) {

@@ -6,7 +6,7 @@ import { Trees } from './entities/Trees'; // Asegúrate de que es el nombre corr
 import { Projects } from '../project/entities/Projects';
 import { Conflicts } from './entities/Conflicts';
 import { ConflictTree } from './entities/ConflictTree';
-import { Coordinates } from './entities/Coordinates';
+import { Coordinates } from '../shared/entities/Coordinates';
 import { Defects } from './entities/Defects';
 import { DefectTree } from './entities/DefectTree';
 import { Diseases } from './entities/Diseases';
@@ -18,6 +18,7 @@ import { PestTree } from './entities/PestTree';
 import { TreeTypes } from './entities/TreeTypes';
 import { Neighborhoods } from '../shared/entities/Neighborhoods';
 import { NeighborhoodCoordinate } from '../shared/entities/NeighborhoodCoordinate';
+import { ProjectModule } from '../project/project.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { NeighborhoodCoordinate } from '../shared/entities/NeighborhoodCoordinat
       Neighborhoods,
       NeighborhoodCoordinate,
     ]),
+    ProjectModule,
   ], // Importa el repositorio
   providers: [TreeService],
   controllers: [TreeController],

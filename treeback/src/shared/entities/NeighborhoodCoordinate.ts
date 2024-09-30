@@ -22,7 +22,8 @@ export class NeighborhoodCoordinate {
   @Column('integer', { name: 'neighborhood_id', unique: true })
   neighborhoodId: number;
 
-  @ManyToOne(() => Coordinates, (coordinates) => coordinates.neighborhoodCoordinates)
+  //@ManyToOne(() => Coordinates, (coordinates) => coordinates.neighborhoodCoordinates)
+  @ManyToOne(() => Coordinates)
   @JoinColumn([{ name: 'coordinate_id', referencedColumnName: 'idCoordinate' }])
   coordinate: Coordinates;
 
