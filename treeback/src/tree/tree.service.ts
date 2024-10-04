@@ -1,11 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTreeDto } from './dto/create-tree.dto';
-import { UpdateTreeDto } from './dto/update-tree.dto';
 import { Repository } from 'typeorm';
 import { Trees } from './entities/Trees';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeTypes } from './entities/TreeTypes';
-//import { Neighborhoods } from '../shared/entities/Neighborhoods';
 import { Pests } from './entities/Pests';
 import { ProjectService } from '../project/project.service';
 import { Coordinates } from '../shared/entities/Coordinates';
@@ -18,6 +16,8 @@ import { ConflictTree } from './entities/ConflictTree';
 import { Conflicts } from './entities/Conflicts';
 import { Diseases } from './entities/Diseases';
 import { DiseaseTree } from './entities/DiseaseTree';
+import { SimplyReadTreeDto } from './dto/simply-read-tree.dto';
+import { ReadTreeDto } from './dto/read-tree.dto';
 @Injectable()
 export class TreeService {
   constructor(
@@ -27,9 +27,7 @@ export class TreeService {
     private readonly coordinatesRepository: Repository<Coordinates>,
     @InjectRepository(TreeTypes)
     private readonly treeTypeRepository: Repository<TreeTypes>,
-    // @InjectRepository(Neighborhoods)
-    // private readonly neighborhoodRepository: Repository<Neighborhoods>,
-    private readonly projectService: ProjectService, // Inyección del servicio
+    private readonly projectService: ProjectService,
     @InjectRepository(Conflicts)
     private readonly conflictRepository: Repository<Conflicts>,
     @InjectRepository(ConflictTree)
@@ -50,7 +48,7 @@ export class TreeService {
     private readonly pestRepository: Repository<Pests>,
     @InjectRepository(PestTree)
     private readonly pestTreeRepository: Repository<PestTree>,
-  ) {} 
+  ) {}
 
   async createTree(createTreeDto: CreateTreeDto) {
     const {
@@ -71,20 +69,18 @@ export class TreeService {
     coordinates.longitude = longitude;
     const savedCoordinates = await this.coordinatesRepository.save(coordinates);
 
-    //const neighborhood = await this.determineNeigboorhood(latitude, longitude);
-
     const project = await this.projectService.findProject(projectId);
 
     const treeType = await this.treeTypeRepository.findOne({
       where: { treeTypeName: treeTypeName },
     });
-    // Create a new Tree (with or without treeType depending on nameType's presence)
+
     const newTree = this.treeRepository.create({
       ...treeData,
       coordinate: savedCoordinates,
       neighborhood: null,
       project: project,
-      treeType: treeType || null, // If nameType is not provided, set treeType to null
+      treeType: treeType || null,
     });
 
     await this.treeRepository.save(newTree);
@@ -116,10 +112,11 @@ export class TreeService {
         await this.defectTreeRepository.save(defectTree);
       }
     }
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Tree created or updated successfully',
+    };
   }
-  // private async determineNeigboorhood(latitude: number, longitude: number): Promise<Neighborhoods> {
-  //   throw new Error('Method not implemented.');
-  // }
 
   private async saveManyToManyRelations(
     names: string[], // Array of entity names (e.g., pestNames, diseaseNames)
@@ -143,20 +140,98 @@ export class TreeService {
     }
   }
 
-  // Find all Trees created by a user or associated with a user through ProjectUser
-  async findAllTreesByIdProject(idProject: number): Promise<Trees[]> {
-    throw new Error('Method not implemented.');
+  // Find all the trees by project in simply dto that has general information of tree
+  async findAllTreesByIdProject(idProject: number): Promise<SimplyReadTreeDto[]> {
+    const trees = await this.treeRepository
+      .createQueryBuilder('tree')
+      .where('tree.project.idProject = :idProject', { idProject })
+      .select(['tree.idTree', 'tree.treeName', 'tree.datetime', 'tree.address', 'tree.treeValue', 'tree.risk'])
+      .getMany();
+
+    return trees.map((tree) => ({
+      idTree: tree.idTree,
+      treeName: tree.treeName,
+      datetime: tree.datetime,
+      address: tree.address,
+      treeValue: tree.treeValue,
+      risk: tree.risk,
+    }));
   }
 
-  async findTreeById(idTree: number) {
-    throw new Error('Method not implemented.');
+  async findTreeById(idTree: number): Promise<ReadTreeDto> {
+    const tree = await this.treeRepository
+      .createQueryBuilder('tree')
+      .innerJoinAndSelect('tree.coordinate', 'coordinate')
+      .innerJoinAndSelect('tree.neighborhood', 'neighborhood')
+      .innerJoinAndSelect('tree.treeType', 'treeType')
+      .innerJoinAndSelect('tree.conflictTrees', 'conflictTrees')
+      .innerJoinAndSelect('conflictTrees.conflict', 'conflict')
+      .innerJoinAndSelect('tree.defectTrees', 'defectTrees')
+      .innerJoinAndSelect('defectTrees.defect', 'defect')
+      .innerJoinAndSelect('tree.diseaseTrees', 'diseaseTrees')
+      .innerJoinAndSelect('diseaseTrees.disease', 'disease')
+      .innerJoinAndSelect('tree.interventionTrees', 'interventionTrees')
+      .innerJoinAndSelect('interventionTrees.intervention', 'intervention')
+      .innerJoinAndSelect('tree.pestTrees', 'pestTrees')
+      .innerJoinAndSelect('pestTrees.pest', 'pest')
+      .where('tree.idTree = :idTree', { idTree })
+      .getOne();
+      
+    const readTreeDto: ReadTreeDto = {
+      idTree: tree.idTree,
+      treeName: tree.treeName,
+      datetime: tree.datetime,
+      pathPhoto: tree.pathPhoto,
+      cityBlock: tree.cityBlock,
+      perimeter: tree.perimeter,
+      height: tree.height,
+      incline: tree.incline,
+      treesInTheBlock: tree.treesInTheBlock,
+      useUnderTheTree: tree.useUnderTheTree,
+      frequencyUse: tree.frequencyUse,
+      potentialDamage: tree.potentialDamage,
+      isMovable: tree.isMovable,
+      isRestrictable: tree.isRestrictable,
+      isMissing: tree.isMissing,
+      isDead: tree.isDead,
+      exposedRoots: tree.exposedRoots,
+      dch: tree.dch,
+      windExposure: tree.windExposure,
+      vigor: tree.vigor,
+      canopyDensity: tree.canopyDensity,
+      growthSpace: tree.growthSpace,
+      treeValue: tree.treeValue,
+      streetMateriality: tree.streetMateriality,
+      risk: tree.risk,
+      address: tree.address,
+      latitude: tree.coordinate.latitude,
+      longitude: tree.coordinate.longitude,
+      neighborhoodName: tree.neighborhood.neighborhoodName,
+      treeTypeDto: {
+        treeTypeName: tree.treeType.treeTypeName,
+        gender: tree.treeType.gender,
+        species: tree.treeType.species,
+        scientificName: tree.treeType.scientificName,
+      },
+      conflictsNames: tree.conflictTrees.map((conflictTree) => conflictTree.conflict.conflictName),
+      diseasesNames: tree.diseaseTrees.map((diseaseTree) => diseaseTree.disease.diseaseName),
+      interventionsNames: tree.interventionTrees.map((interventionTree) => interventionTree.intervention.interventionName),
+      pestsNames: tree.pestTrees.map((pestTree) => pestTree.pest.pestName),
+      defectDto: tree.defectTrees.map((defectTree) => ({
+        defectName: defectTree.defect.defectName,
+        defectValue: defectTree.defectValue,
+        textDefectValue: defectTree.textDefectValue,
+        branches: defectTree.branches,
+      })),
+    };
+    return readTreeDto;
+  }
+  async updateTreeById(idTree: number, createTreeDto: CreateTreeDto) {
+    await this.removeTreeById(idTree);
+    return this.createTree(createTreeDto);
   }
 
-  async updateTreeById(idTree: number, updateTreeDto: UpdateTreeDto) {
-    throw new Error('Method not implemented.');
-  }
-
-  async removeTreeById(idTree: number) {
-    throw new Error('Method not implemented.');
+  async removeTreeById(idTree: number): Promise<void> {
+    await this.treeRepository.delete({ idTree });
   }
 }

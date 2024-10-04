@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { TreeService } from './tree.service';
 import { CreateTreeDto } from './dto/create-tree.dto';
-import { UpdateTreeDto } from './dto/update-tree.dto';
 
 @Controller('project/:idProject/tree')
 export class TreeController {
@@ -12,7 +11,7 @@ export class TreeController {
   async createTree(@Body() createTreeDto: CreateTreeDto) {
     return this.treeService.createTree(createTreeDto);
   }
- 
+
   // READ, Fetch all trees associated with a specific project, but only general atributes not specific
   @Get()
   async findAllTreesByIdProject(@Param('idProject') idProject: number) {
@@ -24,8 +23,8 @@ export class TreeController {
   async getTreeById(@Param('idTree') idTree: number) {
     return this.treeService.findTreeById(idTree);
   }
-  @Patch(':idTree')
-  async updateTreeById(@Param('idTree') idTree: number, @Body() updateTreeDto: UpdateTreeDto) {
+  @Put(':idTree')
+  async updateTreeById(@Param('idTree') idTree: number, @Body() updateTreeDto: CreateTreeDto) {
     return this.treeService.updateTreeById(idTree, updateTreeDto); // Convert id to number and pass it to the service
   }
 

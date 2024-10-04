@@ -15,7 +15,7 @@ export class Trees {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id_tree' })
   idTree: number;
 
-  @Column('character varying', { name: 'tree_name', length: 25 })
+  @Column('character varying', { name: 'tree_name', length: 50 })
   treeName: string;
 
   @Column('timestamp without time zone', {
@@ -37,7 +37,7 @@ export class Trees {
   @Column('numeric', {
     name: 'perimeter',
     nullable: true,
-    precision: 2,
+    precision: 7,
     scale: 5,
   })
   perimeter: number | null;
@@ -45,7 +45,7 @@ export class Trees {
   @Column('numeric', {
     name: 'height',
     nullable: true,
-    precision: 3,
+    precision: 8,
     scale: 5,
   })
   height: number | null;
@@ -53,7 +53,7 @@ export class Trees {
   @Column('numeric', {
     name: 'incline',
     nullable: true,
-    precision: 3,
+    precision: 8,
     scale: 5,
   })
   incline: number | null;
@@ -89,7 +89,7 @@ export class Trees {
   @Column('boolean', { name: 'exposed_roots', nullable: true })
   exposedRoots: boolean | null;
 
-  @Column('numeric', { name: 'dch', nullable: true, precision: 2, scale: 5 })
+  @Column('numeric', { name: 'dch', nullable: true, precision: 7, scale: 5 })
   dch: number | null;
 
   @Column('enum', {
@@ -134,22 +134,31 @@ export class Trees {
   })
   streetMateriality: 'tierra' | 'mejorado petroleo' | 'asfalto' | 'concreto' | 'cordon cuneta' | null;
 
-  @OneToMany(() => ConflictTree, (conflictTree) => conflictTree.tree)
+  @Column('smallint', { name: 'risk', nullable: true })
+  risk: number | null;
+
+  @Column('character varying', {
+    name: 'address',
+    length: 100,
+  })
+  address: string;
+
+  @OneToMany(() => ConflictTree, (conflictTree) => conflictTree.tree, { cascade: true, onDelete: 'CASCADE' })
   conflictTrees: ConflictTree[];
 
-  @OneToMany(() => DefectTree, (defectTree) => defectTree.tree)
+  @OneToMany(() => DefectTree, (defectTree) => defectTree.tree, { cascade: true, onDelete: 'CASCADE' })
   defectTrees: DefectTree[];
 
-  @OneToMany(() => DiseaseTree, (diseaseTree) => diseaseTree.tree)
+  @OneToMany(() => DiseaseTree, (diseaseTree) => diseaseTree.tree, { cascade: true, onDelete: 'CASCADE' })
   diseaseTrees: DiseaseTree[];
 
-  @OneToMany(() => InterventionTree, (interventionTree) => interventionTree.tree)
+  @OneToMany(() => InterventionTree, (interventionTree) => interventionTree.tree, { cascade: true, onDelete: 'CASCADE' })
   interventionTrees: InterventionTree[];
 
-  @OneToMany(() => PestTree, (pestTree) => pestTree.tree)
+  @OneToMany(() => PestTree, (pestTree) => pestTree.tree, { cascade: true, onDelete: 'CASCADE' })
   pestTrees: PestTree[];
 
-  @OneToOne(() => Coordinates)
+  @OneToOne(() => Coordinates, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'coordinate_id', referencedColumnName: 'idCoordinate' }])
   coordinate: Coordinates;
 

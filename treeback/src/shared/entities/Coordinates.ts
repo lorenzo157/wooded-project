@@ -17,7 +17,7 @@ export class Coordinates {
   @Column('numeric', {
     name: 'longitude',
     nullable: true,
-    precision: 3,
+    precision: 12,
     scale: 10,
   })
   longitude: number;
@@ -25,7 +25,7 @@ export class Coordinates {
   @Column('numeric', {
     name: 'latitude',
     nullable: true,
-    precision: 3,
+    precision: 12,
     scale: 10,
   })
   latitude: number;
