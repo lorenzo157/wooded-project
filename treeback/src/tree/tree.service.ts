@@ -176,7 +176,7 @@ export class TreeService {
       .innerJoinAndSelect('pestTrees.pest', 'pest')
       .where('tree.idTree = :idTree', { idTree })
       .getOne();
-      
+
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
       treeName: tree.treeName,
@@ -232,6 +232,13 @@ export class TreeService {
   }
 
   async removeTreeById(idTree: number): Promise<void> {
+    
+    const tree = await this.treeRepository.findOne({
+      where: { idTree: idTree },
+      relations: ['coordinate'],
+    });
+
     await this.treeRepository.delete({ idTree });
+    await this.coordinatesRepository.remove(tree.coordinate);
   }
 }

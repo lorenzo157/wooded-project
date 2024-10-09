@@ -43,7 +43,6 @@ import { ProjectModule } from '../project/project.module';
     ProjectModule,
   ], // Importa el repositorio
   providers: [TreeService],
-  controllers: [TreeController],
-  exports: [TreeService], // Si lo necesitas fuera de este módulo
+  controllers: [TreeController]
 })
 export class TreeModule {}

@@ -35,7 +35,6 @@ export class ReadTreeDto {
   pestsNames: string[];
   latitude: number;
   longitude: number;
-  // RECORDAR QUITAR EL NULL CUANDO SE CREE EL TRIGGER DE DETECCCION AUTOMATICA DE BARRIO
   neighborhoodName: string;
   treeTypeDto: TreeTypeDto;
 }

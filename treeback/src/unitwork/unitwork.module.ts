@@ -11,7 +11,6 @@ import { Coordinates } from '../shared/entities/Coordinates';
 @Module({
   imports: [TypeOrmModule.forFeature([UnitWork, Projects, Neighborhoods, NeighborhoodCoordinate, Coordinates])],
   providers: [UnitWorkService],
-  controllers: [UnitWorkController],
-  exports: [UnitWorkService], // Si lo necesitas fuera de este módulo
+  controllers: [UnitWorkController]
 })
 export class UnitWorkModule {}

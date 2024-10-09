@@ -5,7 +5,6 @@ import { Projects } from './entities/Projects';
 import { ReadProjectDto } from './dto/read-project.dto';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-//import { ProjectUser } from '../shared/entities/ProjectUser';
 
 @Injectable()
 export class ProjectService {
@@ -20,69 +19,65 @@ export class ProjectService {
 
   async findAllAssignedProjectsWithUser(idUser: number): Promise<ReadProjectDto[]> {
     const projects = await this.projectRepository
-      .createQueryBuilder('projects')
-      .innerJoinAndSelect('projects.projectUser', 'projectUser')
-      .innerJoinAndSelect('projectUser.user', 'associatedUser')
-      .innerJoinAndSelect('projects.city', 'projectCity')
+      .createQueryBuilder('project')
+      .innerJoinAndSelect('project.projectUsers', 'projectUser')
+      .innerJoinAndSelect('projectUser.user', 'user')
+      .innerJoinAndSelect('project.city', 'projectCity')
       .innerJoinAndSelect('projectCity.province', 'projectProvince')
-      .where('associatedUser.id = :idUser', { idUser })
+      .where('user.idUser = :idUser', { idUser })
       .select([
-        'projects.id AS idProject',
-        'projects.name AS projectName',
-        'projects.description AS projectDescription',
-        'projects.startDate AS startDate',
-        'projects.endDate AS endDate',
-        'projects.projectType AS projectType',
-        'projectCity.name AS cityName',
-        'projectProvince.name AS provinceName',
+        'project.idProject AS "idProject"' ,
+        'project.projectName AS "projectName"',
+        'project.projectDescription AS "projectDescription"',
+        'project.startDate  AS "startDate"',
+        'project.endDate AS "endDate"',
+        'project.projectType AS "projectType"',
+        'projectCity.cityName AS "cityName"',
+        'projectProvince.provinceName AS "provinceName"',
       ])
       .getRawMany();
-
-    return projects.map((project) => {
-      const readProjectDto = new ReadProjectDto();
-      readProjectDto.idProject = project.idProject;
-      readProjectDto.projectName = project.projectName;
-      readProjectDto.projectDescription = project.projectDescription;
-      readProjectDto.startDate = project.startDate;
-      readProjectDto.endDate = project.endDate;
-      readProjectDto.projectType = project.projectType;
-      readProjectDto.cityName = project.cityName;
-      readProjectDto.provinceName = project.provinceName;
-      return readProjectDto;
-    });
+    
+      return projects.map((project) => ({
+        idProject: project.idProject,
+        projectName: project.projectName,
+        projectDescription: project.projectDescription,
+        startDate: project.startDate,
+        endDate: project.endDate,
+        projectType: project.projectType,
+        cityName: project.cityName,
+        provinceName: project.provinceName,
+      }));
   }
 
   async findAllCreatedProjectsByUser(idUser: number): Promise<ReadProjectDto[]> {
     const projects = await this.projectRepository
       .createQueryBuilder('project')
-      .innerJoinAndSelect('project.user', 'creatorUser')
+      .innerJoinAndSelect('project.user', 'user')
       .innerJoinAndSelect('project.city', 'projectCity')
       .innerJoinAndSelect('projectCity.province', 'projectProvince')
-      .where('creatorUser.id = :idAdmin', { idUser })
+      .where('user.idUser = :idUser', { idUser })
       .select([
-        'project.id AS idProject',
-        'project.name AS projectName',
-        'project.description AS projectDescription',
-        'project.startDate AS startDate',
-        'project.endDate AS endDate',
-        'project.projectType AS projectType',
-        'projectCity.name AS cityName',
-        'projectProvince.name AS provinceName',
+        'project.idProject AS "idProject"' ,
+        'project.projectName AS "projectName"',
+        'project.projectDescription AS "projectDescription"',
+        'project.startDate  AS "startDate"',
+        'project.endDate AS "endDate"',
+        'project.projectType AS "projectType"',
+        'projectCity.cityName AS "cityName"',
+        'projectProvince.provinceName AS "provinceName"',
       ])
       .getRawMany();
 
-    return projects.map((project) => {
-      const readProjectDto = new ReadProjectDto();
-      readProjectDto.idProject = project.idProject;
-      readProjectDto.projectName = project.projectName;
-      readProjectDto.projectDescription = project.projectDescription;
-      readProjectDto.startDate = project.startDate;
-      readProjectDto.endDate = project.endDate;
-      readProjectDto.projectType = project.projectType;
-      readProjectDto.cityName = project.cityName;
-      readProjectDto.provinceName = project.provinceName;
-      return readProjectDto;
-    });
+    return projects.map((project) => ({
+      idProject: project.idProject,
+      projectName: project.projectName,
+      projectDescription: project.projectDescription,
+      startDate: project.startDate,
+      endDate: project.endDate,
+      projectType: project.projectType,
+      cityName: project.cityName,
+      provinceName: project.provinceName,
+    }));
   }
   async findAllAssignedUsersWithProject(idProject: number) {
     throw new Error('Method not implemented.');
