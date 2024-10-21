@@ -1,0 +1,7 @@
+{
+  "name": "myap",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

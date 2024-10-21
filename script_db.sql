@@ -4,12 +4,6 @@
 BEGIN;
 ----------------------------------------- TABLAS DE ORDEN 0
 
-CREATE TABLE IF NOT EXISTS coordinates (
-    id_coordinate SERIAL PRIMARY KEY,
-    longitude NUMERIC(12, 10) NOT NULL,
-    latitude NUMERIC(12, 10) NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS pests (
     id_pest SERIAL PRIMARY KEY,
     pest_name VARCHAR(100) NOT NULL,
@@ -126,13 +120,12 @@ CREATE TABLE IF NOT EXISTS projects (
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id_user)
 );
 
-CREATE TABLE IF NOT EXISTS neighborhood_coordinate (
-    id_neighborhood_coordinate SERIAL PRIMARY KEY,
-    coordinate_id INTEGER NOT NULL,
-    neighborhood_id INTEGER NOT NULL,
-    CONSTRAINT fk_coordinate FOREIGN KEY (coordinate_id) REFERENCES coordinates(id_coordinate),
-    CONSTRAINT fk_neighborhood FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods(id_neighborhood),
-    CONSTRAINT unique_coordinate_neighborhood UNIQUE (coordinate_id, neighborhood_id)
+CREATE TABLE IF NOT EXISTS coordinates (
+    id_coordinate SERIAL PRIMARY KEY,
+    longitude NUMERIC(12, 10) NOT NULL,
+    latitude NUMERIC(12, 10) NOT NULL,
+    neighborhood_id INTEGER NULL,
+    CONSTRAINT fk_neighborhood FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods(id_neighborhood)
 );
 
 ----------------------------------------- TABLAS DE ORDEN 4
