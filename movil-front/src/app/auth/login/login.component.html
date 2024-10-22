@@ -1,3 +1,22 @@
-<p>
-  login works!
-</p>
+<form [formGroup]="form" (ngSubmit)="login()">
+  <div class="bg-gray-300 flex flex-col h-screen">
+    <ion-card class="m-auto">
+        <ion-card-header>
+          <ion-card-title class="p-5 text-3xl text-center">Ingreso</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="grid grid-rows-3 gap-5 m-auto max-w-lg pl-5 pr-5">
+          <ion-item fill="outline">
+            <ion-label position="floating">Usuario</ion-label>
+            <ion-input type="text" ngModel formControlName="username" placeholder=""></ion-input>
+<!--            <ion-note slot="error">Usuario inválido</ion-note>-->
+          </ion-item>
+          <ion-item fill="outline">
+            <ion-label position="floating">Clave</ion-label>
+            <ion-input type="password" ngModel formControlName="password" placeholder=""></ion-input>
+<!--            <ion-note slot="error">Clave inválida</ion-note>-->
+          </ion-item>
+          <ion-button expand="block" size="medium" [disabled]="form.invalid" type="submit">Ingresar</ion-button>
+        </ion-card-content>
+    </ion-card>
+  </div>
+</form>

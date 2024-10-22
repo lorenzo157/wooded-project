@@ -4,7 +4,7 @@ import { ListProjectsComponent } from './list-projects/list-projects.component';
 
 const routes: Routes = [
   {
-    path: 'assignedproject/:id',  // Route with ID parameter
+    path: '',  // Route with ID parameter
     component: ListProjectsComponent,
   },
 ];

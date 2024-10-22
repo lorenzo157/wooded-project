@@ -1,14 +1,41 @@
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+
 export class CreateUserDto {
-  idUser: number;
+  @IsNotEmpty()
+  @IsString()
   userName: string;
+
+  @IsNotEmpty()
+  @IsString()
   lastName: string;
+
+  @IsNotEmpty()
+  @IsEmail()
+  @IsString()
   email: string;
+
+  @IsNotEmpty()
+  @IsString()
   password: string;
-  phonenumber: string | null;
-  address: string | null;
+
+  @IsOptional()
+  @IsString()
+  phonenumber?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsNotEmpty()
+  @IsString()
   cityName: string;
+
+  @IsNotEmpty()
+  @IsString()
   provinceName: string;
-  //projects: ProjectUserDto[] | [];
-  city: any;
-  projectUsers: any;
+
+  @IsNotEmpty()
+  @IsString()
+  roleName: string;
 }
+

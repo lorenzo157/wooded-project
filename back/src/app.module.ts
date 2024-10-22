@@ -4,11 +4,11 @@ import { AppService } from './app.service';
 import { TreeModule } from './tree/tree.module';
 import { ProjectModule } from './project/project.module';
 import { UserModule } from './user/user.module';
-//import { AuthModule } from './auth/auth.module';
 import { UnitWorkModule } from './unitwork/unitwork.module';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -19,7 +19,7 @@ import { DatabaseModule } from './database/database.module';
     TreeModule,
     ProjectModule,
     UserModule,
-    //AuthModule,
+    AuthModule,
     UnitWorkModule,
   ],
   controllers: [AppController],

@@ -6,4 +6,5 @@ export class EnvVars {
   public static dbSchema = 'DATABASE_APPLICATION_SCHEMA';
   public static dbDatabase = 'DATABASE_APPLICATION_DATABASE';
   public static enviroment = 'NODE_ENV';
+  public static secretKey = 'SECRET';
 }

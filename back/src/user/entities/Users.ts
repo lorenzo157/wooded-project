@@ -2,7 +2,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGenerat
 import { ProjectUser } from '../../shared/entities/ProjectUser';
 import { Projects } from '../../project/entities/Projects';
 import { Cities } from '../../shared/entities/Cities';
-//import { Roles } from '../../auth/entities/Roles';
+import { Roles } from '../../auth/entities/Roles';
 
 @Index('unique_email', ['email'], { unique: true })
 @Index('users_pkey', ['idUser'], { unique: true })
@@ -47,7 +47,7 @@ export class Users {
   @JoinColumn([{ name: 'city_id', referencedColumnName: 'idCity' }])
   city: Cities;
 
-  //@ManyToOne(() => Roles, (roles) => roles.users)
-  //@JoinColumn([{ name: 'role_id', referencedColumnName: 'idRole' }])
-  //role: Roles;
+  @ManyToOne(() => Roles, (roles) => roles.users)
+  @JoinColumn([{ name: 'role_id', referencedColumnName: 'idRole' }])
+  role: Roles;
 }
