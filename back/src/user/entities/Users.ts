@@ -1,8 +1,8 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ProjectUser } from '../../shared/entities/ProjectUser';
+import { ProjectUser } from '../../project/entities/ProjectUser';
 import { Projects } from '../../project/entities/Projects';
 import { Cities } from '../../shared/entities/Cities';
-import { Roles } from '../../auth/entities/Roles';
+import { Roles } from './Roles';
 
 @Index('unique_email', ['email'], { unique: true })
 @Index('users_pkey', ['idUser'], { unique: true })

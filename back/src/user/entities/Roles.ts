@@ -6,7 +6,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RolePermission } from './RolePermission';
-import { Users } from '../../user/entities/Users';
+import { Users } from './Users';
 
 @Index('roles_pkey', ['idRole'], { unique: true })
 @Index('unique_role_name', ['roleName'], { unique: true })

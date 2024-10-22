@@ -3,13 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { Users } from './entities/Users'; // Asegúrate de que es el nombre correcto de tu entidad
-import { ProjectUser } from '../shared/entities/ProjectUser';
+import { ProjectUser } from '../project/entities/ProjectUser';
 import { Projects } from '../project/entities/Projects';
 import { Cities } from '../shared/entities/Cities';
 import { Provinces } from '../shared/entities/Provinces';
-import { Roles } from '../auth/entities/Roles';
-import { RolePermission } from '../auth/entities/RolePermission';
-import { Permissions } from '../auth/entities/Permissions';
+import { Roles } from './entities/Roles';
+import { RolePermission } from './entities/RolePermission';
+import { Permissions } from './entities/Permissions';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({

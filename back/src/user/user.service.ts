@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Cities } from '../shared/entities/Cities';
-import { Roles } from '../auth/entities/Roles';
+import { Roles } from './entities/Roles';
 import { Provinces } from '../shared/entities/Provinces';
 
 @Injectable()
@@ -89,4 +89,12 @@ export class UserService {
     const saltRounds = 10; // Higher values are more secure but slower
     return bcrypt.hash(password, saltRounds);
   }
+  async findRoleByIdUser(idUser: number): Promise<string> {
+    
+    const user = await this.userRepository.findOne({
+      where: { idUser: idUser },
+      relations: ['role'],
+    });
+    return user.role.roleName; 
+}
 }

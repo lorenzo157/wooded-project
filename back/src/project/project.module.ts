@@ -5,7 +5,7 @@ import { ProjectController } from './project.controller';
 import { Projects } from './entities/Projects';
 import { Trees } from '../tree/entities/Trees';
 import { Users } from '../user/entities/Users';
-import { ProjectUser } from '../shared/entities/ProjectUser';
+import { ProjectUser } from './entities/ProjectUser';
 import { Cities } from '../shared/entities/Cities';
 import { UnitWork } from '../unitwork/entities/UnitWork';
 import { Neighborhoods } from '../shared/entities/Neighborhoods';

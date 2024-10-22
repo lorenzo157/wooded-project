@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ProjectUser } from '../../shared/entities/ProjectUser';
+import { ProjectUser } from './ProjectUser';
 import { Cities } from '../../shared/entities/Cities';
 import { Users } from '../../user/entities/Users';
 import { Trees } from '../../tree/entities/Trees';
