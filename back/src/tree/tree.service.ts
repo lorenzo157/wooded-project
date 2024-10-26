@@ -69,18 +69,27 @@ export class TreeService {
     coordinates.longitude = longitude;
     const savedCoordinates = await this.coordinatesRepository.save(coordinates);
 
-    const project = await this.projectService.findProject(projectId);
-
-    const treeType = await this.treeTypeRepository.findOne({
-      where: { treeTypeName: treeTypeName },
-    });
-
+    const project = await this.projectService.findProjectById(projectId);
+    
+    let treeType;
+    if (treeTypeName){
+      console.log('entro aca')
+      treeType = await this.treeTypeRepository.findOne({
+        where: { treeTypeName: treeTypeName },
+      });
+    }
+    else
+    {
+      treeType = await this.treeTypeRepository.findOne({
+        where: { treeTypeName: 'Tipo no definido' },
+      });
+    }
     const newTree = this.treeRepository.create({
       ...treeData,
       coordinate: savedCoordinates,
       neighborhood: null,
       project: project,
-      treeType: treeType || null,
+      treeType: treeType,
     });
 
     await this.treeRepository.save(newTree);
@@ -176,7 +185,9 @@ export class TreeService {
       .innerJoinAndSelect('pestTrees.pest', 'pest')
       .where('tree.idTree = :idTree', { idTree })
       .getOne();
-
+      
+  
+    
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
       treeName: tree.treeName,
@@ -233,7 +244,6 @@ export class TreeService {
   }
 
   async removeTreeById(idTree: number): Promise<void> {
-    
     const tree = await this.treeRepository.findOne({
       where: { idTree: idTree },
       relations: ['coordinate'],

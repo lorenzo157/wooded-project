@@ -1,3 +1,371 @@
-<p>
-  create-tree works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <app-navigation></app-navigation>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>Registro de Arbol</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="treeForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-input
+        label="Nombre del arbol"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="treeName"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Direccion"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="address"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Manzana"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="cityBlock"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Arboles en la cuadra"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="treesInTheBlock"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>¿Es arbol faltante?</ion-label>
+      <ion-checkbox formControlName="isMissing"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>¿Esta muerto?</ion-label>
+      <ion-checkbox formControlName="isDead"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>¿Tiene raices expuestas?</ion-label>
+      <ion-checkbox formControlName="exposedRoots"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Perimetro"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="perimeter"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Inclinacion"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="incline"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Altura"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="height"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Valor del arbol</ion-label>
+      <ion-select formControlName="treeValue">
+        <ion-select-option
+          *ngFor="let option of treeValueOptions"
+          [value]="option"
+        >
+          {{ option }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Que se usa o que hay bajo el arbol"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="useUnderTheTree"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Que se usa o que hay bajo el arbol"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="useUnderTheTree"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Frecuencia de lo que se usa bajo el arbol"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="frequencyUse"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Potencial de daño de arbol si se cae"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="potentialDamage"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Potencial de daño del arbol o rama si se cae"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="potentialDamage"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label
+        >¿Se puede mover el blanco que esta debajo del arbol?</ion-label
+      >
+      <ion-checkbox formControlName="isMovable"></ion-checkbox>
+    </ion-item>
+
+    <ion-item
+      lines="none"
+      class="ion-align-items-center ion-justify-content-center"
+    >
+      <ion-label class="ion-text-center"
+        >¿Se puede restringir el blanco que está debajo del árbol?</ion-label
+      >
+      <ion-checkbox formControlName="isRestrictable"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-input
+        label="Diametro de a la altura del pecho"
+        labelPlacement="floating"
+        errorText="Invalid"
+        formControlName="dch"
+      ></ion-input>
+    </ion-item>
+
+    <!-- Wind Exposure -->
+    <ion-item>
+      <ion-label position="floating">Exposicion al viento</ion-label>
+      <ion-select formControlName="windExposure">
+        <ion-select-option *ngFor="let option of windExposureOptions" [value]="option">
+          {{ option }}
+        </ion-select-option>
+        <ion-select-option [value]="null">No definido</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Vigor -->
+    <ion-item>
+      <ion-label position="floating">Vigor</ion-label>
+      <ion-select formControlName="vigor">
+        <ion-select-option *ngFor="let option of vigorOptions" [value]="option">
+          {{ option }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Canopy Density -->
+    <ion-item>
+      <ion-label position="floating">Densidad de copa</ion-label>
+      <ion-select formControlName="canopyDensity">
+        <ion-select-option
+          *ngFor="let option of canopyDensityOptions"
+          [value]="option"
+        >
+          {{ option }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Growth Space -->
+    <ion-item>
+      <ion-label position="floating">Espacio de crecimiento</ion-label>
+      <ion-select formControlName="growthSpace">
+        <ion-select-option
+          *ngFor="let option of growthSpaceOptions"
+          [value]="option"
+        >
+          {{ option }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Tree Type</ion-label>
+      <ion-select formControlName="treeTypeName">
+        <ion-select-option
+          *ngFor="let type of treeTypeOptions"
+          [value]="type"
+          >{{ type }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+
+    <!-- Conflict Section -->
+    <div formArrayName="conflictsNames">
+      <div *ngFor="let conflict of conflictsNames.controls; let i = index">
+        <ion-item>
+          <ion-label>Conflict {{ i + 1 }}</ion-label>
+          <ion-select [formControlName]="i">
+            <ion-select-option
+              *ngFor="let option of conflictOptions"
+              [value]="option"
+              >{{ option }}</ion-select-option
+            >
+          </ion-select>
+          <ion-button color="danger" (click)="removeConflict(i)" fill="clear">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </div>
+      <ion-button (click)="addConflict()">Add Conflict</ion-button>
+    </div>
+    <!-- Intervention Section -->
+    <div formArrayName="interventionsNames">
+      <div
+        *ngFor="let intervention of interventionsNames.controls; let i = index"
+      >
+        <ion-item>
+          <ion-label>Intervention {{ i + 1 }}</ion-label>
+          <ion-select [formControlName]="i">
+            <ion-select-option
+              *ngFor="let option of interventionOptions"
+              [value]="option"
+              >{{ option }}</ion-select-option
+            >
+          </ion-select>
+          <ion-button
+            color="danger"
+            (click)="removeIntervention(i)"
+            fill="clear"
+          >
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </div>
+      <ion-button (click)="addIntervention()">Add Intervention</ion-button>
+    </div>
+    <!-- Diseases Section -->
+    <div formArrayName="diseasesNames">
+      <div *ngFor="let disease of diseasesNames.controls; let i = index">
+        <ion-item>
+          <ion-label>Disease {{ i + 1 }}</ion-label>
+          <ion-select [formControlName]="i">
+            <ion-select-option
+              *ngFor="let option of diseaseOptions"
+              [value]="option"
+            >
+              {{ option }}
+            </ion-select-option>
+          </ion-select>
+          <ion-button color="danger" (click)="removeDisease(i)" fill="clear">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </div>
+      <ion-button (click)="addDisease()">Add Disease</ion-button>
+    </div>
+    <!-- Pests Section -->
+    <div formArrayName="pestsNames">
+      <div *ngFor="let pest of pestsNames.controls; let i = index">
+        <ion-item>
+          <ion-label>Pest {{ i + 1 }}</ion-label>
+          <ion-select [formControlName]="i">
+            <ion-select-option
+              *ngFor="let option of pestOptions"
+              [value]="option"
+            >
+              {{ option }}
+            </ion-select-option>
+          </ion-select>
+          <ion-button color="danger" (click)="removePest(i)" fill="clear">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </div>
+      <ion-button (click)="addPest()">Add Pest</ion-button>
+    </div>
+    <!-- Defects Section -->
+    <div formArrayName="defectDtos">
+      <div
+        *ngFor="let defect of defectDtos.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <ion-item>
+          <ion-label>Defect {{ i + 1 }}</ion-label>
+        </ion-item>
+
+        <!-- Fields for DefectTreeDto properties -->
+        <ion-item>
+          <ion-label>Defect Name</ion-label>
+          <ion-input
+            formControlName="defectName"
+            placeholder="Enter defect name"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Defect Value</ion-label>
+          <ion-input
+            type="number"
+            formControlName="defectValue"
+            placeholder="Enter defect value"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Text Defect Value</ion-label>
+          <ion-input
+            formControlName="textDefectValue"
+            placeholder="Optional text value"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Branches</ion-label>
+          <ion-input
+            type="number"
+            formControlName="branches"
+            placeholder="Number of branches"
+          ></ion-input>
+        </ion-item>
+
+        <!-- Button to delete the defect -->
+        <ion-button color="danger" (click)="removeDefect(i)" fill="clear">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </div>
+
+      <!-- Button to add a new defect -->
+      <ion-button (click)="addDefect()">Add Defect</ion-button>
+    </div>
+
+    <ion-button expand="full" type="submit">Create Tree</ion-button>
+  </form>
+</ion-content>

@@ -1,5 +1,5 @@
 export class TreeTypeDto {
-  treeTypeName: string;
+  treeTypeName?: string;
   gender?: string;
   species?: string;
   scientificName?: string;

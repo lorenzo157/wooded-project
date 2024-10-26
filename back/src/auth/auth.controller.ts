@@ -18,8 +18,11 @@ export class AuthController {
         const payload = { idUser: user.idUser }; // Create JWT payload
         const access_token = await this.authService.signPayload(payload); // Sign the JWT token
         return {
-            access_token,
-            userName: user.userName, // Return just user name to the client
+            statusCode: 200,
+            result: {
+                access_token,
+                userName: user.userName
+            }
         };
     }
 

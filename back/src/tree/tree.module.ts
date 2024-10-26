@@ -16,7 +16,7 @@ import { InterventionTree } from './entities/InterventionTree';
 import { Pests } from './entities/Pests';
 import { PestTree } from './entities/PestTree';
 import { TreeTypes } from './entities/TreeTypes';
-import { Neighborhoods } from '../shared/entities/Neighborhoods';
+import { Neighborhoods } from '../unitwork/entities/Neighborhoods';
 
 import { ProjectModule } from '../project/project.module';
 

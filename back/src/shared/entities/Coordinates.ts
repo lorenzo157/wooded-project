@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Neighborhoods } from './Neighborhoods';
+import { Neighborhoods } from '../../unitwork/entities/Neighborhoods';
 
 
 @Index('coordinates_pkey', ['idCoordinate'], { unique: true })

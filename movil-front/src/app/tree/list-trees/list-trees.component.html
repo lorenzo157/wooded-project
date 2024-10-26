@@ -1,3 +1,32 @@
-<p>
-  list-trees works!
-</p>
+<!-- src/app/list-trees/list-trees.component.html -->
+<ion-header>
+  <ion-toolbar>
+    <app-navigation></app-navigation>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>Project Trees</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="trees.length > 0; else noTrees">
+    <ion-item *ngFor="let tree of trees">
+      <ion-label>
+        <a (click)="viewTreeDetails(tree.idTree)" class="linkproyect">
+          <span class="tree">{{ tree.treeName }}</span>
+        </a>
+        <p><strong>Address:</strong> {{ tree.address }}</p>
+        <p><strong>Date:</strong> {{ tree.datetime | date:'short' }}</p>
+        <p><strong>Value:</strong> {{ tree.treeValue || 'N/A' }}</p>
+        <p><strong>Risk:</strong> {{ tree.risk || 'N/A' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #noTrees>
+    <ion-item>
+      <ion-label>No trees found for this project.</ion-label>
+    </ion-item>
+  </ng-template>
+</ion-content>
+

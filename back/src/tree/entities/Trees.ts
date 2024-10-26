@@ -5,7 +5,7 @@ import { DiseaseTree } from './DiseaseTree';
 import { InterventionTree } from './InterventionTree';
 import { PestTree } from './PestTree';
 import { Coordinates } from '../../shared/entities/Coordinates';
-import { Neighborhoods } from '../../shared/entities/Neighborhoods';
+import { Neighborhoods } from '../../unitwork/entities/Neighborhoods';
 import { Projects } from '../../project/entities/Projects';
 import { TreeTypes } from './TreeTypes';
 

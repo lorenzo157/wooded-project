@@ -79,7 +79,7 @@ export class ProjectService {
       provinceName: project.provinceName,
     }));
   }
-  async findAllAssignedUsersWithProject(idProject: number) {
+  async findAllAssignedUsersToProject(idProject: number) {
     throw new Error('Method not implemented.');
   }
 
@@ -95,7 +95,7 @@ export class ProjectService {
   async removeProjectById(idProject: number) {
     throw new Error('Method not implemented.');
   }
-  async findProject(idProject: number): Promise<Projects> {
+  async findProjectById(idProject: number): Promise<Projects> {
     const project = await this.projectRepository.findOne({
       where: { idProject: idProject },
     });

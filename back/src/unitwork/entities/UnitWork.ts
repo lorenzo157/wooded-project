@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Neighborhoods } from '../../shared/entities/Neighborhoods';
+import { Neighborhoods } from './Neighborhoods';
 import { Projects } from '../../project/entities/Projects';
 
 @Index('unit_work_pkey', ['idUnitWork'], { unique: true })

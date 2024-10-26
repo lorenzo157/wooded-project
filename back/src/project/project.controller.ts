@@ -40,8 +40,8 @@ export class ProjectController {
   }
 
   @Get(':idProject/assigneduser')
-  async findAllAssignedUsersWithProject(@Param('idProject') idProject: number) {
-    return this.projectService.findAllAssignedUsersWithProject(idProject);
+  async findAllAssignedUsersToProject(@Param('idProject') idProject: number) {
+    return this.projectService.findAllAssignedUsersToProject(idProject);
   }
   @Post(':idProject/assigneduser/:idUser')
   async assignUserToProject(@Param('idProject') idProject: number, @Param('idUser') idUser: number) {
@@ -59,5 +59,9 @@ export class ProjectController {
   @Delete(':idProject')
   async removeProjectById(@Param('idProject') idProject: number) {
     return this.projectService.removeProjectById(idProject);
+  }
+  @Get(':idProject')
+  async findProjectById(@Param('idProject') idProject: number) {
+    return this.projectService.findProjectById(idProject);
   }
 }

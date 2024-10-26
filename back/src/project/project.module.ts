@@ -8,7 +8,7 @@ import { Users } from '../user/entities/Users';
 import { ProjectUser } from './entities/ProjectUser';
 import { Cities } from '../shared/entities/Cities';
 import { UnitWork } from '../unitwork/entities/UnitWork';
-import { Neighborhoods } from '../shared/entities/Neighborhoods';
+import { Neighborhoods } from '../unitwork/entities/Neighborhoods';
 import { Provinces } from '../shared/entities/Provinces';
 
 @Module({

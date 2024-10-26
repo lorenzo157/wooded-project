@@ -4,7 +4,7 @@ import { UnitWorkService } from './unitwork.service';
 import { UnitWorkController } from './unitwork.controller';
 import { UnitWork } from './entities/UnitWork';
 import { Projects } from '../project/entities/Projects';
-import { Neighborhoods } from '../shared/entities/Neighborhoods';
+import { Neighborhoods } from './entities/Neighborhoods';
 import { Coordinates } from '../shared/entities/Coordinates';
 
 @Module({

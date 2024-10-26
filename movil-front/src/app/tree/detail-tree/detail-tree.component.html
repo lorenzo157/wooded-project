@@ -1,0 +1,118 @@
+<ion-header>
+  <ion-toolbar>
+    <app-navigation></app-navigation>
+  </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="tree">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ tree.treeName }}</ion-card-title>
+      <ion-card-subtitle>{{ tree.address }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+
+      <!-- Image Section -->
+      <ion-item *ngIf="tree.pathPhoto">
+        <ion-label>Tree Photo</ion-label>
+        <img [src]="tree.pathPhoto" alt="Tree Image" />
+      </ion-item>
+
+      <!-- General Information -->
+      <ion-item>
+        <ion-label><strong>Neighborhood:</strong> {{ tree.neighborhoodName || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>City Block:</strong> {{ tree.cityBlock || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Perimeter:</strong> {{ tree.perimeter || 'N/A' }} m</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Height:</strong> {{ tree.height || 'N/A' }} m</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Incline:</strong> {{ tree.incline || 'N/A' }} °</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Trees in Block:</strong> {{ tree.treesInTheBlock || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Under Tree Use:</strong> {{ tree.useUnderTheTree || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Frequency of Use:</strong> {{ tree.frequencyUse || 'N/A' }}</ion-label>
+      </ion-item>
+
+      <!-- Condition Flags -->
+      <ion-item>
+        <ion-label><strong>Movable:</strong> {{ tree.isMovable ? 'Yes' : 'No' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Restrictable:</strong> {{ tree.isRestrictable ? 'Yes' : 'No' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Exposed Roots:</strong> {{ tree.exposedRoots ? 'Yes' : 'No' }}</ion-label>
+      </ion-item>
+
+      <!-- Risk & Value Information -->
+      <ion-item>
+        <ion-label><strong>Risk Level:</strong> {{ tree.risk || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Tree Value:</strong> {{ tree.treeValue || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Potential Damage:</strong> {{ tree.potentialDamage || 'N/A' }}</ion-label>
+      </ion-item>
+
+      <!-- Tree Type Information -->
+      <ion-item>
+        <ion-label><strong>Tree Type:</strong> {{ tree.treeTypeDto.treeTypeName || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="tree.treeTypeDto.species">
+        <ion-label><strong>Species:</strong> {{ tree.treeTypeDto.species }}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="tree.treeTypeDto.scientificName">
+        <ion-label><strong>Scientific Name:</strong> {{ tree.treeTypeDto.scientificName }}</ion-label>
+      </ion-item>
+
+      <!-- Defects Section -->
+      <ion-item *ngIf="tree.defectDto.length > 0">
+        <ion-label><strong>Defects:</strong></ion-label>
+        <ion-list>
+          <ion-item *ngFor="let defect of tree.defectDto">
+            <p>
+              {{ defect.defectName }} - Severity: {{ defect.textDefectValue }}
+              <span *ngIf="defect.branches">Branches Affected: {{ defect.branches }}</span>
+            </p>
+          </ion-item>
+        </ion-list>
+      </ion-item>
+
+      <!-- Other Tree Information -->
+      <ion-item *ngIf="tree.diseasesNames.length > 0">
+        <ion-label><strong>Diseases:</strong> {{ tree.diseasesNames.join(', ') }}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="tree.interventionsNames.length > 0">
+        <ion-label><strong>Interventions:</strong> {{ tree.interventionsNames.join(', ') }}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="tree.pestsNames.length > 0">
+        <ion-label><strong>Pests:</strong> {{ tree.pestsNames.join(', ') }}</ion-label>
+      </ion-item>
+
+      <!-- Location Information -->
+      <ion-item>
+        <ion-label><strong>Latitude:</strong> {{ tree.latitude || 'N/A' }}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label><strong>Longitude:</strong> {{ tree.longitude || 'N/A' }}</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <ion-row class="ion-justify-content-center button-container">
+      <ion-button expand="block" color="primary" (click)="updateTree()">
+        Actualizar Árbol
+      </ion-button>
+  </ion-row>
+</ion-content>
+

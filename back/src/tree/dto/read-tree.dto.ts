@@ -36,5 +36,5 @@ export class ReadTreeDto {
   latitude: number;
   longitude: number;
   neighborhoodName: string;
-  treeTypeDto: TreeTypeDto;
+  treeTypeDto: TreeTypeDto | null;
 }

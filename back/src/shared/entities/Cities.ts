@@ -1,6 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Provinces } from './Provinces';
-import { Neighborhoods } from './Neighborhoods';
+import { Neighborhoods } from '../../unitwork/entities/Neighborhoods';
 import { Projects } from '../../project/entities/Projects';
 import { Users } from '../../user/entities/Users';
 

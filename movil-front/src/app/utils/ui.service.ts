@@ -10,11 +10,11 @@ import {
 })
 export class UiService {
     private loading: any;
-
+    
     constructor(
-        public alertController: AlertController,
-        public loadingController: LoadingController,
-        public toastController: ToastController
+        private alertController: AlertController,
+        private loadingController: LoadingController,
+        private toastController: ToastController
     ) {}
 
     async alerta(

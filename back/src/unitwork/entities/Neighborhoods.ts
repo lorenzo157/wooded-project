@@ -1,8 +1,8 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Cities } from './Cities';
+import { Cities } from '../../shared/entities/Cities';
 import { Trees } from '../../tree/entities/Trees';
-import { UnitWork } from '../../unitwork/entities/UnitWork';
-import { Coordinates } from './Coordinates';
+import { UnitWork } from './UnitWork';
+import { Coordinates } from '../../shared/entities/Coordinates';
 
 @Index('neighborhoods_pkey', ['idNeighborhood'], { unique: true })
 @Entity('neighborhoods', { schema: 'public' })
