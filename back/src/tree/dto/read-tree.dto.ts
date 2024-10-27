@@ -1,5 +1,4 @@
 import { DefectTreeDto } from './defect-tree.dto';
-import { TreeTypeDto } from './tree-type.dto';
 
 export class ReadTreeDto {
   idTree: number;
@@ -36,5 +35,8 @@ export class ReadTreeDto {
   latitude: number;
   longitude: number;
   neighborhoodName: string;
-  treeTypeDto: TreeTypeDto | null;
+  treeTypeName?: string;
+  gender?: string;
+  species?: string;
+  scientificName?: string;
 }

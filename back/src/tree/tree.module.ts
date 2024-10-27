@@ -15,9 +15,7 @@ import { Interventions } from './entities/Interventions';
 import { InterventionTree } from './entities/InterventionTree';
 import { Pests } from './entities/Pests';
 import { PestTree } from './entities/PestTree';
-import { TreeTypes } from './entities/TreeTypes';
 import { Neighborhoods } from '../unitwork/entities/Neighborhoods';
-
 import { ProjectModule } from '../project/project.module';
 
 @Module({
@@ -35,7 +33,6 @@ import { ProjectModule } from '../project/project.module';
       Pests,
       PestTree,
       Trees,
-      TreeTypes,
       Projects,
       Neighborhoods,
     ]),

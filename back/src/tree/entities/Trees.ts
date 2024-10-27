@@ -7,7 +7,6 @@ import { PestTree } from './PestTree';
 import { Coordinates } from '../../shared/entities/Coordinates';
 import { Neighborhoods } from '../../unitwork/entities/Neighborhoods';
 import { Projects } from '../../project/entities/Projects';
-import { TreeTypes } from './TreeTypes';
 
 @Index('trees_pkey', ['idTree'], { unique: true })
 @Entity('trees', { schema: 'public' })
@@ -143,6 +142,26 @@ export class Trees {
   })
   address: string;
 
+  @Column('character varying', { name: 'tree_type_name', length: 80 })
+  treeTypeName: string;
+
+  @Column('character varying', { name: 'gender', nullable: true, length: 80 })
+  gender: string | null;
+
+  @Column('character varying', {
+    name: 'species',
+    nullable: true,
+    length: 80,
+  })
+  species: string | null;
+
+  @Column('character varying', {
+    name: 'scientific_name',
+    nullable: true,
+    length: 80,
+  })
+  scientificName: string | null;
+
   @OneToMany(() => ConflictTree, (conflictTree) => conflictTree.tree, { cascade: true, onDelete: 'CASCADE' })
   conflictTrees: ConflictTree[];
 
@@ -169,8 +188,4 @@ export class Trees {
   @ManyToOne(() => Projects, (projects) => projects.trees)
   @JoinColumn([{ name: 'project_id', referencedColumnName: 'idProject' }])
   project: Projects;
-
-  @ManyToOne(() => TreeTypes, (treeTypes) => treeTypes.trees)
-  @JoinColumn([{ name: 'tree_type_id', referencedColumnName: 'idTreeType' }])
-  treeType: TreeTypes;
 }

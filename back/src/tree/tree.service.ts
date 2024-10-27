@@ -3,7 +3,6 @@ import { CreateTreeDto } from './dto/create-tree.dto';
 import { Repository } from 'typeorm';
 import { Trees } from './entities/Trees';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TreeTypes } from './entities/TreeTypes';
 import { Pests } from './entities/Pests';
 import { ProjectService } from '../project/project.service';
 import { Coordinates } from '../shared/entities/Coordinates';
@@ -25,8 +24,6 @@ export class TreeService {
     private readonly treeRepository: Repository<Trees>,
     @InjectRepository(Coordinates)
     private readonly coordinatesRepository: Repository<Coordinates>,
-    @InjectRepository(TreeTypes)
-    private readonly treeTypeRepository: Repository<TreeTypes>,
     private readonly projectService: ProjectService,
     @InjectRepository(Conflicts)
     private readonly conflictRepository: Repository<Conflicts>,
@@ -71,25 +68,11 @@ export class TreeService {
 
     const project = await this.projectService.findProjectById(projectId);
     
-    let treeType;
-    if (treeTypeName){
-      console.log('entro aca')
-      treeType = await this.treeTypeRepository.findOne({
-        where: { treeTypeName: treeTypeName },
-      });
-    }
-    else
-    {
-      treeType = await this.treeTypeRepository.findOne({
-        where: { treeTypeName: 'Tipo no definido' },
-      });
-    }
     const newTree = this.treeRepository.create({
       ...treeData,
       coordinate: savedCoordinates,
       neighborhood: null,
       project: project,
-      treeType: treeType,
     });
 
     await this.treeRepository.save(newTree);
@@ -148,7 +131,6 @@ export class TreeService {
       }
     }
   }
-
   // Find all the trees by project in simply dto that has general information of tree
   async findAllTreesByIdProject(idProject: number): Promise<SimplyReadTreeDto[]> {
     const trees = await this.treeRepository
@@ -166,13 +148,11 @@ export class TreeService {
       risk: tree.risk,
     }));
   }
-
   async findTreeById(idTree: number): Promise<ReadTreeDto> {
     const tree = await this.treeRepository
       .createQueryBuilder('tree')
       .innerJoinAndSelect('tree.coordinate', 'coordinate')
       .innerJoinAndSelect('tree.neighborhood', 'neighborhood')
-      .innerJoinAndSelect('tree.treeType', 'treeType')
       .innerJoinAndSelect('tree.conflictTrees', 'conflictTrees')
       .innerJoinAndSelect('conflictTrees.conflict', 'conflict')
       .innerJoinAndSelect('tree.defectTrees', 'defectTrees')
@@ -186,8 +166,6 @@ export class TreeService {
       .where('tree.idTree = :idTree', { idTree })
       .getOne();
       
-  
-    
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
       treeName: tree.treeName,
@@ -218,12 +196,10 @@ export class TreeService {
       latitude: tree.coordinate.latitude,
       longitude: tree.coordinate.longitude,
       neighborhoodName: tree.neighborhood.neighborhoodName,
-      treeTypeDto: {
-        treeTypeName: tree.treeType.treeTypeName,
-        gender: tree.treeType.gender,
-        species: tree.treeType.species,
-        scientificName: tree.treeType.scientificName,
-      },
+      treeTypeName: tree.treeTypeName,
+      gender: tree.gender,
+      species: tree.species,
+      scientificName: tree.scientificName,
       conflictsNames: tree.conflictTrees.map((conflictTree) => conflictTree.conflict.conflictName),
       diseasesNames: tree.diseaseTrees.map((diseaseTree) => diseaseTree.disease.diseaseName),
       interventionsNames: tree.interventionTrees.map((interventionTree) => interventionTree.intervention.interventionName),

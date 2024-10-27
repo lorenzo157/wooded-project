@@ -36,14 +36,6 @@ CREATE TABLE IF NOT EXISTS defects (
     CONSTRAINT unique_defect_name UNIQUE (defect_name)
 );
 
-CREATE TABLE IF NOT EXISTS tree_types (
-    id_tree_type SERIAL PRIMARY KEY,
-    tree_type_name VARCHAR(80) NOT NULL,
-    gender VARCHAR(80),
-    species VARCHAR(80),
-    scientific_name VARCHAR(80)
-);
-
 CREATE TABLE IF NOT EXISTS provinces (
     id_province SERIAL PRIMARY KEY,
     province_name VARCHAR(40) NOT NULL
@@ -193,7 +185,10 @@ CREATE TABLE IF NOT EXISTS trees (
     canopy_density canopy_density_type,
     growth_space growth_space_type,
     tree_value tree_value_type,
-    tree_type_id INTEGER,
+    tree_type_name VARCHAR(80),
+    gender VARCHAR(80),
+    species VARCHAR(80),
+    scientific_name VARCHAR(80),
     project_id INTEGER NOT NULL,
     coordinate_id INTEGER NOT NULL,
     neighborhood_id INTEGER,

@@ -27,7 +27,7 @@ export class AuthController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Roles('Administrador')
+    @Roles('Administrador','Gestor')
     @Get('profile')
     async getProfile(@Request() req) { 
         return {idUser: req.user}; // Access to the user info after successful JWT validation
