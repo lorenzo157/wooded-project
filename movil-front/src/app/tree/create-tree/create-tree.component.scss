@@ -1,3 +1,36 @@
 ion-checkbox {
-    padding-left: 10%;
+  padding-left: 10%;
+}
+
+.sub-title {
+  padding: 10px;
+  border-radius: 5px;
+}
+.text-color{
+  color: white;
+}
+
+/* Subclasses extending .sub-title with specific background gradients */
+.green {
+  background: linear-gradient(to right, #13ca5f, #a2d9b1);
+}
+
+.blue {
+  background: linear-gradient(to right, #0993f0, #a8cce6);
+}
+
+.red {
+  background: linear-gradient(to right, #f72e18, #f0a79b);
+}
+
+.orange {
+  background: linear-gradient(to right, #fa7602, #f0b98b);
+}
+
+.violet {
+  background: linear-gradient(to right, #a424db, #c8a5d3);
+}
+
+.yellow {
+  background: linear-gradient(to right, #fdcb02, #f8e79a);
 }

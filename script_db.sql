@@ -163,10 +163,9 @@ CREATE TYPE tree_value_type AS ENUM ('historico', 'monumental', 'singular', 'not
 CREATE TYPE street_materiality_type AS ENUM ('tierra', 'mejorado petroleo', 'asfalto', 'concreto', 'cordon cuneta');
 CREATE TABLE IF NOT EXISTS trees (
     id_tree SERIAL PRIMARY KEY,
-    tree_name VARCHAR(25) NOT NULL,
     datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     path_photo VARCHAR(255),
-    city_block INTEGER NOT NULL,
+    city_block INTEGER,
     perimeter NUMERIC(8, 5),
     height NUMERIC(8, 5),
     incline NUMERIC(8, 5),

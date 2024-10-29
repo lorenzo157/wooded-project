@@ -1,19 +1,20 @@
-
 <ion-header>
-  <!-- Toolbar for Navigation -->
   <ion-toolbar>
     <app-navigation></app-navigation>
   </ion-toolbar>
-
-  <!-- Toolbar for Title -->
-  <ion-toolbar class="title">
+  <ion-toolbar>
     <ion-title>Lista de Proyectos Asignados</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-card>
+    <ion-card-header>
+    <ion-input placeholder="Ingresa el nombre del projecto" [(ngModel)]="filterProjectName" type="text" clearInput>
+    </ion-input>
+  </ion-card-header>
   <ion-list *ngIf="projects.length > 0; else noProjects">
-    <ion-item *ngFor="let project of projects">
+    <ion-item *ngFor="let project of filteredProjects">
       <ion-label>
         <h2>
           <a (click)="viewProjectDetails(project)" class="linkproyect">
@@ -31,9 +32,10 @@
 
   <ng-template #noProjects>
     <ion-item>
-      <ion-label>No projects assigned to this user.</ion-label>
+      <ion-label>Aún no has sido asignado a ningún proyecto</ion-label>
     </ion-item>
   </ng-template>
+</ion-card>
 </ion-content>
 
 

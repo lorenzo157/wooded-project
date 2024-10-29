@@ -29,7 +29,6 @@ export class DetailTreeComponent implements OnInit {
   loadTree() {
     this.treeService.getTreeById(this.idTree).subscribe({
       next: (tree) => {
-        console.log(tree)
         this.tree = tree; // Load tree details
       },
       error: (error) => {

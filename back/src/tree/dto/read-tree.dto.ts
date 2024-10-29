@@ -2,7 +2,6 @@ import { DefectTreeDto } from './defect-tree.dto';
 
 export class ReadTreeDto {
   idTree: number;
-  treeName: string;
   datetime: Date;
   pathPhoto: string | null;
   cityBlock: number;

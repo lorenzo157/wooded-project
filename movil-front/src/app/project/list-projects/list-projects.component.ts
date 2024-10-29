@@ -9,21 +9,28 @@ import { Location } from '@angular/common';
 })
 export class ListProjectsComponent implements OnInit {
   projects: ProjectDto[] = []; // Array to hold project data
-  
+  filterProjectName!: string;
+
   constructor(private projectService: ProjectService, private router: Router) {}
 
   async ngOnInit() {
     // Call the service to get assigned projects
-    this.projects = await this.projectService.getAssignedProjects()
+    this.projects = await this.projectService.getAssignedProjects();
   }
   viewProjectDetails(project: ProjectDto) {
     // Navigating with state to pass the idProject of the selected project
     this.router.navigate([`project/detailproject/${project.idProject}`], {
-      state: { cityName: project.cityName , provinceName: project.provinceName}
+      state: { cityName: project.cityName, provinceName: project.provinceName },
     });
-  } 
+  }
   logout() {
     this.projectService.logout();
   }
+  get filteredProjects() {
+    return this.filterProjectName
+      ? this.projects.filter((project) =>
+          project.projectName.toLowerCase().includes(this.filterProjectName.trim().toLowerCase())
+        )
+      : this.projects;
+  }
 }
-

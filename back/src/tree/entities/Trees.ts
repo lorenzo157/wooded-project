@@ -14,9 +14,6 @@ export class Trees {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id_tree' })
   idTree: number;
 
-  @Column('character varying', { name: 'tree_name', length: 50 })
-  treeName: string;
-
   @Column('timestamp without time zone', {
     name: 'datetime',
     default: () => 'CURRENT_TIMESTAMP',

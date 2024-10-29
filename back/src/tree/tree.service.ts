@@ -136,12 +136,11 @@ export class TreeService {
     const trees = await this.treeRepository
       .createQueryBuilder('tree')
       .where('tree.project.idProject = :idProject', { idProject })
-      .select(['tree.idTree', 'tree.treeName', 'tree.datetime', 'tree.address', 'tree.treeValue', 'tree.risk'])
+      .select(['tree.idTree', 'tree.datetime', 'tree.address', 'tree.treeValue', 'tree.risk'])
       .getMany();
 
     return trees.map((tree) => ({
       idTree: tree.idTree,
-      treeName: tree.treeName,
       datetime: tree.datetime,
       address: tree.address,
       treeValue: tree.treeValue,
@@ -168,7 +167,6 @@ export class TreeService {
       
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
-      treeName: tree.treeName,
       datetime: tree.datetime,
       pathPhoto: tree.pathPhoto,
       cityBlock: tree.cityBlock,

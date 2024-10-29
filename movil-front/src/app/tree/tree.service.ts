@@ -13,46 +13,48 @@ export interface SimplyReadTreeDto {
   risk: number | null;
 }
 
-export interface CreateTreeDto {
-  treeName: string;
-  datetime: Date;
-  pathPhoto: string | null;
-  cityBlock: number;
-  perimeter: number | null;
-  height: number | null;
-  incline: number | null;
-  treesInTheBlock: number | null;
-  useUnderTheTree: string;
-  frequencyUse: number | null;
-  potentialDamage: number | null;
-  isMovable: boolean | null;
-  isRestrictable: boolean | null;
-  isMissing: boolean | null;
-  isDead: boolean | null;
-  exposedRoots: boolean | null;
-  dch: number | null;
-  windExposure: string | null;
-  vigor: string | null;
-  canopyDensity: string | null;
-  growthSpace: string | null;
-  treeValue: string | null;
-  streetMateriality: string | null;
-  risk: number | null;
-  address: string;
-  conflictsNames: string[];
-  defectDto: DefectTreeDto[];
-  diseasesNames: string[];
-  interventionsNames: string[];
-  pestsNames: string[];
-  latitude: number;
-  longitude: number;
-  treeTypeDto: TreeTypeDto;
-  projectId: number;
+export class CreateTreeDto {
+  treeName!: string;
+  datetime?: Date;
+  pathPhoto?: string | null;
+  cityBlock!: number;
+  perimeter?: number | null;
+  height?: number | null;
+  incline?: number | null;
+  treesInTheBlock?: number | null;
+  useUnderTheTree?: string;
+  frequencyUse?: number | null;
+  potentialDamage?: number | null;
+  isMovable?: boolean | null;
+  isRestrictable?: boolean | null;
+  isMissing?: boolean | null;
+  isDead?: boolean | null;
+  exposedRoots?: boolean | null;
+  dch?: number | null;
+  windExposure?: string | null;
+  vigor?: string | null;
+  canopyDensity?: string | null;
+  growthSpace?: string | null;
+  treeValue?: string | null;
+  streetMateriality?: string;
+  risk?: number | null;
+  address!: string;
+  conflictsNames?: string[];
+  defectDto!: DefectTreeDto[];
+  diseasesNames?: string[];
+  interventionsNames?: string[];
+  pestsNames?: string[];
+  latitude!: number;
+  longitude!: number;
+  treeTypeName?: string;
+  gender?: string;
+  species?: string;
+  scientificName?: string;
+  projectId!: number;
 }
 
 export interface ReadTreeDto {
   idTree: number;
-  treeName: string;
   datetime: Date;
   pathPhoto: string | null;
   cityBlock: number;
@@ -85,22 +87,22 @@ export interface ReadTreeDto {
   latitude: number;
   longitude: number;
   neighborhoodName: string;
-  treeTypeDto: TreeTypeDto;
+  treeTypeName?: string;
+  gender?: string;
+  species?: string;
+  scientificName?: string;
 }
 
 // Define DefectDto as well
 export class DefectTreeDto {
   defectName!: string;
-  defectValue!: number;
+  defectValue?: number;
   textDefectValue?: string;
   branches?: number;
 }
 
-export class TreeTypeDto {
-  treeTypeName!: string;
-  gender?: string;
-  species?: string;
-  scientificName?: string;
+export interface NumberToStringMap {
+  [key: number]: string;
 }
 
 @Injectable({

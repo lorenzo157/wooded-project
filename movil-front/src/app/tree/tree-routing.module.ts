@@ -15,7 +15,7 @@ const routes: Routes = [
     component: DetailTreeComponent,
   },
   {
-    path: 'createtree',
+    path: 'createtree/:projectType',
     component: CreateTreeComponent,
   },
 ];

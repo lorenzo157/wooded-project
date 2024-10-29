@@ -36,7 +36,7 @@ export class DetailProjectComponent  implements OnInit {
     });
   }
   createTree(){
-    this.router.navigate([`/project/${this.idProject}/tree/createtree`]);
+    this.router.navigate([`/project/${this.idProject}/tree/createtree/${this.project.projectType}`]);
   }
 
   showAllTrees() {

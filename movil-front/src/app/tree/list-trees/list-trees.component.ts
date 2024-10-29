@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class ListTreesComponent implements OnInit {
   idProject!: number;
   trees: SimplyReadTreeDto[] = [];
+  filterId: number | null = null;
   constructor(
     private route: ActivatedRoute,
     private treeService: TreeService,
@@ -38,5 +39,10 @@ export class ListTreesComponent implements OnInit {
     this.router.navigate([
       `/project/${this.idProject}/tree/detailtree/${idTree}`
     ]);  // Navigate with both projectId and idTree
+  }
+  get filteredTrees() {
+    return this.filterId 
+      ? this.trees.filter(tree => tree.idTree === this.filterId) 
+      : this.trees;
   }
 }
