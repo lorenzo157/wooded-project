@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TreeService, SimplyReadTreeDto } from '../tree.service';
+import { TreeService } from '../tree.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { SimplyReadTreeDto } from '../dto/simply-read-tree.dto';
 
 @Component({
   selector: 'app-list-trees',

@@ -3,103 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API } from '../constants/API';
 import { AuthService } from '../auth/auth.service';
-
-export interface SimplyReadTreeDto {
-  idTree: number;
-  treeName: string;
-  address: string;
-  datetime: Date;
-  treeValue: string | null;
-  risk: number | null;
-}
-
-export class CreateTreeDto {
-  treeName!: string;
-  datetime?: Date;
-  pathPhoto?: string | null;
-  cityBlock!: number;
-  perimeter?: number | null;
-  height?: number | null;
-  incline?: number | null;
-  treesInTheBlock?: number | null;
-  useUnderTheTree?: string;
-  frequencyUse?: number | null;
-  potentialDamage?: number | null;
-  isMovable?: boolean | null;
-  isRestrictable?: boolean | null;
-  isMissing?: boolean | null;
-  isDead?: boolean | null;
-  exposedRoots?: boolean | null;
-  dch?: number | null;
-  windExposure?: string | null;
-  vigor?: string | null;
-  canopyDensity?: string | null;
-  growthSpace?: string | null;
-  treeValue?: string | null;
-  streetMateriality?: string;
-  risk?: number | null;
-  address!: string;
-  conflictsNames?: string[];
-  defectDto!: DefectTreeDto[];
-  diseasesNames?: string[];
-  interventionsNames?: string[];
-  pestsNames?: string[];
-  latitude!: number;
-  longitude!: number;
-  treeTypeName?: string;
-  gender?: string;
-  species?: string;
-  scientificName?: string;
-  projectId!: number;
-}
-
-export interface ReadTreeDto {
-  idTree: number;
-  datetime: Date;
-  pathPhoto: string | null;
-  cityBlock: number;
-  perimeter: number | null;
-  height: number | null;
-  incline: number | null;
-  treesInTheBlock: number | null;
-  useUnderTheTree: string | null;
-  frequencyUse: number | null;
-  potentialDamage: number | null;
-  isMovable: boolean | null;
-  isRestrictable: boolean | null;
-  isMissing: boolean | null;
-  isDead: boolean | null;
-  exposedRoots: boolean | null;
-  dch: number | null;
-  windExposure: string | null;
-  vigor: string | null;
-  canopyDensity: string | null;
-  growthSpace: string | null;
-  treeValue: string | null;
-  streetMateriality: string | null;
-  risk: number | null;
-  address: string;
-  conflictsNames: string[];
-  defectDto: DefectTreeDto[];
-  diseasesNames: string[];
-  interventionsNames: string[];
-  pestsNames: string[];
-  latitude: number;
-  longitude: number;
-  neighborhoodName: string;
-  treeTypeName?: string;
-  gender?: string;
-  species?: string;
-  scientificName?: string;
-}
-
-// Define DefectDto as well
-export class DefectTreeDto {
-  defectName!: string;
-  defectValue?: number;
-  textDefectValue?: string;
-  branches?: number;
-}
+import { CreateTreeDto } from './dto/create-tree.dto';
+import { ReadTreeDto } from './dto/read-tree.dto';
+import { SimplyReadTreeDto } from './dto/simply-read-tree.dto';
 
 export interface NumberToStringMap {
   [key: number]: string;
@@ -134,3 +40,5 @@ export class TreeService {
     this.authService.logout();
   }
 }
+export { CreateTreeDto };
+

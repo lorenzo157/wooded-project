@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TreeService } from '../tree.service';
-import { ReadTreeDto } from '../tree.service';
+import { ReadTreeDto } from '../dto/read-tree.dto';
+
 
 @Component({
   selector: 'app-detail-tree',

@@ -3,6 +3,8 @@ import { TreeService, CreateTreeDto, NumberToStringMap } from '../tree.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Geolocation } from '@capacitor/geolocation';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-create-tree',
@@ -10,10 +12,6 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./create-tree.component.scss'],
 })
 export class CreateTreeComponent implements OnInit {
-  private idProject!: number;
-  projectType!: boolean;
-  treeForm: FormGroup;
-
   windExposureOptions: string[] = [
     'expuesto',
     'parcialmente expuesto',
@@ -69,7 +67,7 @@ export class CreateTreeComponent implements OnInit {
     'restringir acceso',
     'requiere inspeccion avanzada',
   ];
-  pestOptions: string[] = ['Plaga1', 'Plaga2'];
+  pestOptions: string[] = ['orificios de taladros de madera o corteza', 'Plaga1', 'Plaga2'];
   // DEFECTOS EN LAS RAICES
   private fruitingBodiesOfFungiOnNeckOrRoots: NumberToStringMap = {
     4: 'con cuerpos fructiferos',
@@ -77,29 +75,23 @@ export class CreateTreeComponent implements OnInit {
   fruitingBodiesOfFungiOnNeckOrRootsEntries = Object.entries(
     this.fruitingBodiesOfFungiOnNeckOrRoots
   );
-
   private mechanicalDamageToRoots: NumberToStringMap = {
     2: 'daño < 50% de las raices en la zona critica de raiz',
     3: 'daño en 50-75% de las raices en la zona critica de raiz',
     4: 'daño > 75% de las raices en la zona critica de raiz',
   };
   mechanicalDamageToRootsEntries = Object.entries(this.mechanicalDamageToRoots);
-
   private stranglingRoots: NumberToStringMap = {
     3: 'afecta < 50% del perimetro de la base',
     4: 'afecta > 50% del perimetro de la base',
   };
   stranglingRootsEntries = Object.entries(this.stranglingRoots);
-
   private deadRoots: NumberToStringMap = {
     2: 'daño < 50% de las raices en la zona critica de raiz',
     3: 'daño en 50-75% de las raices en la zona critica de raiz',
     4: 'daño > 75% de las raices en la zona critica de raiz',
   };
   deadRootsEntries = Object.entries(this.deadRoots);
-
-  //FALTA EL SIN DETERMINAR( no se excavo para ver raices)
-
   private symptomsDiseaseOfRootsInCrown: NumberToStringMap = {
     4: 'con sintomas',
   };
@@ -110,34 +102,53 @@ export class CreateTreeComponent implements OnInit {
     4: 'afecta > 50% perimetro',
   };
   gallsTermiteMoundsAnthillsEntries = Object.entries(this.gallsTermiteMoundsAnthills);
-
   private cankersTrunk: NumberToStringMap = {
     2: 'afecta < 25% del perimetro',
     3: 'afecta 25-50% del perimetro',
     4: 'afecta > 50% del perimetro',
   };
   cankersTrunkEntries = Object.entries(this.cankersTrunk);
-  // FALTA CAVIDADES QUE SE CALCULA PIDIENDO SOLO EL T Y USANDO EL DIAMETRO PARA OTENER EL RADIO
-  // FALTA CONFICIENTE DE ESBELTES QUE SE CALCULA SOLO UNA VEZ OBTENIDOS LA ALTURA Y EL DAP(EL DAP SE CALCULA CON EL PERIMETRO)
-  // FALTA CORTEZA PERDIDA O MUERTA QUE SE CALCULA SOLO PIDIENDO EL ANCHO DE LA ZONA CON PERDIDA DE CORTEZA
+  private cavitiesTrunk: NumberToStringMap = {
+    4: 't/R < 15%',
+    3: 't/R 15-20%',
+    2: 't/R 20-30%',
+  };
+  cavitiesTrunkEntries = Object.entries(this.cavitiesTrunk);
+  private slendernessCoefficent: NumberToStringMap = {
+    4: 'H/DAP > 100',
+    3: 'H/DAP = 80-100',
+    2: 'H/DAP = 60-80',
+  };
+  slendernessCoefficentEntries = Object.entries(this.slendernessCoefficent);
+  private lostOrDeadBark: NumberToStringMap = {
+    4: 'corteza muerta/perdida afectando > 50% del perimetro',
+    3: 'corteza muerta/perdida afectando hasta el 50% del perimetro',
+    2: 'corteza muerta/perdida afectando < 25% del perimetro',
+  };
+  lostOrDeadBarkEntries = Object.entries(this.lostOrDeadBark);
   private multipleTrunks: NumberToStringMap = {
     2: 'si',
     3: 'con corteza incluida',
     4: 'con cavidades, rajaduras, pudricion',
   };
   multipleTrunksEntries = Object.entries(this.multipleTrunks);
-  // FALTA HERIDAS QUE SE CALCULA SOLO PIDIENDO EL ANCHO DE LA ZONA CON PERDIDA DE CORTEZA
   private forkTrunk: NumberToStringMap = {
     2: 'sin corteza incluida y sin otros defectos',
     3: 'con corteza incluida y sin otros defectos importantes(rajadura, pudricion, cavidad, cuerpo fructifero, agalla)',
     4: 'con corteza incluida y otros defectos importantes (rajadura, pudricion, cavidad, cuerpo fructifero, agalla)',
   };
   forkTrunkEntries = Object.entries(this.forkTrunk);
-  // FALTA INCLINACION QUE SE CALCULA SOLO
-  // FALTA Orificios de taladros de madera o corteza QUE SE CALCULA SOLO PIDIENDO EL ANCHO DE LA ZONA CON PERDIDA DE CORTEZA
-  // FALTA Pudricion de madera QUE SE CALCULA PIDIENDO SOLO EL T Y USANDO EL DIAMETRO PARA OTENER EL RADIO
-  // FALTA RAJADURAS QUE SE CALCULA PIDIENDO SOLO EL T Y USANDO EL DIAMETRO PARA OTENER EL RADIO PERO NO SE ENTIENDE
+  private inclination: NumberToStringMap = {
+    2: 'inclinacion leve(angulo 10-20°), autocompensada, suelo intacto',
+    3: 'inclinacion significativa(angulo 20°-30°), no compensada, suelo intacto',
+    4: 'inclinacion severa(angulo > 30°) no compensada, o suelo rajado, levantado o raices expuestas',
+  };
+  inclinationEntries = Object.entries(this.inclination);
 
+  private wounds: NumberToStringMap = {
+    3: 'afecta < 50% del perímetro con pudrición',
+    4: 'afecta > 50% del perímetro con pudrición o cuerpo fructífero',
+  };
   // DEFECTOS EN RAMAS ESTRUCTURASLES Y RAMAS MENORES
   private cankersBranch: NumberToStringMap = {
     2: 'ramas con diametro < 10 cm afecta < 50% perimetro',
@@ -151,50 +162,42 @@ export class CreateTreeComponent implements OnInit {
     4: 'cavidades en ramas > 10 cm afectando <25% del perimetro',
   };
   cavitiesBranchesEntries = Object.entries(this.cavitiesBranches);
-
   private fruitingBodiesOfFungi: NumberToStringMap = {
     4: 'con cuerpos fructiferos',
   };
   fruitingBodiesOfFungiEntries = Object.entries(this.fruitingBodiesOfFungi);
-
   private forkBranch: NumberToStringMap = {
     2: 'sin corteza incluida y sin otros defectos',
     3: 'con corteza incluida y sin otros defectos importantes(rajadura, pudricion, cavidad, cuerpo fructifero, agalla)',
     4: 'con corteza incluida y otros defectos importantes (rajadura, pudricion, cavidad, cuerpo fructifero, agalla)',
   };
   forkBranchEntries = Object.entries(this.forkBranch);
-
   private hangingOrBrokenBranches: NumberToStringMap = {
     2: '< 10 cm de diametro',
     4: '> 10 cm de diametro',
   };
   hangingOrBrokenBranchesEntries = Object.entries(this.hangingOrBrokenBranches);
-
   private deadBranches: NumberToStringMap = {
     2: '< 10 cm de diametro',
     4: '> 10 cm de diametro',
   };
   deadBranchesEntries = Object.entries(this.deadBranches);
-
   private overExtendedBranches: NumberToStringMap = {
     3: 'ramas sobreextendidas sin chupones verticales',
     4: 'ramas sobre extendidas con chupones verticales pesados',
   };
   overExtendedBranchesEntries = Object.entries(this.overExtendedBranches);
-
   private fissures: NumberToStringMap = {
     2: 'rajaduras pequeñas y poco profundas',
     3: 'rajaduras longitudinales sin movimiento',
     4: 'rajaduras longitudinales profundas  o rajaduras transversaleso',
   };
   fissuresEntries = Object.entries(this.fissures);
-
   private woodRot: NumberToStringMap = {
     3: 'pudricion afecta menos del 40% del perimetro en ramas menores',
     4: 'rama estructural con signos de pudricion',
   };
   woodRotEntries = Object.entries(this.woodRot);
-
   private interferenceWithTheElectricalGrid: NumberToStringMap = {
     2: 'ramas a una distancia de 1m de conductores de baja tension',
     3: 'ramas bajo media tension a una distancia de 1-3m del conductor O Ramas en contacto con conductores de baja tension',
@@ -202,15 +205,27 @@ export class CreateTreeComponent implements OnInit {
   };
   interferenceWithTheElectricalGridEntries = Object.entries(this.interferenceWithTheElectricalGrid);
 
+  private idProject!: number;
+  projectType!: boolean;
+  treeForm: FormGroup;
+  private dch!: number;
   hangingOrBrokenBranches_branches: boolean = false;
   deadBranches_branches: boolean = false;
   overExtendedBranches_branches: boolean = false;
-  private dch!: number;
+  showWarning: boolean = false;
+
+  angle: number = 0;
+  x: number = 0;
+  y: number = 0;
+  z: number = 0;
+
+
   constructor(
     private route: ActivatedRoute,
     private treeService: TreeService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastController: ToastController
   ) {
     this.treeForm = this.fb.group({
       pathPhoto: [''],
@@ -236,6 +251,7 @@ export class CreateTreeComponent implements OnInit {
       address: ['', Validators.required],
       latitude: [null, Validators.required],
       longitude: [null, Validators.required],
+      currentPosition: [null],
       treeTypeName: [null, Validators.required],
       conflictsNames: this.fb.array([]),
       diseasesNames: this.fb.array([]),
@@ -247,15 +263,24 @@ export class CreateTreeComponent implements OnInit {
       deadRoots: [null],
       symptomsDiseaseOfRootsInCrown: [null],
       gallsTermiteMoundsAnthills: [null],
+      isWounds: [null],
+      wounds_width: [null],
       cankersTrunk: [null],
-      cavitiesTrunk:[null],
+      isCavitiesTrunk: [false],
+      cavitiesTrunk_t: [null],
+      isLostOrDeadBark: [false],
+      lostOrDeadBark_width: [null],
       multipleTrunks: [null],
       forkTrunk: [null],
+      isWoodRoot: [false],
+      isWoodRoot_fruitingBodies: [false],
+      woodRoot_t: [null],
       cankersBranch: [null],
       cavitiesBranches: [null],
       fruitingBodiesOfFungi: [null],
       forkBranch: [null],
       hangingOrBrokenBranches: [null],
+      hangingOrBrokenBranches_branches: [null],
       deadBranches: [null],
       deadBranches_branches: [null],
       overExtendedBranches: [null],
@@ -265,6 +290,21 @@ export class CreateTreeComponent implements OnInit {
       interferenceWithTheElectricalGrid: [null],
     });
     this.addConditionalValidation();
+  }
+
+  
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.idProject = +params.get('idProject')!; // Retrieve project ID from route
+      this.projectType = params.get('projectType') === 'true';
+    });
+    if (this.projectType) {
+      this.treeForm.get('treeValue')?.clearValidators();
+      this.treeForm.get('treeValue')?.updateValueAndValidity();
+    } else {
+      this.treeForm.get('treesInTheBlock')?.clearValidators();
+      this.treeForm.get('treesInTheBlock')?.updateValueAndValidity();
+    }
   }
   addConditionalValidation() {
     const isMissingControl = this.treeForm.get('isMissing');
@@ -281,8 +321,23 @@ export class CreateTreeComponent implements OnInit {
     this.treeForm.get('perimeter')?.valueChanges.subscribe((perimeterValue) => {
       if (perimeterValue != null) this.dch = perimeterValue / Math.PI;
     });
+    this.treeForm.get('isWoodRoot')?.valueChanges.subscribe((isWoodRoot) => {
+      if (!isWoodRoot) this.treeForm.get('isWoodRoot_fruitingBodies')?.setValue(false);
+    });
+    this.treeForm.get('latitude')?.disable();
+    this.treeForm.get('longitude')?.disable();
   }
-
+  onTogglePosition(event: any) {
+    if (event.detail.checked) {
+      this.getLocation();
+    } else {
+      // Disable and clear the fields
+      this.treeForm.patchValue({
+        latitude: null,
+        longitude: null,
+      });
+    }
+  }
   updateConditionalValidators(condition: boolean) {
     const fieldsToValidate = [
       'perimeter',
@@ -308,24 +363,24 @@ export class CreateTreeComponent implements OnInit {
       control?.updateValueAndValidity();
     });
   }
-  ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      this.idProject = +params.get('idProject')!; // Retrieve project ID from route
-      this.projectType = !!+params.get('projectType')!;
-    });
-    if (this.projectType) {
-      this.treeForm.get('treeValue')?.clearValidators();
-      this.treeForm.get('treeValue')?.updateValueAndValidity();
-    } else {
-      this.treeForm.get('treesInTheBlock')?.clearValidators();
-      this.treeForm.get('treesInTheBlock')?.updateValueAndValidity();
+
+  async getLocation() {
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      // Update form values
+      this.treeForm.patchValue({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+    } catch (error) {
+      console.error('Error fetching location', error);
     }
   }
   addItem(nameArray: string) {
-    (this as any)[nameArray+'Names'].push(this.fb.control('', Validators.required));
+    (this as any)[nameArray + 'Names'].push(this.fb.control('', Validators.required));
   }
-  removeItem(index: number,nameArray: string) {
-    (this as any)[nameArray+'Names'].removeAt(index);
+  removeItem(index: number, nameArray: string) {
+    (this as any)[nameArray + 'Names'].removeAt(index);
   }
   get pestsNames() {
     return this.treeForm.get('pestsNames') as FormArray;
@@ -342,7 +397,46 @@ export class CreateTreeComponent implements OnInit {
 
   showBranchesInput(event: any, nameInput: string) {
     const selectedValue = event.detail.value;
-    (this as any)[nameInput + '_branches'] = selectedValue > 1;
+    selectedValue > 2;
+    if (selectedValue > 2) {
+      (this as any)[nameInput + '_branches'] = true;
+      console.log('asdas');
+      this.treeForm.get(nameInput + '_branches')?.setValidators([Validators.required]);
+    } else {
+      (this as any)[nameInput + '_branches'] = false;
+      this.treeForm.get(nameInput + '_branches')?.clearValidators();
+    }
+    this.treeForm.get(nameInput + '_branches')?.updateValueAndValidity();
+    console.log('asdasasdasdas');
+  }
+  async displayWarningSign() {
+    // Initialize an array to hold invalid field messages
+    const invalidFields: string[] = [];
+
+    // Check each control in the form
+    Object.keys(this.treeForm.controls).forEach((controlName) => {
+      // If the control is invalid, add a message to the array
+      if (this.treeForm.get(controlName)?.invalid) {
+        invalidFields.push(controlName); // You can customize this to show more user-friendly names if needed
+      }
+    });
+
+    // If there are invalid fields, create and present a warning message
+    if (invalidFields.length > 0) {
+      const message = `Por favor completa los siguiente campos requeridos: ${invalidFields.join(
+        ', '
+      )}`;
+
+      const toast = await this.toastController.create({
+        message: message,
+        duration: 7000,
+        color: 'warning',
+        position: 'top',
+      });
+      toast.present();
+    } else {
+      // Form submit logic here
+    }
   }
 
   onSubmit() {
@@ -350,7 +444,8 @@ export class CreateTreeComponent implements OnInit {
     if (!this.treeForm.valid) console.log('NOOOvalidoooo');
 
     // Access specific form fields
-    const newTree = new CreateTreeDto();
+    let newTree = new CreateTreeDto();
+    newTree.projectId = this.idProject;
     newTree.pathPhoto = this.treeForm.get('pathPhoto')?.value;
     newTree.cityBlock = this.treeForm.get('cityBlock')?.value;
     newTree.perimeter = this.treeForm.get('perimeter')?.value;
@@ -371,7 +466,6 @@ export class CreateTreeComponent implements OnInit {
     newTree.canopyDensity = this.treeForm.get('canopyDensity')?.value;
     newTree.growthSpace = this.treeForm.get('growthSpace')?.value;
     newTree.treeValue = this.treeForm.get('treeValue')?.value;
-    if (this.projectType) newTree.treeValue = 'alineacion';
     newTree.risk = this.treeForm.get('risk')?.value;
     newTree.address = this.treeForm.get('address')?.value;
     newTree.latitude = this.treeForm.get('latitude')?.value;
@@ -463,23 +557,108 @@ export class CreateTreeComponent implements OnInit {
       this.interferenceWithTheElectricalGrid
     );
 
-    //console.log(newTree.defectDto);
+    const cavitiesTrunk_t = this.treeForm.get('cavitiesTrunk_t')?.value;
+    if (cavitiesTrunk_t && newTree.perimeter) {
+      const tr = cavitiesTrunk_t / (newTree.perimeter / 2 / Math.PI);
+      console.log(newTree.perimeter / 2 / Math.PI);
+      console.log(tr);
+      let defectValue: number = 1;
+      if (tr < 0.15) defectValue = 4;
+      else if (tr < 0.2) defectValue = 3;
+      else if (tr < 0.3) defectValue = 2;
+      addDefect('cavidades en tronco o cuello', defectValue, this.cavitiesTrunk);
+    }
+    let slendernessCoefficent;
+    if (newTree.height && newTree.dch) {
+      slendernessCoefficent = newTree.height / newTree.dch;
+      console.log(slendernessCoefficent);
+      let defectValue: number = 1;
+      if (slendernessCoefficent < 60) defectValue = 2;
+      else if (slendernessCoefficent < 80) defectValue = 3;
+      else if (slendernessCoefficent < 100) defectValue = 4;
+      addDefect('coeficiente de esbeltez', defectValue, this.slendernessCoefficent);
+    }
+    console.log(slendernessCoefficent, 'esbeltez');
+    const lostOrDeadBarkWidht = this.treeForm.get('lostOrDeadBark_width')?.value;
+    if (lostOrDeadBarkWidht && newTree.perimeter) {
+      const lostOrDeadBark = lostOrDeadBarkWidht / newTree.perimeter;
+      console.log(lostOrDeadBark);
+      let defectValue: number = 1;
+      if (lostOrDeadBark < 0.25) defectValue = 2;
+      else if (lostOrDeadBark < 0.5) defectValue = 3;
+      else if (lostOrDeadBark > 0.5) defectValue = 4;
+      addDefect('corteza perdida o muerta', defectValue, this.lostOrDeadBark);
+    }
+
+    const woundsWidht = this.treeForm.get('wounds_width')?.value;
+    if (woundsWidht && newTree.perimeter) {
+      const wounds = woundsWidht / newTree.perimeter;
+      console.log(wounds);
+      let defectValue: number = 1;
+      if (wounds < 0.5) defectValue = 3;
+      else if (wounds > 0.5) defectValue = 4;
+      addDefect('heridas de tronco o cuello', defectValue, this.wounds);
+    }
+
+    if (newTree.incline) {
+      let defectValue: number = 1;
+      if (newTree.incline >= 10 && newTree.incline < 20) defectValue = 2;
+      else if (newTree.incline >= 20 && newTree.incline < 30) defectValue = 3;
+      else if (newTree.incline >= 40) defectValue = 4;
+      addDefect('inclinacion', defectValue, this.inclination);
+    }
+    if (this.treeForm.get('isWoodRoot')?.value) {
+      let t = this.treeForm.get('woodRoot_t')?.value;
+      let defectValue: number = 1;
+      console.log('entro aca', t, newTree.perimeter, slendernessCoefficent);
+      if (this.treeForm.get('isWoodRoot_fruitingBodies')?.value) defectValue = 4;
+      else if (t && newTree.perimeter && slendernessCoefficent) {
+        const tr = t / (newTree.perimeter / 2 / Math.PI);
+        if (tr < 0.15 && slendernessCoefficent > 60) defectValue = 3;
+        else if (tr < 0.2 && slendernessCoefficent > 60) defectValue = 2;
+      }
+      addDefect('pudricion de madera', defectValue, this.inclination);
+    }
+
+    console.log(newTree.defectDto);
+
     let risk: number = 0;
     if (newTree.windExposure == 'parcialmente expuesto') risk += 1;
     if (newTree.windExposure == 'expuesto') risk += 2;
     if (newTree.windExposure == 'tunel de viento') risk += 2;
     if (newTree.canopyDensity == 'escasa') risk -= 1;
     if (newTree.canopyDensity == 'densa') risk += 1;
+    console.log(newTree.frequencyUse, newTree.potentialDamage);
+    if (newTree.frequencyUse) risk += newTree.frequencyUse;
+    if (newTree.potentialDamage) risk += newTree.potentialDamage;
+
+    const defectValues = newTree.defectDto
+      .map((defectDto) => defectDto.defectValue)
+      .filter((value) => value !== undefined) as number[]; // Ensures we only work with numbers
+    let maxDefectValue = defectValues.length ? Math.max(...defectValues) : null;
+    if (maxDefectValue) risk += maxDefectValue;
+    console.log(maxDefectValue);
     console.log(risk, '  risk');
+
+    if (!newTree.isMissing && !newTree.isDead) {
+      newTree = new CreateTreeDto();
+      newTree.projectId = this.idProject;
+      newTree.isMissing = this.treeForm.get('isMissing')?.value;
+      newTree.isDead = this.treeForm.get('isDead')?.value;
+      newTree.pathPhoto = this.treeForm.get('pathPhoto')?.value;
+      newTree.cityBlock = this.treeForm.get('cityBlock')?.value;
+      newTree.address = this.treeForm.get('address')?.value;
+      newTree.treesInTheBlock = this.treeForm.get('treesInTheBlock')?.value;
+      newTree.latitude = this.treeForm.get('latitude')?.value;
+      newTree.longitude = this.treeForm.get('longitude')?.value;
+    }
     // } else {
     //   console.log("Form is invalid");
     // }
     //console.log(this.idProject,this.projectType)
     // Filter out objects without a defined defectValue, then map to defectValue and find the maximum
-    const defectValues = newTree.defectDto
-      .map((defectDto) => defectDto.defectValue)
-      .filter((value) => value !== undefined) as number[]; // Ensures we only work with numbers
-    let maxDefectValue = defectValues.length ? Math.max(...defectValues) : null; // Returns null if there are no valid defectValues
+    // Returns null if there are no valid defectValue
+    this.displayWarningSign();
   }
 }
 
