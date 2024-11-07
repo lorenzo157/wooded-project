@@ -21,6 +21,7 @@ export class TreeController {
   // READ, Fetch a specific tree with all the properties includes relationship by idTree
   @Get(':idTree')
   async getTreeById(@Param('idTree') idTree: number) {
+    console.log('asdadds')
     return this.treeService.findTreeById(idTree);
   }
   @Put(':idTree')

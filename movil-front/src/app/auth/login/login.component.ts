@@ -24,13 +24,14 @@ export class LoginComponent {
     });
   }
 
-  onLogin() {
+  async onLogin() {
     if (this.loginForm.valid) {
-      this.uiService.cargando(true);
+      await this.uiService.cargando(true);
       this.authService
         .login(this.loginForm.value.email, this.loginForm.value.password)
         .subscribe({
           next: (value) => {
+            this.uiService.cargando(false);
             this.router.navigate(['']);
           },
           error: (error) => {

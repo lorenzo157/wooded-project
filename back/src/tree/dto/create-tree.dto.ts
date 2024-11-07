@@ -9,7 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { DefectTreeDto } from './defect-tree.dto';
+import { CreateDefectTreeDto } from './create-defect-tree.dto';
 
 export class CreateTreeDto {
   @ApiProperty({ description: 'The name of the tree', maxLength: 25 })
@@ -160,7 +160,7 @@ export class CreateTreeDto {
 
   @ApiProperty({ description: 'Dto of defects' })
   @IsOptional()
-  defectsDtos: DefectTreeDto[];
+  createDefectsDtos: CreateDefectTreeDto[];
 
   @ApiProperty({ description: 'Array of diseases' })
   @IsOptional()

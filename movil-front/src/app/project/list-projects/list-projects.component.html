@@ -2,15 +2,17 @@
   <ion-toolbar>
     <app-navigation></app-navigation>
   </ion-toolbar>
-  <ion-toolbar>
+  <ion-item lines="none">
+    <ion-title style="text-align: right;">Hola {{userName}}</ion-title>
+  </ion-item>
+  <ion-item lines="none">
     <ion-title>Lista de Proyectos Asignados</ion-title>
-  </ion-toolbar>
+  </ion-item>
 </ion-header>
-
 <ion-content>
   <ion-card>
     <ion-card-header>
-    <ion-input placeholder="Ingresa el nombre del projecto" [(ngModel)]="filterProjectName" type="text" clearInput>
+    <ion-input placeholder="Ingrese el nombre del proyecto" [(ngModel)]="filterProjectName" type="text" clearInput>
     </ion-input>
   </ion-card-header>
   <ion-list *ngIf="projects.length > 0; else noProjects">

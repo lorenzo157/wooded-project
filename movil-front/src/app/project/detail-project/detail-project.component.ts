@@ -1,21 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectDto, ProjectService } from '../project.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UiService } from '../../utils/ui.service';
 
 @Component({
   selector: 'app-detail-project',
   templateUrl: './detail-project.component.html',
   styleUrls: ['./detail-project.component.scss'],
 })
-export class DetailProjectComponent  implements OnInit {
-
-  idProject!: number
-  project!: ProjectDto
+export class DetailProjectComponent implements OnInit {
+  idProject!: number;
+  project!: ProjectDto;
   provinceName!: string;
   cityName!: string;
-  constructor(private router: Router,private route: ActivatedRoute, private projectService: ProjectService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private projectService: ProjectService,
+    private uiService: UiService
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.uiService.cargando(true);
     // Access the project object from the router state
     this.cityName = history.state.cityName;
     this.provinceName = history.state.provinceName;
@@ -23,24 +29,26 @@ export class DetailProjectComponent  implements OnInit {
       this.idProject = +params.get('idProject')!; // Retrieve project ID from route
       this.loadProject();
     });
-    
   }
   loadProject() {
     this.projectService.findProjectById(this.idProject).subscribe({
       next: (project) => {
+        this.uiService.cargando(false);
         this.project = project; // Load tree details
       },
       error: (error) => {
-        console.error('Error loading project details:', error);
+        this.uiService.alerta('No se pudo cargar el proyecto.', 'Error');
+        this.uiService.cargando(false);
       },
     });
   }
-  createTree(){
-    this.router.navigate([`/project/${this.idProject}/tree/createtree/${this.project.projectType}`]);
+  createTree() {
+    this.router.navigate([
+      `/project/${this.idProject}/tree/${this.project.projectType? 'muestreo':'individual'}/createtree/0`,
+    ]);
   }
 
   showAllTrees() {
-    this.router.navigate([`/project/${this.idProject}/tree/`]); // Navigates with project ID
+    this.router.navigate([`/project/${this.idProject}/tree/${this.project.projectType? 'muestreo':'individual'}/listtree`]); // Navigates with project ID
   }
 }
-

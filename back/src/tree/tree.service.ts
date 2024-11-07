@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTreeDto } from './dto/create-tree.dto';
 import { Repository } from 'typeorm';
 import { Trees } from './entities/Trees';
@@ -50,7 +50,7 @@ export class TreeService {
   async createTree(createTreeDto: CreateTreeDto) {
     const {
       conflictsNames,
-      defectsDtos,
+      createDefectsDtos,
       diseasesNames,
       interventionsNames,
       pestsNames,
@@ -67,7 +67,7 @@ export class TreeService {
     const savedCoordinates = await this.coordinatesRepository.save(coordinates);
 
     const project = await this.projectService.findProjectById(projectId);
-    
+
     const newTree = this.treeRepository.create({
       ...treeData,
       coordinate: savedCoordinates,
@@ -88,8 +88,8 @@ export class TreeService {
     );
     await this.saveManyToManyRelations(pestsNames, this.pestRepository, this.pestTreeRepository, newTree, 'pest');
 
-    if (defectsDtos && defectsDtos.length > 0) {
-      for (const defectDto of defectsDtos) {
+    if (createDefectsDtos && createDefectsDtos.length > 0) {
+      for (const defectDto of createDefectsDtos) {
         let entity = await this.defectRepository.findOne({
           where: { defectName: defectDto.defectName },
         });
@@ -104,10 +104,7 @@ export class TreeService {
         await this.defectTreeRepository.save(defectTree);
       }
     }
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Tree created or updated successfully',
-    };
+    return newTree.idTree;
   }
 
   private async saveManyToManyRelations(
@@ -150,21 +147,21 @@ export class TreeService {
   async findTreeById(idTree: number): Promise<ReadTreeDto> {
     const tree = await this.treeRepository
       .createQueryBuilder('tree')
-      .innerJoinAndSelect('tree.coordinate', 'coordinate')
-      .innerJoinAndSelect('tree.neighborhood', 'neighborhood')
-      .innerJoinAndSelect('tree.conflictTrees', 'conflictTrees')
-      .innerJoinAndSelect('conflictTrees.conflict', 'conflict')
-      .innerJoinAndSelect('tree.defectTrees', 'defectTrees')
-      .innerJoinAndSelect('defectTrees.defect', 'defect')
-      .innerJoinAndSelect('tree.diseaseTrees', 'diseaseTrees')
-      .innerJoinAndSelect('diseaseTrees.disease', 'disease')
-      .innerJoinAndSelect('tree.interventionTrees', 'interventionTrees')
-      .innerJoinAndSelect('interventionTrees.intervention', 'intervention')
-      .innerJoinAndSelect('tree.pestTrees', 'pestTrees')
-      .innerJoinAndSelect('pestTrees.pest', 'pest')
+      .leftJoinAndSelect('tree.coordinate', 'coordinate')
+      .leftJoinAndSelect('tree.neighborhood', 'neighborhood')
+      .leftJoinAndSelect('tree.conflictTrees', 'conflictTrees')
+      .leftJoinAndSelect('conflictTrees.conflict', 'conflict')
+      .leftJoinAndSelect('tree.defectTrees', 'defectTrees')
+      .leftJoinAndSelect('defectTrees.defect', 'defect')
+      .leftJoinAndSelect('tree.diseaseTrees', 'diseaseTrees')
+      .leftJoinAndSelect('diseaseTrees.disease', 'disease')
+      .leftJoinAndSelect('tree.interventionTrees', 'interventionTrees')
+      .leftJoinAndSelect('interventionTrees.intervention', 'intervention')
+      .leftJoinAndSelect('tree.pestTrees', 'pestTrees')
+      .leftJoinAndSelect('pestTrees.pest', 'pest')
       .where('tree.idTree = :idTree', { idTree })
       .getOne();
-      
+    const neighborhoodName = tree.neighborhood? tree.neighborhood.neighborhoodName: null;
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
       datetime: tree.datetime,
@@ -193,7 +190,7 @@ export class TreeService {
       address: tree.address,
       latitude: tree.coordinate.latitude,
       longitude: tree.coordinate.longitude,
-      neighborhoodName: tree.neighborhood.neighborhoodName,
+      neighborhoodName: neighborhoodName,
       treeTypeName: tree.treeTypeName,
       gender: tree.gender,
       species: tree.species,
@@ -202,7 +199,7 @@ export class TreeService {
       diseasesNames: tree.diseaseTrees.map((diseaseTree) => diseaseTree.disease.diseaseName),
       interventionsNames: tree.interventionTrees.map((interventionTree) => interventionTree.intervention.interventionName),
       pestsNames: tree.pestTrees.map((pestTree) => pestTree.pest.pestName),
-      defectDto: tree.defectTrees.map((defectTree) => ({
+      readDefectDto: tree.defectTrees.map((defectTree) => ({
         defectName: defectTree.defect.defectName,
         defectZone: defectTree.defect.defectZone,
         defectValue: defectTree.defectValue,
@@ -214,7 +211,77 @@ export class TreeService {
   }
   async updateTreeById(idTree: number, createTreeDto: CreateTreeDto) {
     await this.removeTreeById(idTree);
-    return this.createTree(createTreeDto);
+    const newIdTree = await this.createTree(createTreeDto);
+    
+    await this.pestRepository
+      .createQueryBuilder()
+      .update(PestTree)
+      .set({ treeId: null }) 
+      .where('treeId = :newIdTree', { newIdTree })
+      .execute();
+    await this.diseaseRepository
+      .createQueryBuilder()
+      .update(DiseaseTree)
+      .set({ treeId: null }) 
+      .where('treeId = :newIdTree', { newIdTree })
+      .execute();
+    await this.conflictRepository
+      .createQueryBuilder()
+      .update(ConflictTree)
+      .set({ treeId: null }) 
+      .where('treeId = :newIdTree', { newIdTree })
+      .execute();
+    await this.interventionRepository
+      .createQueryBuilder()
+      .update(InterventionTree)
+      .set({ treeId: null }) 
+      .where('treeId = :newIdTree', { newIdTree })
+      .execute();
+    await this.defectRepository
+      .createQueryBuilder()
+      .update(DefectTree)
+      .set({ treeId: null }) 
+      .where('treeId = :newIdTree', { newIdTree })
+      .execute();
+
+    await this.treeRepository
+      .createQueryBuilder()
+      .update(Trees)
+      .set({ idTree: idTree }) 
+      .where('idTree = :newIdTree', { newIdTree })
+      .execute();
+
+      await this.pestRepository
+      .createQueryBuilder()
+      .update(PestTree)
+      .set({ treeId: idTree }) 
+      .where('treeId IS NULL')
+      .execute();
+    await this.diseaseRepository
+      .createQueryBuilder()
+      .update(DiseaseTree)
+      .set({ treeId: idTree }) 
+      .where('treeId IS NULL')
+      .execute();
+    await this.conflictRepository
+      .createQueryBuilder()
+      .update(ConflictTree)
+      .set({ treeId: idTree }) 
+      .where('treeId IS NULL')
+      .execute();
+    await this.interventionRepository
+      .createQueryBuilder()
+      .update(InterventionTree)
+      .set({ treeId: idTree }) 
+      .where('treeId IS NULL')
+      .execute();
+    await this.defectRepository
+      .createQueryBuilder()
+      .update(DefectTree)
+      .set({ treeId: idTree }) 
+      .where('treeId IS NULL')
+      .execute();
+    return idTree;
   }
 
   async removeTreeById(idTree: number): Promise<void> {

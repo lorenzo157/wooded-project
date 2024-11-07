@@ -6,16 +6,16 @@ import { CreateTreeComponent } from './create-tree/create-tree.component';
 
 const routes: Routes = [
   {
-    path: 'listtree',
+    path: ':projectType/listtree',
     component: ListTreesComponent,
   },
   { path: '', redirectTo: 'listtree', pathMatch: 'full' },
   {
-    path: 'detailtree/:idTree',
+    path: ':projectType/detailtree/:idTree',
     component: DetailTreeComponent,
   },
   {
-    path: 'createtree/:projectType',
+    path: ':projectType/createtree/:idTree',
     component: CreateTreeComponent,
   },
 ];

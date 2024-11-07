@@ -113,19 +113,16 @@ export class CreateTreeComponent implements OnInit {
     3: 't/R 15-20%',
     2: 't/R 20-30%',
   };
-  cavitiesTrunkEntries = Object.entries(this.cavitiesTrunk);
   private slendernessCoefficent: NumberToStringMap = {
     4: 'H/DAP > 100',
     3: 'H/DAP = 80-100',
     2: 'H/DAP = 60-80',
   };
-  slendernessCoefficentEntries = Object.entries(this.slendernessCoefficent);
   private lostOrDeadBark: NumberToStringMap = {
     4: 'corteza muerta/perdida afectando > 50% del perimetro',
     3: 'corteza muerta/perdida afectando hasta el 50% del perimetro',
     2: 'corteza muerta/perdida afectando < 25% del perimetro',
   };
-  lostOrDeadBarkEntries = Object.entries(this.lostOrDeadBark);
   private multipleTrunks: NumberToStringMap = {
     2: 'si',
     3: 'con corteza incluida',
@@ -143,8 +140,11 @@ export class CreateTreeComponent implements OnInit {
     3: 'inclinacion significativa(angulo 20°-30°), no compensada, suelo intacto',
     4: 'inclinacion severa(angulo > 30°) no compensada, o suelo rajado, levantado o raices expuestas',
   };
-  inclinationEntries = Object.entries(this.inclination);
-
+  private woodRotTrunk: NumberToStringMap = {
+    2: 't/R < 20 y esbeltez >60 pudrición en herida abierta',
+    3: 't/R < 15 y esbeltez >60 columna de pudrición cerrada',
+    4: 'presencia de cuerpos fructiferos',
+  };
   private wounds: NumberToStringMap = {
     3: 'afecta < 50% del perímetro con pudrición',
     4: 'afecta > 50% del perímetro con pudrición o cuerpo fructífero',
@@ -206,6 +206,7 @@ export class CreateTreeComponent implements OnInit {
   interferenceWithTheElectricalGridEntries = Object.entries(this.interferenceWithTheElectricalGrid);
 
   private idProject!: number;
+  idTree!: number;
   projectType!: boolean;
   treeForm: FormGroup;
   private dch!: number;
@@ -218,7 +219,6 @@ export class CreateTreeComponent implements OnInit {
   x: number = 0;
   y: number = 0;
   z: number = 0;
-
 
   constructor(
     private route: ActivatedRoute,
@@ -292,11 +292,12 @@ export class CreateTreeComponent implements OnInit {
     this.addConditionalValidation();
   }
 
-  
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.idProject = +params.get('idProject')!; // Retrieve project ID from route
-      this.projectType = params.get('projectType') === 'true';
+      this.projectType = params.get('projectType') === 'muestreo';
+      if (params.get('idTree') !== '0') this.idTree = +params.get('idTree')!;
+      console.log(this.idTree)
     });
     if (this.projectType) {
       this.treeForm.get('treeValue')?.clearValidators();
@@ -474,7 +475,7 @@ export class CreateTreeComponent implements OnInit {
     newTree.conflictsNames = this.treeForm.get('conflictsNames')?.value;
     newTree.diseasesNames = this.treeForm.get('diseasesNames')?.value;
     newTree.interventionsNames = this.treeForm.get('interventionsNames')?.value;
-    newTree.defectDto = [];
+    newTree.createDefectDto = [];
 
     const addDefect = (
       defectName: string,
@@ -483,7 +484,7 @@ export class CreateTreeComponent implements OnInit {
       branches?: number
     ) => {
       if (defectValue > 1)
-        newTree.defectDto.push({
+        newTree.createDefectDto.push({
           defectName,
           defectValue: +defectValue,
           textDefectValue: mapping[defectValue],
@@ -492,7 +493,7 @@ export class CreateTreeComponent implements OnInit {
     };
 
     addDefect(
-      'cuerpos fructiferos de hongos en cuello o raices',
+      'cuerpos fructiferos de hongos en raices',
       this.treeForm.get('fruitingBodiesOfFungiOnNeckOrRoots')?.value,
       this.fruitingBodiesOfFungiOnNeckOrRoots
     );
@@ -518,20 +519,20 @@ export class CreateTreeComponent implements OnInit {
       this.gallsTermiteMoundsAnthills
     );
     addDefect(
-      'cancros de tronco o cuello',
+      'cancros de tronco',
       this.treeForm.get('cankersTrunk')?.value,
       this.cankersTrunk
     );
     addDefect('fustes miltiples', this.treeForm.get('multipleTrunks')?.value, this.multipleTrunks);
     addDefect('horqueta de tronco', this.treeForm.get('forkTrunk')?.value, this.forkTrunk);
-    addDefect('cancros de ramas', this.treeForm.get('cankersBranch')?.value, this.cankersBranch);
-    addDefect('cavidades', this.treeForm.get('cavitiesBranches')?.value, this.cavitiesBranches);
+    addDefect('cancros de rama', this.treeForm.get('cankersBranch')?.value, this.cankersBranch);
+    addDefect('cavidades de rama', this.treeForm.get('cavitiesBranches')?.value, this.cavitiesBranches);
     addDefect(
-      'cuerpos fructiferos de hongos',
+      'cuerpos fructiferos de hongos en rama',
       this.treeForm.get('fruitingBodiesOfFungi')?.value,
       this.fruitingBodiesOfFungi
     );
-    addDefect('horqueta de ramas', this.treeForm.get('forkBranch')?.value, this.forkBranch);
+    addDefect('horqueta de rama', this.treeForm.get('forkBranch')?.value, this.forkBranch);
     addDefect(
       'ramas colgantes o quebradas',
       this.treeForm.get('hangingOrBrokenBranches')?.value,
@@ -549,8 +550,8 @@ export class CreateTreeComponent implements OnInit {
       this.treeForm.get('overExtendedBranches')?.value,
       this.overExtendedBranches
     );
-    addDefect('rajaduras', this.treeForm.get('fissures')?.value, this.fissures);
-    addDefect('pudricion de madera', this.treeForm.get('woodRot')?.value, this.woodRot);
+    addDefect('rajaduras de rama', this.treeForm.get('fissures')?.value, this.fissures);
+    addDefect('pudricion de madera en ramas', this.treeForm.get('woodRot')?.value, this.woodRot);
     addDefect(
       'interferencia con red electrica',
       this.treeForm.get('interferenceWithTheElectricalGrid')?.value,
@@ -566,7 +567,7 @@ export class CreateTreeComponent implements OnInit {
       if (tr < 0.15) defectValue = 4;
       else if (tr < 0.2) defectValue = 3;
       else if (tr < 0.3) defectValue = 2;
-      addDefect('cavidades en tronco o cuello', defectValue, this.cavitiesTrunk);
+      addDefect('cavidades en tronco', defectValue, this.cavitiesTrunk);
     }
     let slendernessCoefficent;
     if (newTree.height && newTree.dch) {
@@ -597,7 +598,7 @@ export class CreateTreeComponent implements OnInit {
       let defectValue: number = 1;
       if (wounds < 0.5) defectValue = 3;
       else if (wounds > 0.5) defectValue = 4;
-      addDefect('heridas de tronco o cuello', defectValue, this.wounds);
+      addDefect('heridas de tronco', defectValue, this.wounds);
     }
 
     if (newTree.incline) {
@@ -617,10 +618,10 @@ export class CreateTreeComponent implements OnInit {
         if (tr < 0.15 && slendernessCoefficent > 60) defectValue = 3;
         else if (tr < 0.2 && slendernessCoefficent > 60) defectValue = 2;
       }
-      addDefect('pudricion de madera', defectValue, this.inclination);
+      addDefect('pudricion de madera en tronco', defectValue, this.woodRotTrunk);
     }
 
-    console.log(newTree.defectDto);
+    console.log(newTree.createDefectDto);
 
     let risk: number = 0;
     if (newTree.windExposure == 'parcialmente expuesto') risk += 1;
@@ -632,15 +633,16 @@ export class CreateTreeComponent implements OnInit {
     if (newTree.frequencyUse) risk += newTree.frequencyUse;
     if (newTree.potentialDamage) risk += newTree.potentialDamage;
 
-    const defectValues = newTree.defectDto
-      .map((defectDto) => defectDto.defectValue)
+    const defectValues = newTree.createDefectDto
+      .map((createDefectDto) => createDefectDto.defectValue)
       .filter((value) => value !== undefined) as number[]; // Ensures we only work with numbers
     let maxDefectValue = defectValues.length ? Math.max(...defectValues) : null;
     if (maxDefectValue) risk += maxDefectValue;
     console.log(maxDefectValue);
     console.log(risk, '  risk');
 
-    if (!newTree.isMissing && !newTree.isDead) {
+    if (newTree.isMissing || newTree.isDead) {
+      console.log('permeter', newTree.isDead);
       newTree = new CreateTreeDto();
       newTree.projectId = this.idProject;
       newTree.isMissing = this.treeForm.get('isMissing')?.value;
@@ -652,6 +654,7 @@ export class CreateTreeComponent implements OnInit {
       newTree.latitude = this.treeForm.get('latitude')?.value;
       newTree.longitude = this.treeForm.get('longitude')?.value;
     }
+
     // } else {
     //   console.log("Form is invalid");
     // }

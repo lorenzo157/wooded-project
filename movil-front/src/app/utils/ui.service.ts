@@ -37,20 +37,19 @@ export class UiService {
 
     async cargando(isCargando: boolean = true) {
         if (isCargando && !this.loading) {
+            // Create and show the loading spinner
             this.loading = await this.loadingController.create({
                 spinner: 'bubbles',
                 message: 'Espere por favor...',
                 translucent: true,
-                backdropDismiss: false,
-                duration: 5000
+                backdropDismiss: false
             });
-            this.loading.present();
-        } else {
-            if (this.loading) {
-                this.loading.dismiss().then(() => {
-                    this.loading = null;
-                });
-            }
+            await this.loading.present(); 
+        
+        } else if (this.loading){
+            // Dismiss the spinner when isCargando is false
+            await this.loading.dismiss();
+            this.loading = null; // Reset the loading variable
         }
     }
 

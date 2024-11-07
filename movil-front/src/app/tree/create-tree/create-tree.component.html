@@ -3,7 +3,7 @@
     <app-navigation></app-navigation>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-title>Registro de árbol</ion-title>
+    <ion-title>{{idTree? "Actualización del árbol ID: "+idTree : "Registro de árbol"}}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -105,7 +105,7 @@
           ></ion-input>
         </ion-item>
         <!-- incline -->
-        <button #myButton (click)="startListening()">Start Listening</button>
+        <!-- <tilt-measure></tilt-measure> -->
 
         <ion-item lines="none">
           <ion-input
@@ -115,6 +115,15 @@
             errorText="Invalid"
             formControlName="incline"
           ></ion-input>
+        </ion-item>
+        <!-- treeValue -->
+        <ion-item>
+          <ion-label position="floating">Valor del árbol</ion-label>
+          <ion-select formControlName="treeValue">
+            <ion-select-option *ngFor="let option of treeValueOptions" [value]="option">
+              {{ option }}
+            </ion-select-option>
+          </ion-select>
         </ion-item>
         <!-- Pests Section -->
         <div formArrayName="pestsNames">
@@ -154,15 +163,7 @@
             >Agregar enfermedad</ion-button
           >
         </div>
-        <!-- treeValue -->
-        <ion-item>
-          <ion-label position="floating">Valor del árbol</ion-label>
-          <ion-select formControlName="treeValue">
-            <ion-select-option *ngFor="let option of treeValueOptions" [value]="option">
-              {{ option }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+      
         <ion-card-header class="sub-title yellow">
           <ion-card-title class="text-color"> Factores de carga </ion-card-title>
         </ion-card-header>
@@ -196,8 +197,22 @@
         <ion-card-header class="sub-title violet">
           <ion-card-title class="text-color"> Condiciones del sitio </ion-card-title>
         </ion-card-header>
-        <!-- Conflict Section -->
-        <div formArrayName="conflictsNames">
+        <!-- Growth Space -->
+        <ion-item>
+          <ion-label position="floating">Espacio de crecimiento</ion-label>
+          <ion-select formControlName="growthSpace">
+            <ion-select-option *ngFor="let option of growthSpaceOptions" [value]="option">
+              {{ option }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <!-- exposedRoots -->
+        <ion-item>
+          <ion-label>¿Plato radicular levantado, rajado o raíces expuestas?</ion-label>
+          <ion-checkbox formControlName="exposedRoots"></ion-checkbox>
+        </ion-item>
+         <!-- Conflict Section -->
+         <div formArrayName="conflictsNames">
           <div *ngFor="let conflict of conflictsNames.controls; let i = index">
             <ion-item>
               <ion-label>Conflicto {{ i + 1 }}</ion-label>
@@ -215,20 +230,6 @@
             >Agregar conflicto</ion-button
           >
         </div>
-        <!-- Growth Space -->
-        <ion-item>
-          <ion-label position="floating">Espacio de crecimiento</ion-label>
-          <ion-select formControlName="growthSpace">
-            <ion-select-option *ngFor="let option of growthSpaceOptions" [value]="option">
-              {{ option }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
-        <!-- exposedRoots -->
-        <ion-item>
-          <ion-label>¿Plato radicular levantado, rajado o raíces expuestas?</ion-label>
-          <ion-checkbox formControlName="exposedRoots"></ion-checkbox>
-        </ion-item>
         <ion-card-header class="sub-title red">
           <ion-card-title class="text-color"> Blanco debajo del árbol </ion-card-title>
         </ion-card-header>
@@ -641,6 +642,9 @@
             </ion-button>
           </ion-item>
         </div>
+        <ion-card-header class="sub-title gray">
+          <ion-card-title class="text-color"> Intervenciones </ion-card-title>
+        </ion-card-header>
         <ion-button class='manyToMany' (click)="addItem('interventions')" expand="block" color="secondary"
           >Agregar intervención</ion-button
         >
@@ -648,7 +652,9 @@
       <ion-text color="danger" *ngIf="treeForm.invalid && treeForm.touched">
         <p>Complete todos los campos obligatorios por favor</p>
       </ion-text>
+    <ion-card>
       <ion-button expand="full" type="submit">Registrar árbol</ion-button>
+    </ion-card>
     </form>
   </ion-card>
 </ion-content>

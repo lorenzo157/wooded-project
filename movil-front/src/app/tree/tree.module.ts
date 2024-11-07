@@ -9,13 +9,14 @@ import { TreeService } from './tree.service';
 import { ListTreesComponent } from './list-trees/list-trees.component';
 import { DetailTreeComponent } from './detail-tree/detail-tree.component';
 import { CreateTreeComponent } from './create-tree/create-tree.component';
+import { TiltMeasureComponent } from './create-tree/acelerometer.component';
 
 @NgModule({
   declarations: [ListTreesComponent,DetailTreeComponent,CreateTreeComponent],
   imports: [
     CommonModule,
     TreeRoutingModule,
-    FormsModule, IonicModule,AuthModule,NavigationComponent,ReactiveFormsModule
+    FormsModule, IonicModule,AuthModule,NavigationComponent,ReactiveFormsModule,TiltMeasureComponent
   ],
   providers: [TreeService],
 })

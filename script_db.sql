@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS trees (
 
 CREATE TABLE IF NOT EXISTS pest_tree (
     id_pest_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER NOT NULL,
+    tree_id INTEGER,
     pest_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_pest FOREIGN KEY (pest_id) REFERENCES pests(id_pest),
@@ -213,7 +213,7 @@ CREATE TABLE IF NOT EXISTS pest_tree (
 
 CREATE TABLE IF NOT EXISTS conflict_tree (
     id_conflict_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER NOT NULL,
+    tree_id INTEGER,
     conflict_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_conflict FOREIGN KEY (conflict_id) REFERENCES conflicts(id_conflict),
@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS conflict_tree (
 
 CREATE TABLE IF NOT EXISTS disease_tree (
     id_disease_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER NOT NULL,
+    tree_id INTEGER,
     disease_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_disease FOREIGN KEY (disease_id) REFERENCES diseases(id_disease),
@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS disease_tree (
 
 CREATE TABLE IF NOT EXISTS intervention_tree (
     id_intervention_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER NOT NULL,
+    tree_id INTEGER,
     intervention_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_intervention FOREIGN KEY (intervention_id) REFERENCES interventions(id_intervention),
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS intervention_tree (
 
 CREATE TABLE IF NOT EXISTS defect_tree (
     id_defect_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER NOT NULL,
+    tree_id INTEGER,
     defect_id INTEGER NOT NULL,
     defect_value SMALLINT NOT NULL,
     text_defect_value VARCHAR(100) NOT NULL,
@@ -251,3 +251,60 @@ CREATE TABLE IF NOT EXISTS defect_tree (
 );
 
 COMMIT;
+
+
+INSERT INTO conflicts (conflict_name) VALUES
+('obstruccion visual de señaletica vial'),
+('obstruccion de visual(transito humano y vehicular)'),
+('obstruccion fisica de transito humano o vehicular'),
+('conductores de 1/2 tension'),
+('conductores de baja tension'),
+('transformadores'),
+('rotura de veredas'),
+('luminarias a menos de 3m'),
+('rotura de desagues');
+
+
+INSERT INTO interventions (intervention_name) VALUES
+('extraccion del arbol'),
+('plantacion de arbol faltante'),
+('poda'),
+('cableado'),
+('sujecion'),
+('apuntalamiento'),
+('aumentar superficie permeable'),
+('fertilizacion'),
+('descompactado'),
+('drenaje'),
+('abertura de cazuela en vereda'),
+('mover el blanco'),
+('restringir acceso'),
+('requiere inspeccion avanzada');
+
+INSERT INTO defects (defect_name,defect_zone) VALUES
+('cuerpos fructiferos de hongos en raices','raiz'),
+('daño mecanico a raices','raiz'),
+('raices estrangulantes','raiz'),
+('raices muertas','raiz'),
+('sintomas de enfermedad radicular en copa','raiz'),
+('agallas, termiteros, hormigueros','tronco'),
+('cancros de tronco','tronco'),
+('cavidades en tronco','tronco'),
+('coeficiente de esbeltez','tronco'),
+('corteza perdida o muerta','tronco'),
+('fustes miltiples','tronco'),
+('heridas de tronco','tronco'),
+('horqueta de tronco','tronco'),
+('inclinacion','tronco'),
+('pudricion de madera','tronco'),
+('rajaduras de tronco','tronco'),
+('cancros de rama','rama'),
+('cavidades de rama','rama'),
+('cuerpos fructiferos de hongos en rama','rama'),
+('horqueta de rama','rama'),
+('ramas colgantes o quebradas','rama'),
+('ramas muertas','rama'),
+('ramas sobre extendidas','rama'),
+('rajaduras de rama','rama'),
+('pudricion de madera','rama'),
+('interferencia con red electrica','rama');

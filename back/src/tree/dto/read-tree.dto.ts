@@ -1,4 +1,4 @@
-import { DefectTreeDto } from './defect-tree.dto';
+import { ReadDefectTreeDto } from './read-defect-tree.dto';
 
 export class ReadTreeDto {
   idTree: number;
@@ -27,7 +27,7 @@ export class ReadTreeDto {
   risk: number | null;
   address: string;
   conflictsNames: string[];
-  defectDto: DefectTreeDto[];
+  readDefectDto: ReadDefectTreeDto[];
   diseasesNames: string[];
   interventionsNames: string[];
   pestsNames: string[];

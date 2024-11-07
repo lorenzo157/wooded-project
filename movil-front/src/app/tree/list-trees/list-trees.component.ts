@@ -3,6 +3,7 @@ import { TreeService } from '../tree.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { SimplyReadTreeDto } from '../dto/simply-read-tree.dto';
+import { UiService } from '../../utils/ui.service';
 
 @Component({
   selector: 'app-list-trees',
@@ -13,15 +14,19 @@ export class ListTreesComponent implements OnInit {
   idProject!: number;
   trees: SimplyReadTreeDto[] = [];
   filterId: number | null = null;
+  projectType!: boolean;
   constructor(
     private route: ActivatedRoute,
     private treeService: TreeService,
-    private router: Router
+    private router: Router,
+    private uiService: UiService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.uiService.cargando(true);
     this.route.paramMap.subscribe((params) => {
       this.idProject = +params.get('idProject')!; // Retrieve project ID from route
+      this.projectType = params.get('projectType') === 'muestreo'; // Retrieve project ID from route
       this.loadTrees();
     });
   }
@@ -29,16 +34,18 @@ export class ListTreesComponent implements OnInit {
   loadTrees() {
     this.treeService.getTreesByProjectId(this.idProject).subscribe({
       next: (trees) => {
+        this.uiService.cargando(false);
         this.trees = trees;
       },
       error: (error) => {
-        console.error('Error loading trees:', error);
+        this.uiService.alerta('No se pudieron cargar los árboles.', 'Error');
+        this.uiService.cargando(false);
       },
     });
   }
   viewTreeDetails(idTree: number) {
     this.router.navigate([
-      `/project/${this.idProject}/tree/detailtree/${idTree}`
+      `/project/${this.idProject}/tree/${this.projectType? 'muestreo':'individual'}/detailtree/${idTree}`
     ]);  // Navigate with both projectId and idTree
   }
   get filteredTrees() {

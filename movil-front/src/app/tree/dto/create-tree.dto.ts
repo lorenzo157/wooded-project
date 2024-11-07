@@ -1,4 +1,4 @@
-import { DefectTreeDto } from './defect-tree.dto';
+import { CreateDefectTreeDto } from './create-defect-tree.dto';
 
 export class CreateTreeDto {
   treeName!: string;
@@ -27,7 +27,7 @@ export class CreateTreeDto {
   risk?: number | null;
   address!: string;
   conflictsNames?: string[];
-  defectDto!: DefectTreeDto[];
+  createDefectDto!: CreateDefectTreeDto[];
   diseasesNames?: string[];
   interventionsNames?: string[];
   pestsNames?: string[];
