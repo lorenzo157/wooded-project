@@ -17,14 +17,16 @@ import { Diseases } from './entities/Diseases';
 import { DiseaseTree } from './entities/DiseaseTree';
 import { SimplyReadTreeDto } from './dto/simply-read-tree.dto';
 import { ReadTreeDto } from './dto/read-tree.dto';
+import { S3Service } from '../s3/s3.service';
 @Injectable()
 export class TreeService {
   constructor(
+    private readonly projectService: ProjectService,
+    private readonly s3Service: S3Service,
     @InjectRepository(Trees)
     private readonly treeRepository: Repository<Trees>,
     @InjectRepository(Coordinates)
     private readonly coordinatesRepository: Repository<Coordinates>,
-    private readonly projectService: ProjectService,
     @InjectRepository(Conflicts)
     private readonly conflictRepository: Repository<Conflicts>,
     @InjectRepository(ConflictTree)
@@ -161,7 +163,7 @@ export class TreeService {
       .leftJoinAndSelect('pestTrees.pest', 'pest')
       .where('tree.idTree = :idTree', { idTree })
       .getOne();
-    const neighborhoodName = tree.neighborhood? tree.neighborhood.neighborhoodName: null;
+    const neighborhoodName = tree.neighborhood ? tree.neighborhood.neighborhoodName : null;
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
       datetime: tree.datetime,
@@ -212,75 +214,65 @@ export class TreeService {
   async updateTreeById(idTree: number, createTreeDto: CreateTreeDto) {
     await this.removeTreeById(idTree);
     const newIdTree = await this.createTree(createTreeDto);
-    
+
     await this.pestRepository
       .createQueryBuilder()
       .update(PestTree)
-      .set({ treeId: null }) 
+      .set({ treeId: null })
       .where('treeId = :newIdTree', { newIdTree })
       .execute();
     await this.diseaseRepository
       .createQueryBuilder()
       .update(DiseaseTree)
-      .set({ treeId: null }) 
+      .set({ treeId: null })
       .where('treeId = :newIdTree', { newIdTree })
       .execute();
     await this.conflictRepository
       .createQueryBuilder()
       .update(ConflictTree)
-      .set({ treeId: null }) 
+      .set({ treeId: null })
       .where('treeId = :newIdTree', { newIdTree })
       .execute();
     await this.interventionRepository
       .createQueryBuilder()
       .update(InterventionTree)
-      .set({ treeId: null }) 
+      .set({ treeId: null })
       .where('treeId = :newIdTree', { newIdTree })
       .execute();
     await this.defectRepository
       .createQueryBuilder()
       .update(DefectTree)
-      .set({ treeId: null }) 
+      .set({ treeId: null })
       .where('treeId = :newIdTree', { newIdTree })
       .execute();
 
     await this.treeRepository
       .createQueryBuilder()
       .update(Trees)
-      .set({ idTree: idTree }) 
+      .set({ idTree: idTree })
       .where('idTree = :newIdTree', { newIdTree })
       .execute();
 
-      await this.pestRepository
-      .createQueryBuilder()
-      .update(PestTree)
-      .set({ treeId: idTree }) 
-      .where('treeId IS NULL')
-      .execute();
+    await this.pestRepository.createQueryBuilder().update(PestTree).set({ treeId: idTree }).where('treeId IS NULL').execute();
     await this.diseaseRepository
       .createQueryBuilder()
       .update(DiseaseTree)
-      .set({ treeId: idTree }) 
+      .set({ treeId: idTree })
       .where('treeId IS NULL')
       .execute();
     await this.conflictRepository
       .createQueryBuilder()
       .update(ConflictTree)
-      .set({ treeId: idTree }) 
+      .set({ treeId: idTree })
       .where('treeId IS NULL')
       .execute();
     await this.interventionRepository
       .createQueryBuilder()
       .update(InterventionTree)
-      .set({ treeId: idTree }) 
+      .set({ treeId: idTree })
       .where('treeId IS NULL')
       .execute();
-    await this.defectRepository
-      .createQueryBuilder()
-      .update(DefectTree)
-      .set({ treeId: idTree }) 
-      .where('treeId IS NULL')
-      .execute();
+    await this.defectRepository.createQueryBuilder().update(DefectTree).set({ treeId: idTree }).where('treeId IS NULL').execute();
     return idTree;
   }
 
@@ -289,7 +281,7 @@ export class TreeService {
       where: { idTree: idTree },
       relations: ['coordinate'],
     });
-
+    if (tree.pathPhoto) await this.s3Service.deleteFile(tree.pathPhoto);
     await this.treeRepository.delete({ idTree });
     await this.coordinatesRepository.remove(tree.coordinate);
   }

@@ -2,31 +2,39 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class StorageService {
-    constructor(private storage: Storage) {
-        this.init();
-    }
+  private _storage: Storage | null = null;
 
-    async init() {
-        // If using, define drivers here: await this.storage.defineDriver(/*...*/);
-        const storage = await this.storage.create();
-        this.storage = storage;
-    }
+  constructor(private storage: Storage) {
+    this.init();
+  }
 
-    // Create and expose methods that users of this service can
-    // call, for example:
-    public set(key: string, value: any) {
-        this.storage.set(key, value);
-    }
+  async init() {
+    // Create or initialize the storage
+    const storage = await this.storage.create();
+    this._storage = storage;
+  }
 
-    public async get(key: string) {
-        const value = await this.storage.get(key);
-        return value;
-    }
+  // Save a value to storage
+  public async set(key: string, value: any) {
+    await this._storage?.set(key, value);
+  }
 
-    clear() {
-        this.storage.clear();
-    }
+  // Retrieve a value from storage
+  public async get(key: string): Promise<any> {
+    return await this._storage?.get(key);
+  }
+
+  // Clear all values from storage
+  public async clear() {
+    console.log('CLEAR storage')
+    await this._storage?.clear();
+  }
+
+  // Remove a specific key
+  public async remove(key: string) {
+    await this._storage?.remove(key);
+  }
 }

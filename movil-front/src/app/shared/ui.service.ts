@@ -1,69 +1,59 @@
 import { Injectable } from '@angular/core';
-import {
-    AlertController,
-    LoadingController,
-    ToastController
-} from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class UiService {
-    private loading: any;
+  private isLoading: any;
 
-    constructor(
-        public alertController: AlertController,
-        public loadingController: LoadingController,
-        public toastController: ToastController
-    ) {}
+  constructor(
+    public alertController: AlertController,
+    public loadingController: LoadingController,
+    public toastController: ToastController
+  ) {}
 
-    async alerta(
-        message: string,
-        header: string = 'Atención',
-        buttons: any = ['Aceptar'],
-        backdropDismiss: boolean = true,
-        cssClass = ''
-    ) {
-        const alert = await this.alertController.create({
-            header,
-            message,
-            buttons,
-            cssClass,
-            backdropDismiss
-        });
+  async alert(
+    message: string,
+    header: string = 'Atención',
+    buttons: any = ['Aceptar'],
+    backdropDismiss: boolean = true,
+    cssClass = ''
+  ) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons,
+      cssClass,
+      backdropDismiss,
+    });
 
-        await alert.present();
+    await alert.present();
+  }
+
+  async loading() {
+    if (!this.isLoading) {
+      this.isLoading = await this.loadingController.create({
+        spinner: 'bubbles',
+        message: 'Espere por favor...',
+        translucent: true,
+        backdropDismiss: false,
+        duration: 2000,
+      });
+      this.isLoading.present();
+    } else {
+      this.isLoading.dismiss().then(() => {
+        this.isLoading = null;
+      });
     }
+  }
 
-    async cargando(isCargando: boolean = true) {
-        if (isCargando && !this.loading) {
-            this.loading = await this.loadingController.create({
-                spinner: 'bubbles',
-                message: 'Espere por favor...',
-                translucent: true,
-                backdropDismiss: false,
-                duration: 1000
-            });
-            this.loading.present();
-        } else {
-            if (this.loading) {
-                this.loading.dismiss().then(() => {
-                    this.loading = null;
-                });
-            }
-        }
-    }
-
-    async toast(
-        message: string,
-        color: string = 'primary',
-        duration: number = 3000
-    ) {
-        const toast = await this.toastController.create({
-            color,
-            message,
-            duration
-        });
-        toast.present();
-    }
+  async toast(message: string, color: string = 'primary', duration: number = 3000) {
+    const toast = await this.toastController.create({
+      color,
+      message,
+      duration,
+    });
+    toast.present();
+  }
 }

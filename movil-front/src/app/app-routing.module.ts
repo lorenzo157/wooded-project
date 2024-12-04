@@ -5,19 +5,17 @@ import { AuthGuard } from './auth/auth.guard';
 const routes: Routes = [
   {
     path: 'project',
-    loadChildren: () =>
-      import('./project/project.module').then((m) => m.ProjectModule),
-      canActivate: [AuthGuard]
+    loadChildren: () => import('./project/project.module').then((m) => m.ProjectModule),
+  },
+
+  {
+    path: 'project/:idProject/tree',
+    loadChildren: () => import('./tree/tree.module').then((m) => m.TreeModule),
   },
   {
     path: '',
-    redirectTo: 'project',
+    redirectTo: 'auth',
     pathMatch: 'full',
-  },
-  {
-    path: 'project/:idProject/tree',
-    loadChildren: () =>
-      import('./tree/tree.module').then((m) => m.TreeModule)
   },
   {
     path: 'auth',
@@ -26,9 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
-  ],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

@@ -15,11 +15,10 @@ export class Neighborhoods {
 
   @Column('numeric', {
     name: 'neighborhood_metres',
-    nullable: true,
     precision: 8,
     scale: 2,
   })
-  neighborhoodMetres: string | null;
+  neighborhoodMetres: string;
 
   @ManyToOne(() => Cities, (cities) => cities.neighborhoods)
   @JoinColumn([{ name: 'city_id', referencedColumnName: 'idCity' }])

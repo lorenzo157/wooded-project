@@ -28,15 +28,15 @@ export class DetailTreeComponent implements OnInit {
 
   async ngOnInit() {
     await this.uiService.cargando(true);
-    this.route.paramMap.subscribe((params) => {
-      this.idTree = +params.get('idTree')!; // Retrieve idTree from route
+    await this.route.paramMap.subscribe((params) => {
+      this.idTree = +params.get('idTree')!; 
       this.idProject = +params.get('idProject')!;
-      this.projectType = params.get('projectType') === 'muestreo'; // Retrieve idTree from route
+      this.projectType = params.get('projectType') === 'muestreo';
       this.loadTree();
     });
   }
 
-  loadTree() {
+  async loadTree() {
     this.treeService.getTreeById(this.idTree).subscribe({
       next: (tree) => {
         this.uiService.cargando(false);
@@ -51,7 +51,7 @@ export class DetailTreeComponent implements OnInit {
         console.log(this.tree.pathPhoto)
       },
       error: (error) => {
-        this.uiService.alerta('No se pudo cargar el árbol.', 'Error');
+        this.uiService.alert('No se pudo cargar el árbol.', 'Error');
         this.uiService.cargando(false);
       },
     });
@@ -59,7 +59,7 @@ export class DetailTreeComponent implements OnInit {
   updateTree() {
     this.router.navigate([
       `/project/${this.idProject}/tree/${this.projectType? 'muestreo':'individual'}/createtree/${this.idTree}`,
-    ]); // Navigates createTree with idTree indicating it will be an update
+    ]); 
   }
   createTree() {
     this.router.navigate([

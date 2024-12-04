@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local/local-auth.guard'; // We'll create this guard to handle login
 import { JwtAuthGuard } from './jwt/jwt-auth.guard'; // Used for protecting routes
 import { Roles } from './role/role.decorator';
-import { RolesGuard } from './role/role.guard';
 
 @Controller('auth')
 export class AuthController {

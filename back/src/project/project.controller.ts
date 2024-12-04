@@ -6,23 +6,22 @@ import {
   Patch,
   Param,
   Delete,
-  //UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-//import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-//import { PermissionsGuard } from '../auth/permissions.guard';
-//import { Permissions } from '../auth/permissions.decorator';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+
 
 @Controller('project')
-//@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard)
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   // Create a new project in web application and assigned it with creator user
   @Post()
-  //@Permissions('gestor', 'administrador')
+  //@Roles('gestor', 'administrador')
   async createProject(@Body() createProjectDto: CreateProjectDto) {
     return this.projectService.createProject(createProjectDto);
   }

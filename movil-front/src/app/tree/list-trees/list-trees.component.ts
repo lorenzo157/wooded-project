@@ -38,7 +38,7 @@ export class ListTreesComponent implements OnInit {
         this.trees = trees;
       },
       error: (error) => {
-        this.uiService.alerta('No se pudieron cargar los árboles.', 'Error');
+        this.uiService.alert('No se pudieron cargar los árboles.', 'Error');
         this.uiService.cargando(false);
       },
     });

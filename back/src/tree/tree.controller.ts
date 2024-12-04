@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { TreeService } from './tree.service';
 import { CreateTreeDto } from './dto/create-tree.dto';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
 @Controller('project/:idProject/tree')
+@UseGuards(JwtAuthGuard)
 export class TreeController {
   constructor(private readonly treeService: TreeService) {}
 
@@ -21,7 +23,6 @@ export class TreeController {
   // READ, Fetch a specific tree with all the properties includes relationship by idTree
   @Get(':idTree')
   async getTreeById(@Param('idTree') idTree: number) {
-    console.log('asdadds')
     return this.treeService.findTreeById(idTree);
   }
   @Put(':idTree')

@@ -26,21 +26,17 @@ export class ProjectService {
   // Method to get assigned projects by user ID
   getAssignedProjects(): Observable<ProjectDto[]> {
     return this.authService.getIdUserFromToken().pipe(
-        switchMap((idUser) => {
-            // Ensure idUser is not null or undefined
-            if (idUser == null) {
-                throw new Error('User ID is missing or could not be retrieved');
-            }
-            console.log(`${this.API_URL}/assignedproject/${idUser}`);
-            return this.http.get<ProjectDto[]>(`${this.API_URL}/assignedproject/${idUser}`);
-        })
+      switchMap((idUser) => {
+        // Ensure idUser is not null or undefined
+        if (idUser == null) {
+          throw new Error('User ID is missing or could not be retrieved');
+        }
+        return this.http.get<ProjectDto[]>(`${this.API_URL}/assignedproject/${idUser}`);
+      })
     );
-}
+  }
 
   findProjectById(idProject: number): Observable<ProjectDto> {
     return this.http.get<ProjectDto>(`${this.API_URL}/${idProject}`);
-  }
-  logout() {
-    this.authService.logout();
   }
 }

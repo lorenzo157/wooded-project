@@ -9,7 +9,7 @@ import { TreeService } from './tree.service';
 import { ListTreesComponent } from './list-trees/list-trees.component';
 import { DetailTreeComponent } from './detail-tree/detail-tree.component';
 import { CreateTreeComponent } from './create-tree/create-tree.component';
-import { TiltMeasureComponent } from './create-tree/acelerometer.component';
+import { TiltMeasureComponent } from './create-tree/acelerometer-tilt.component';
 
 @NgModule({
   declarations: [ListTreesComponent,DetailTreeComponent,CreateTreeComponent],

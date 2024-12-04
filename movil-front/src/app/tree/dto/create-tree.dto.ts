@@ -1,7 +1,6 @@
 import { CreateDefectTreeDto } from './create-defect-tree.dto';
 
 export class CreateTreeDto {
-  treeName!: string;
   datetime?: Date;
   pathPhoto?: string | null;
   cityBlock!: number;
@@ -34,8 +33,5 @@ export class CreateTreeDto {
   latitude!: number;
   longitude!: number;
   treeTypeName?: string;
-  gender?: string;
-  species?: string;
-  scientificName?: string;
   projectId!: number;
 }

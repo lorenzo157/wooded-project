@@ -17,7 +17,7 @@ export class UiService {
         private toastController: ToastController
     ) {}
 
-    async alerta(
+    async alert(
         message: string,
         header: string = 'Atención',
         buttons: any = ['Aceptar'],
@@ -56,12 +56,13 @@ export class UiService {
     async toast(
         message: string,
         color: string = 'primary',
-        duration: number = 3000
+        duration: number = 5000,
     ) {
         const toast = await this.toastController.create({
             color,
             message,
-            duration
+            duration,
+            position: 'top'
         });
         toast.present();
     }

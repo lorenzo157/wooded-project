@@ -7,4 +7,7 @@ export class EnvVars {
   public static dbDatabase = 'DATABASE_APPLICATION_DATABASE';
   public static enviroment = 'NODE_ENV';
   public static secretKey = 'SECRET';
+  public static s3AccessKey = 'S3_ACCESS_KEY';
+  public static s3SecretAccessKey = 'S3_SECRET_ACCESS_KEY';
+  public static s3Bucket = 'S3_BUCKET';
 }

@@ -26,17 +26,17 @@ export class LoginComponent {
 
   async onLogin() {
     if (this.loginForm.valid) {
-      await this.uiService.cargando(true);
+      await this.uiService.cargando();
       this.authService
         .login(this.loginForm.value.email, this.loginForm.value.password)
         .subscribe({
           next: (value) => {
-            this.uiService.cargando(false);
-            this.router.navigate(['']);
+            this.uiService.cargando();
+            this.router.navigate(['project']);
           },
           error: (error) => {
-            this.uiService.cargando(false);
-            this.uiService.alerta('Credenciales incorrectas.', 'Error');
+            this.uiService.cargando();
+            this.uiService.alert('Credenciales incorrectas.', 'Error');
           },
         });
     }

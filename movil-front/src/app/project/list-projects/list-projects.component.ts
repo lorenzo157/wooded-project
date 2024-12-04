@@ -14,42 +14,36 @@ export class ListProjectsComponent implements OnInit {
   filterProjectName!: string;
   userName!: string;
 
-  constructor(private projectService: ProjectService, private router: Router,private uiService: UiService, private authService: AuthService) {
+  constructor(
+    private projectService: ProjectService,
+    private router: Router,
+    private uiService: UiService,
+    private authService: AuthService
+  ) {
     authService.getUserName().subscribe({
-      next: (userName) => {
-        this.userName = userName;
-      },
-      error: (error) => {
-        this.userName = "Sin nombre"; // Optional: Set a default value or handle error differently
-      },
+      next: (userName) => (this.userName = userName),
+      error: (error) => (this.userName = 'Sin nombre'), 
     });
   }
 
   async ngOnInit() {
-      
-      await this.uiService.cargando(true);
-      this.projectService
-        .getAssignedProjects()
-        .subscribe({
-          next: (value) => {
-            this.uiService.cargando(false);
-            this.projects = value
-          },
-          error: (error) => {
-            this.uiService.alerta('No se pudieron cargar los proyectos.', 'Error');
-            this.uiService.cargando(false);
-          },
-        });
+    await this.uiService.cargando(true);
+    this.projectService.getAssignedProjects().subscribe({
+      next: (value) => {
+        this.uiService.cargando(false);
+        this.projects = value;
+      },
+      error: (error) => {
+        this.uiService.alert('No se pudieron cargar los proyectos.', 'Error');
+        this.uiService.cargando(false);
+      },
+    });
   }
   viewProjectDetails(project: ProjectDto) {
     // Navigating with state to pass the idProject of the selected project
     this.router.navigate([`project/detailproject/${project.idProject}`], {
       state: { cityName: project.cityName, provinceName: project.provinceName },
     });
-  }
-
-  logout() {
-    this.projectService.logout();
   }
 
   get filteredProjects() {

@@ -25,8 +25,11 @@ interface DecodedToken {
 })
 export class AuthService {
   private readonly API_URL = `${API}/auth`;
-  private userId: string | null = null;
-  constructor(private storage: StorageService, private http: HttpClient, private router: Router) {}
+  constructor(
+    private storageService: StorageService,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   login(email: string, password: string): Observable<ApiResponse<LoginResponse>> {
     return this.http
@@ -37,27 +40,21 @@ export class AuthService {
       .pipe(
         tap((value) => {
           if (value.statusCode === HttpStatusCode.Ok) {
-            this.setUserinfo(value.result);
+            this.storageService.set('auth.token', value.result.access_token);
+            this.storageService.set('auth.user', value.result.userName);
           }
         })
       );
   }
-  setUserinfo(userinfo: LoginResponse) {
-    this.storage.set('auth.token', userinfo.access_token);
-    this.storage.set('auth.user', userinfo.userName);
-  }
   logout() {
-    this.storage.clear();
+    this.storageService.clear();
     this.router.navigate(['auth/login']);
   }
   getUserName(): Observable<string> {
-    return from(this.storage.get('auth.user'));
-  }
-  isLogged() {
-    return from(this.storage.get('auth.token')).pipe(map((value) => !!value));
+    return from(this.storageService.get('auth.user'));
   }
   getToken(): Observable<string | null> {
-    return from(this.storage.get('auth.token'));
+    return from(this.storageService.get('auth.token'));
   }
   getIdUserFromToken(): Observable<number | null> {
     return this.getToken().pipe(
@@ -68,21 +65,14 @@ export class AuthService {
       })
     );
   }
+  isTokenExpired(token: string): boolean {
+    try {
+      const decoded: any = jwtDecode(token);
+      const now = Math.floor(new Date().getTime() / 1000);
+      console.log(decoded.exp - now)
+      return decoded.exp - now < 3; // Refresh if token will expire in the next 3 seconds
+    } catch (error) {
+      return true; // Consider the token invalid if decoding fails
+    }
+  }
 }
-// getIdUser(): number | null {
-//   const token = this.getToken();
-//   if (token) {
-//     const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-//     return payload.idUser;
-//   }
-//   return null;
-// }
-// isTokenExpired(): boolean {
-//   const token = this.getToken();
-//   if (token) {
-//     const payload = JSON.parse(atob(token.split('.')[1]));
-//     const expiry = payload.exp * 1000; // Convert to milliseconds
-//     return Date.now() > expiry;
-//   }
-//   return true;
-// }

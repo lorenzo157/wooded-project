@@ -1,41 +1,33 @@
-// src/core/auth/jwt.interceptor.ts
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService) {}
 
   // Intercept outgoing HTTP requests
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.authService.getToken(); // Get token from AuthService
-
-    // If token exists, clone the request and add the Authorization header
-    let modifiedReq = req;
-    if (token) {
-      modifiedReq = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-
-    // Pass the modified request to the next handler and catch errors
-    return next.handle(modifiedReq).pipe(
-      catchError((err) => {
-        // If unauthorized (401), redirect to login page
-        if (err.status === 401) {
-          this.authService.logout();  // Clear token and redirect to login
-          this.router.navigate(['/login']);
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return this.authService.getToken().pipe(
+      // Use switchMap to wait for the token to be retrieved
+      switchMap((token) => {
+        console.log('jwtinterceptor is activated and the token is: ', token);
+        if (token) {
+          // Clone the request and add the Authorization header
+          request = request.clone({
+            setHeaders: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
         }
-        return throwError(err); // Rethrow error for other handlers
+        return next.handle(request);
       })
     );
   }
 }
+
+

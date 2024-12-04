@@ -37,7 +37,8 @@ export class DetailProjectComponent implements OnInit {
         this.project = project; // Load tree details
       },
       error: (error) => {
-        this.uiService.alerta('No se pudo cargar el proyecto.', 'Error');
+        if(error.status === 401)
+        this.uiService.alert('No se pudo cargar el proyecto.', 'Error');
         this.uiService.cargando(false);
       },
     });

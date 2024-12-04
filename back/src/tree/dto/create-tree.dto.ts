@@ -1,6 +1,5 @@
 import {
   IsBoolean,
-  //IsDateString,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -12,12 +11,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CreateDefectTreeDto } from './create-defect-tree.dto';
 
 export class CreateTreeDto {
-  @ApiProperty({ description: 'The name of the tree', maxLength: 25 })
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(50)
-  treeName: string;
-
   @ApiProperty({ description: 'Path to the tree photo', required: false })
   @IsString()
   @IsOptional()
@@ -25,6 +18,7 @@ export class CreateTreeDto {
   pathPhoto?: string;
 
   @ApiProperty({ description: 'City block number' })
+  @IsOptional()
   @IsNumber()
   cityBlock: number;
 

@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS cities (
 CREATE TABLE IF NOT EXISTS neighborhoods (
     id_neighborhood SERIAL PRIMARY KEY,
     neighborhood_name VARCHAR(40) NOT NULL,
-    neighborhood_metres NUMERIC(8, 2),
+    neighborhood_metres NUMERIC(8, 2) NOT NULL,
     city_id INTEGER NOT NULL,
     CONSTRAINT fk_city FOREIGN KEY (city_id) REFERENCES cities(id_city)
 );
@@ -133,8 +133,8 @@ CREATE TABLE IF NOT EXISTS project_user (
 
 CREATE TABLE IF NOT EXISTS unit_work (
     id_unit_work SERIAL PRIMARY KEY,
-    project_id INTEGER NOT NULL,
-    neighborhood_id INTEGER NOT NULL,
+    project_id INTEGER NULL,
+    neighborhood_id INTEGER NULL,
     pruning INTEGER NOT NULL DEFAULT 0,
     cabling INTEGER NOT NULL DEFAULT 0,
     fastening INTEGER NOT NULL DEFAULT 0,

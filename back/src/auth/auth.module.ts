@@ -18,7 +18,7 @@ import { EnvVars } from '../config-loader';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get(EnvVars.secretKey),
-        signOptions: { expiresIn: '20h' },
+        signOptions: { expiresIn: '24h' },
       }),
     }),
   ],

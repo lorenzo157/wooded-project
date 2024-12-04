@@ -3,7 +3,9 @@
     <app-navigation></app-navigation>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-title>{{idTree? "Actualización del árbol ID: "+idTree : "Registro de árbol"}}</ion-title>
+    <ion-title>{{
+      idTree ? "Actualización del árbol ID: " + idTree : "Registro de árbol"
+    }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -31,26 +33,40 @@
         ></ion-input>
       </ion-item>
 
+      <ion-row>
+        <ion-col size="auto">
+          <ion-button (click)="takePhoto()">Tomar foto</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-item>
+            <ion-input
+              [readonly]="true"
+              label="archivo"
+              labelPlacement="floating"
+              formControlName="pathPhoto"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
       <ion-item>
         <ion-label>Obtener posición actual</ion-label>
-        <ion-checkbox class='check' formControlName="currentPosition" (ionChange)="onTogglePosition($event)"></ion-checkbox>
+        <ion-checkbox class="check" (ionChange)="onTogglePosition($event)"></ion-checkbox>
         <ion-input
+          [readonly]="true"
           type="number"
           label="Latitud"
           labelPlacement="floating"
           formControlName="latitude"
         ></ion-input>
-        
         <ion-input
+          [readonly]="true"
           type="number"
           label="Longitud"
           labelPlacement="floating"
           formControlName="longitude"
         ></ion-input>
       </ion-item>
-
-    
-
       <!-- treesInTheBlock -->
       <ion-item *ngIf="projectType">
         <ion-input
@@ -94,6 +110,17 @@
             formControlName="perimeter"
           ></ion-input>
         </ion-item>
+        <!-- incline -->
+        <ion-item lines="none">
+          <tilt-measure (tiltChange)="onTiltChange($event)"></tilt-measure>
+            <ion-input
+              type="number"
+              label="Inclinación"
+              labelPlacement="floating"
+              errorText="Invalid"
+              formControlName="incline"
+            ></ion-input>
+          </ion-item>
         <!-- height -->
         <ion-item lines="none">
           <ion-input
@@ -102,18 +129,6 @@
             labelPlacement="floating"
             errorText="Invalid"
             formControlName="height"
-          ></ion-input>
-        </ion-item>
-        <!-- incline -->
-        <!-- <tilt-measure></tilt-measure> -->
-
-        <ion-item lines="none">
-          <ion-input
-            type="number"
-            label="Inclinación"
-            labelPlacement="floating"
-            errorText="Invalid"
-            formControlName="incline"
           ></ion-input>
         </ion-item>
         <!-- treeValue -->
@@ -126,10 +141,9 @@
           </ion-select>
         </ion-item>
         <!-- Pests Section -->
-        <div formArrayName="pestsNames">
+        <div formArrayName="pestsNames" class="manyToMany">
           <div *ngFor="let pest of pestsNames.controls; let i = index">
             <ion-item>
-              <ion-label>Plaga {{ i + 1 }}</ion-label>
               <ion-select [formControlName]="i">
                 <ion-select-option *ngFor="let option of pestOptions" [value]="option">
                   {{ option }}
@@ -140,15 +154,18 @@
               </ion-button>
             </ion-item>
           </div>
-          <ion-button class='manyToMany' (click)="addItem('pests')" expand="block" color="secondary"
+          <ion-button
+            class="manyToManyButton"
+            (click)="addItem('pests')"
+            expand="block"
+            color="secondary"
             >Agregar plaga</ion-button
           >
         </div>
         <!-- Diseases Section -->
-        <div formArrayName="diseasesNames">
+        <div formArrayName="diseasesNames" class="manyToMany">
           <div *ngFor="let disease of diseasesNames.controls; let i = index">
             <ion-item>
-              <ion-label>Enfermedad {{ i + 1 }}</ion-label>
               <ion-select [formControlName]="i">
                 <ion-select-option *ngFor="let option of diseaseOptions" [value]="option">
                   {{ option }}
@@ -159,11 +176,15 @@
               </ion-button>
             </ion-item>
           </div>
-          <ion-button class='manyToMany' (click)="addItem('diseases')" expand="block" color="secondary"
+          <ion-button
+            class="manyToManyButton"
+            (click)="addItem('diseases')"
+            expand="block"
+            color="secondary"
             >Agregar enfermedad</ion-button
           >
         </div>
-      
+
         <ion-card-header class="sub-title yellow">
           <ion-card-title class="text-color"> Factores de carga </ion-card-title>
         </ion-card-header>
@@ -211,11 +232,10 @@
           <ion-label>¿Plato radicular levantado, rajado o raíces expuestas?</ion-label>
           <ion-checkbox formControlName="exposedRoots"></ion-checkbox>
         </ion-item>
-         <!-- Conflict Section -->
-         <div formArrayName="conflictsNames">
+        <!-- Conflict Section -->
+        <div formArrayName="conflictsNames" class="manyToMany">
           <div *ngFor="let conflict of conflictsNames.controls; let i = index">
             <ion-item>
-              <ion-label>Conflicto {{ i + 1 }}</ion-label>
               <ion-select [formControlName]="i">
                 <ion-select-option *ngFor="let option of conflictOptions" [value]="option">{{
                   option
@@ -226,7 +246,11 @@
               </ion-button>
             </ion-item>
           </div>
-          <ion-button class='manyToMany' (click)="addItem('conflicts')" expand="block" color="secondary"
+          <ion-button
+            class="manyToManyButton"
+            (click)="addItem('conflicts')"
+            expand="block"
+            color="secondary"
             >Agregar conflicto</ion-button
           >
         </div>
@@ -248,7 +272,7 @@
           <ion-select formControlName="frequencyUse">
             <ion-select-option
               *ngFor="let option of frequencyUseOptions; let i = index"
-              [value]="i+1"
+              [value]="i + 1"
             >
               {{ option }}
             </ion-select-option>
@@ -272,7 +296,7 @@
           <ion-select formControlName="potentialDamage">
             <ion-select-option
               *ngFor="let option of potentialDamageOptions; let i = index"
-              [value]="i+1"
+              [value]="i + 1"
             >
               {{ option }}
             </ion-select-option>
@@ -373,7 +397,7 @@
         </ion-item>
         <ion-item>
           <ion-label>¿Tiene cavidades en el tronco?</ion-label>
-          <ion-checkbox class='check'formControlName="isCavitiesTrunk"></ion-checkbox>
+          <ion-checkbox class="check" formControlName="isCavitiesTrunk"></ion-checkbox>
           <div *ngIf="treeForm.get('isCavitiesTrunk')?.value">
             <ion-input
               label="Ingrese valor de t"
@@ -399,7 +423,7 @@
         </ion-item>
         <ion-item>
           <ion-label>¿Hay corteza pérdida o muerta en el tronco?</ion-label>
-          <ion-checkbox class='check' formControlName="isLostOrDeadBark"></ion-checkbox>
+          <ion-checkbox class="check" formControlName="isLostOrDeadBark"></ion-checkbox>
           <div *ngIf="treeForm.get('isLostOrDeadBark')?.value">
             <ion-input
               label="Ingrese el ancho afectado"
@@ -429,7 +453,7 @@
 
         <ion-item>
           <ion-label>¿Hay heridas en el tronco(no leves o superficiales)?</ion-label>
-          <ion-checkbox class='check' formControlName="isWounds"></ion-checkbox>
+          <ion-checkbox class="check" formControlName="isWounds"></ion-checkbox>
           <div *ngIf="treeForm.get('isWounds')?.value">
             <ion-input
               label="Ingrese el ancho afectado"
@@ -438,10 +462,7 @@
               errorText="Invalid"
               formControlName="wounds_width"
             ></ion-input>
-            <ion-note
-              *ngIf="this.treeForm.get('wounds_width')?.value === null"
-              color="warning"
-            >
+            <ion-note *ngIf="this.treeForm.get('wounds_width')?.value === null" color="warning">
               Advertencia: Si no ingresa el ancho afectado, este defecto no se tendrá en cuenta.
             </ion-note>
           </div>
@@ -459,24 +480,25 @@
 
         <ion-item>
           <ion-label>¿Hay pudrición de madera?</ion-label>
-          <ion-checkbox class='check' formControlName="isWoodRoot"></ion-checkbox>
+          <ion-checkbox class="check" formControlName="isWoodRoot"></ion-checkbox>
           <div *ngIf="this.treeForm.get('isWoodRoot')?.value">
             <ion-label>¿Es con presencia de cuerpos fructiferos?</ion-label>
-            <ion-checkbox class='check' formControlName="isWoodRoot_fruitingBodies"></ion-checkbox>
-          
-          <div *ngIf="!treeForm.get('isWoodRoot_fruitingBodies')?.value">
-            <ion-input
-              label="Ingrese el valor de t"
-              type="number"
-              labelPlacement="floating"
-              errorText="Invalid"
-              formControlName="woodRoot_t"
-            ></ion-input>
-            <ion-note *ngIf="this.treeForm.get('woodRoot_t')?.value === null" color="warning">
-              Advertencia: Ingrese el ancho afectado si no hay presencia de CF. Si no lo ingresa, este defecto no se tendrá en cuenta.
-            </ion-note>
+            <ion-checkbox class="check" formControlName="isWoodRoot_fruitingBodies"></ion-checkbox>
+
+            <div *ngIf="!treeForm.get('isWoodRoot_fruitingBodies')?.value">
+              <ion-input
+                label="Ingrese el valor de t"
+                type="number"
+                labelPlacement="floating"
+                errorText="Invalid"
+                formControlName="woodRoot_t"
+              ></ion-input>
+              <ion-note *ngIf="this.treeForm.get('woodRoot_t')?.value === null" color="warning">
+                Advertencia: Ingrese el valor de t si no hay presencia de CF. Si no lo ingresa, este
+                defecto no se tendrá en cuenta.
+              </ion-note>
+            </div>
           </div>
-        </div>
         </ion-item>
 
         <ion-card-header class="sub-title orange">
@@ -628,10 +650,18 @@
         </ion-item>
       </div>
       <!-- Intervention Section -->
-      <div formArrayName="interventionsNames">
+      <ion-card-header class="sub-title gray">
+        <ion-card-title class="text-color">
+          Mitigación del riesgo/acciones correctivas
+        </ion-card-title>
+      </ion-card-header>
+      <div
+        formArrayName="interventionsNames"
+        class="manyToMany"
+        *ngIf="!treeForm.get('isMissing')?.value && !treeForm.get('isDead')?.value"
+      >
         <div *ngFor="let intervention of interventionsNames.controls; let i = index">
           <ion-item>
-            <ion-label>Intervención {{ i + 1 }}</ion-label>
             <ion-select [formControlName]="i">
               <ion-select-option *ngFor="let option of interventionOptions" [value]="option">{{
                 option
@@ -642,19 +672,27 @@
             </ion-button>
           </ion-item>
         </div>
-        <ion-card-header class="sub-title gray">
-          <ion-card-title class="text-color"> Intervenciones </ion-card-title>
-        </ion-card-header>
-        <ion-button class='manyToMany' (click)="addItem('interventions')" expand="block" color="secondary"
+        <ion-button
+          class="manyToManyButton"
+          (click)="addItem('interventions')"
+          expand="block"
+          color="secondary"
           >Agregar intervención</ion-button
         >
       </div>
+      <ion-item *ngIf="treeForm.get('isMissing')?.value || treeForm.get('isDead')?.value">
+        {{
+          treeForm.get("isMissing")?.value ? "plantacion de arbol faltante" : "extraccion del arbol"
+        }}
+      </ion-item>
       <ion-text color="danger" *ngIf="treeForm.invalid && treeForm.touched">
         <p>Complete todos los campos obligatorios por favor</p>
       </ion-text>
-    <ion-card>
-      <ion-button expand="full" type="submit">Registrar árbol</ion-button>
-    </ion-card>
+      <ion-card>
+        <ion-button expand="full" type="submit">{{
+          idTree ? "Actualizar árbol ID: " + idTree : "Registrar árbol"
+        }}</ion-button>
+      </ion-card>
     </form>
   </ion-card>
 </ion-content>
