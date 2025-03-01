@@ -6,10 +6,11 @@ import { UnitWork } from './entities/UnitWork';
 import { Projects } from '../project/entities/Projects';
 import { Neighborhoods } from './entities/Neighborhoods';
 import { Coordinates } from '../shared/entities/Coordinates';
+import { Trees } from '../tree/entities/Trees';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UnitWork, Projects, Neighborhoods, Coordinates])],
+  imports: [TypeOrmModule.forFeature([UnitWork, Projects, Neighborhoods, Trees, Coordinates])],
   providers: [UnitWorkService],
-  controllers: [UnitWorkController]
+  controllers: [UnitWorkController],
 })
 export class UnitWorkModule {}
