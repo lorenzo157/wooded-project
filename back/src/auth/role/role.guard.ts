@@ -19,7 +19,7 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user; // This should be set by the AuthGuard after JWT validation
     // Check if the user has at least one of the required roles
-    console.log(requiredRoles)
-    return await this.authService.validateRoleByUserId(user.idUser,requiredRoles);
+    console.log(requiredRoles);
+    return await this.authService.validateRoleByUserId(user.idUser, requiredRoles);
   }
 }
