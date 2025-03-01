@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer';
 export class ReadUserDto {
   idUser: number;
   @Expose()
-  userName: string;
+  firstName: string;
   @Expose()
   lastName: string;
   @Expose()

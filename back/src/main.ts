@@ -24,7 +24,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.use(json({ limit: '50mb' }));
-  app.use(urlencoded({ extended: true, limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '10mb' }));
 
   await app.listen(3000);
 }

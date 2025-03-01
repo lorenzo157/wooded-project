@@ -13,12 +13,8 @@ export class Neighborhoods {
   @Column('character varying', { name: 'neighborhood_name', length: 40 })
   neighborhoodName: string;
 
-  @Column('numeric', {
-    name: 'neighborhood_metres',
-    precision: 8,
-    scale: 2,
-  })
-  neighborhoodMetres: string;
+  @Column('integer', { name: 'num_blocks_in_neighborhood' })
+  numBlocksInNeighborhood: number;
 
   @ManyToOne(() => Cities, (cities) => cities.neighborhoods)
   @JoinColumn([{ name: 'city_id', referencedColumnName: 'idCity' }])

@@ -21,22 +21,22 @@
   "growthSpace": "cazuela > 2 m2",
   "treeValue": "singular",
   "streetMateriality": "asfalto",
-  "conflictsNames": ["Conflicto1", "Conflicto2"],
-  "defectsDtos": [
+  "conflictsNames": ["obstruccion visual de señaletica vial", "obstruccion de visual(transito humano y vehicular)"],
+  "createDefectsDtos": [
     {
-      "defectName": "Defecto1",
+      "defectName": "ramas colgantes o quebradas",
       "defectValue": 4,
-      "textDefectValue": "Moderate",
+      "textDefectValue": "> 10 cm de diametro",
       "branches": 3
     },
     {
-      "defectName": "Defecto2",
-      "defectValue": 2,
-      "textDefectValue": "Mild"
+      "defectName": "raices estrangulantes",
+      "defectValue": 4,
+      "textDefectValue": "afecta > 50% del perimetro de la base"
     }
   ],
   "diseasesNames": ["Enfermedad1", "Enfermedad2"],
-  "interventionsNames": ["Intervencion1", "Intervencion2"],
+  "interventionsNames": ["extraccion del arbol", "poda"],
   "pestsNames": ["Plaga1", "Plaga2"],
   "latitude": -34.603722,
   "longitude": -58.381592,
@@ -93,3 +93,34 @@ UPDATE trees SET neighborhood_id = 1 WHERE id_tree = 8;
 
 TRUNCATE TABLE trees CASCADE;
 select * from trees
+
+SELECT * FROM convert_lat_long_to_xy(40.7128, -74.0060);
+SELECT point_in_polygon(4.5, 2.5, ARRAY[0, 2, 6, 4,6], ARRAY[0, 4, 4, 2,0]);
+
+INSERT INTO neighborhoods (neighborhood_name, neighborhood_metres, city_id)
+VALUES ('Los hornos', 20000, 1);
+
+select * from neighborhoods
+INSERT INTO coordinates (longitude, latitude, neighborhood_id)
+VALUES
+  (-59.45678901, -30.67890123, 1),
+  (-60.45678901, -31.67890123, 1),
+  (-61.45678901, -30.67890123, 1),
+  (-62.45678901, -31.67890123, 1),
+  (-61.45678901, -32.67890123, 1),
+  (-60.45678901, -32.67890123, 1);
+
+  SELECT n.id_neighborhood, n.city_id,
+        json_agg(json_build_object('latitude', c.latitude, 'longitude', c.longitude)) AS coordinates
+    FROM neighborhoods n
+    INNER JOIN coordinates c ON n.id_neighborhood = c.neighborhood_id
+    INNER JOIN cities ci ON n.city_id = ci.id_city
+	WHERE n.city_id = 1
+    GROUP BY n.id_neighborhood
+    Having n.city_id = 1;  
+
+    -- Select a point inside the polygon (adjust coordinates as needed)
+SELECT * FROM determine_tree_neighborhoods(1, 46.5, 25);
+SELECT * FROM determine_tree_neighborhoods(1, 46.67890123, 24.45678901);
+SELECT * FROM determine_tree_neighborhoods(1, -31.67890123, -60.45678902);
+SELECT * FROM determine_tree_neighborhoods(1, -31.6296, -60.693);

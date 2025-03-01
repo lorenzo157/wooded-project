@@ -97,9 +97,12 @@ export class CreateTreeComponent implements OnInit {
   deadBranches_branches: boolean = false;
   overExtendedBranches_branches: boolean = false;
   showWarning: boolean = false;
+  operation: string = 'Registración';
   private image: any;
-  tiltValues = { angle: 0 };
-  onTiltChange(event: { angle: number }) {
+  tiltValues = { angle: 0 ,x :0,y :0,z :0};
+  onTiltChange(event: { angle: number,x: number,
+    y: number,
+    z: number }) {
     this.tiltValues = event;
     this.treeForm.get('incline')?.setValue(Number(Number(event.angle.toFixed(2))));
   }
@@ -171,6 +174,7 @@ export class CreateTreeComponent implements OnInit {
       interferenceWithTheElectricalGrid: [null],
     });
     this.addConditionalValidation();
+    this.operation = this.idTree ? 'Actualización' : 'Registración';
   }
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -320,7 +324,7 @@ export class CreateTreeComponent implements OnInit {
         resultType: CameraResultType.DataUrl,
         source: CameraSource.Camera,
       });
-      this.treeForm.get('pathPhoto')?.setValue(`tree_${Date.now() - 1732800000000}.jpg`);
+      this.treeForm.get('pathPhoto')?.setValue(`tree_${Date.now() - 1734000000000}.jpg`);
     } catch (error) {
       this.uiService.alert('Error al tomar la foto', 'Error');
     }
@@ -335,18 +339,22 @@ export class CreateTreeComponent implements OnInit {
   async onSubmit() {
     if (this.treeForm.valid) {
       console.log('is validoooo');
-      await this.uiService.alert('¿Registrar el árbol?', 'Confirme', [
-        {
-          text: 'No',
-          role: 'cancel',
-        },
-        {
-          text: 'Si',
-          handler: () => {
-            this.createTree(); 
+      await this.uiService.alert(
+        '¿Desea finalizar la ' + this.operation + ' del árbol?',
+        this.operation,
+        [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
           },
-        },
-      ]);
+          {
+            text: 'Confirmar',
+            handler: () => {
+              this.createTree();
+            },
+          },
+        ]
+      );
     } else {
       this.displayWarningSign();
     }
@@ -485,8 +493,10 @@ export class CreateTreeComponent implements OnInit {
         slendernessCoefficent_number = newTree.height / newTree.dch;
         console.log(slendernessCoefficent_number);
         let defectValue: number = 1;
-        if (slendernessCoefficent_number > 60 && slendernessCoefficent_number <= 80) defectValue = 2;
-        else if (slendernessCoefficent_number > 80 && slendernessCoefficent_number <= 100) defectValue = 3;
+        if (slendernessCoefficent_number > 60 && slendernessCoefficent_number <= 80)
+          defectValue = 2;
+        else if (slendernessCoefficent_number > 80 && slendernessCoefficent_number <= 100)
+          defectValue = 3;
         else if (slendernessCoefficent_number > 100) defectValue = 4;
         addDefect('coeficiente de esbeltez', defectValue, slendernessCoefficent);
       }
@@ -538,12 +548,13 @@ export class CreateTreeComponent implements OnInit {
       }
 
       console.log(newTree.createDefectDto);
-      const defectValues = newTree.createDefectDto
-        .map((createDefectDto) => createDefectDto.defectValue);
+      const defectValues = newTree.createDefectDto.map(
+        (createDefectDto) => createDefectDto.defectValue
+      );
       let maxDefectValue = defectValues.length ? Math.max(...defectValues) : null;
 
       if (maxDefectValue) newTree.risk += maxDefectValue;
-      else newTree.risk+=1;
+      else newTree.risk += 1;
       if (newTree.windExposure == 'parcialmente expuesto') newTree.risk += 1;
       if (newTree.windExposure == 'expuesto') newTree.risk += 2;
       if (newTree.windExposure == 'tunel de viento') newTree.risk += 2;
@@ -555,8 +566,9 @@ export class CreateTreeComponent implements OnInit {
       console.log(maxDefectValue);
       console.log(newTree.risk, '  risk');
 
-      newTree.createDefectDto = newTree.createDefectDto
-        .filter((createDefectDto) => createDefectDto.defectValue > 2);
+      newTree.createDefectDto = newTree.createDefectDto.filter(
+        (createDefectDto) => createDefectDto.defectValue > 2
+      );
     } // end if
     if (this.image) {
       console.log(this.image ? 'imagen existe' : ' img no existe');
@@ -564,17 +576,16 @@ export class CreateTreeComponent implements OnInit {
     }
     console.log(newTree);
 
-    let operation = this.idTree ? 'Actualización' : 'Registración';
     // this.treeService.createOrUpdateTree(newTree, this.idTree).subscribe({
     //   next: (idTree) => {
-    //     this.uiService.alert(operation + ' exitosa', 'Éxito');
+    //     this.uiService.alert(this.operation + ' exitosa', 'Éxito');
     //     this.router.navigate([
     //       `/project/${this.idProject}/tree/${
     //         this.projectType ? 'muestreo' : 'individual'
     //       }/detailtree/${idTree}`,
     //     ]);
     //   },
-    //   error: () => this.uiService.alert(operation + ' fallida', 'Error'),
+    //   error: () => this.uiService.alert(this.operation + ' fallida', 'Error'),
     // });
   }
 }

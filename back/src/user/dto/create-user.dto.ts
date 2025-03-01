@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-vali
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
-  userName: string;
+  firstName: string;
 
   @IsNotEmpty()
   @IsString()

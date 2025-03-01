@@ -11,8 +11,8 @@ export class Users {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id_user' })
   idUser: number;
 
-  @Column('character varying', { name: 'user_name', length: 50 })
-  userName: string;
+  @Column('character varying', { name: 'first_name', length: 50 })
+  firstName: string;
 
   @Column('character varying', { name: 'last_name', length: 50 })
   lastName: string;

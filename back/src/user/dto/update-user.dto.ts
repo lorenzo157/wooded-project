@@ -1,6 +1,6 @@
 export class UpdateUserDto {
   idUser: number;
-  userName: string;
+  firstName: string;
   lastName: string;
   email: string;
   password: string;
@@ -8,7 +8,6 @@ export class UpdateUserDto {
   address: string | null;
   cityName: string;
   provinceName: string;
-  //projects: ProjectUserDto[] | [];
   city: any;
   projectUsers: any;
 }

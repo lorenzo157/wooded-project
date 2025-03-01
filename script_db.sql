@@ -77,14 +77,14 @@ CREATE TABLE IF NOT EXISTS cities (
 CREATE TABLE IF NOT EXISTS neighborhoods (
     id_neighborhood SERIAL PRIMARY KEY,
     neighborhood_name VARCHAR(40) NOT NULL,
-    neighborhood_metres NUMERIC(8, 2) NOT NULL,
+    num_blocks_in_neighborhood INTEGER NOT NULL,
     city_id INTEGER NOT NULL,
     CONSTRAINT fk_city FOREIGN KEY (city_id) REFERENCES cities(id_city)
 );
 
 CREATE TABLE IF NOT EXISTS users (
     id_user SERIAL PRIMARY KEY,
-    user_name VARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -114,8 +114,8 @@ CREATE TABLE IF NOT EXISTS projects (
 
 CREATE TABLE IF NOT EXISTS coordinates (
     id_coordinate SERIAL PRIMARY KEY,
-    longitude NUMERIC(12, 10) NOT NULL,
     latitude NUMERIC(12, 10) NOT NULL,
+    longitude NUMERIC(12, 10) NOT NULL,
     neighborhood_id INTEGER NULL,
     CONSTRAINT fk_neighborhood FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods(id_neighborhood)
 );
@@ -126,8 +126,8 @@ CREATE TABLE IF NOT EXISTS project_user (
     id_project_user SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     project_id INTEGER NOT NULL,
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id_user),
-    CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES projects(id_project),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id_user) ON DELETE CASCADE,
+    CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES projects(id_project)  ON DELETE CASCADE,
     CONSTRAINT unique_user_project UNIQUE (user_id, project_id)
 );
 
@@ -135,7 +135,9 @@ CREATE TABLE IF NOT EXISTS unit_work (
     id_unit_work SERIAL PRIMARY KEY,
     project_id INTEGER NULL,
     neighborhood_id INTEGER NULL,
-    pruning INTEGER NOT NULL DEFAULT 0,
+    advanced_inspections INTEGER NOT NULL DEFAULT 0,
+	move_target INTEGER NOT NULL DEFAULT 0,
+	restrict_access INTEGER NOT NULL DEFAULT 0,
     cabling INTEGER NOT NULL DEFAULT 0,
     fastening INTEGER NOT NULL DEFAULT 0,
     propping INTEGER NOT NULL DEFAULT 0,
@@ -147,6 +149,13 @@ CREATE TABLE IF NOT EXISTS unit_work (
     plantations INTEGER NOT NULL DEFAULT 0,
     openings_pot INTEGER NOT NULL DEFAULT 0,
     advanced_inspections INTEGER NOT NULL DEFAULT 0,
+    pruning_training INTEGER NOT NULL DEFAULT 0,
+	pruning_sanitary INTEGER NOT NULL DEFAULT 0,
+	pruning_height_reduction INTEGER NOT NULL DEFAULT 0,
+	pruning_branch_thinning INTEGER NOT NULL DEFAULT 0,
+	pruning_sign_clearing INTEGER NOT NULL DEFAULT 0,
+	pruning_power_line_clearing INTEGER NOT NULL DEFAULT 0,
+	pruning_root_deflectors INTEGER NOT NULL DEFAULT 0,
     unit_work_id INTEGER,
     campaign_description VARCHAR(100),
     CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES projects(id_project),
@@ -194,7 +203,6 @@ CREATE TABLE IF NOT EXISTS trees (
     street_materiality street_materiality_type,
     risk SMALLINT,
     address VARCHAR(100) NOT NULL,
-    CONSTRAINT fk_tree_type FOREIGN KEY (tree_type_id) REFERENCES tree_types(id_tree_type),
     CONSTRAINT fk_neighborhood FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods(id_neighborhood),
     CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES projects(id_project),
     CONSTRAINT fk_coordinate FOREIGN KEY (coordinate_id) REFERENCES coordinates(id_coordinate)

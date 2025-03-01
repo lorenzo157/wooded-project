@@ -51,6 +51,7 @@ export class DetailTreeComponent implements OnInit {
         console.log(this.tree.pathPhoto)
       },
       error: (error) => {
+        
         this.uiService.alert('No se pudo cargar el árbol.', 'Error');
         this.uiService.cargando(false);
       },

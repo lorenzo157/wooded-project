@@ -1,7 +1,7 @@
 import { NumberToStringMap } from '../tree/tree.service';
 
-export const API = 'https://d84a-2803-9800-b802-7ec0-9876-6469-cceb-e714.ngrok-free.app';
-//export const API = 'http://localhost:3000';
+//export const API = 'https://d84a-2803-9800-b802-7ec0-9876-6469-cceb-e714.ngrok-free.app';
+export const API = 'http://localhost:3000';
 
 export const windExposureOptions: string[] = [
   'expuesto',

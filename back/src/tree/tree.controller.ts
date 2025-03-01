@@ -4,7 +4,7 @@ import { CreateTreeDto } from './dto/create-tree.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 
 @Controller('project/:idProject/tree')
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 export class TreeController {
   constructor(private readonly treeService: TreeService) {}
 

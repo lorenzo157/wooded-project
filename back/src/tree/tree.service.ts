@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTreeDto } from './dto/create-tree.dto';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Trees } from './entities/Trees';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pests } from './entities/Pests';
@@ -23,6 +23,7 @@ export class TreeService {
   constructor(
     private readonly projectService: ProjectService,
     private readonly s3Service: S3Service,
+    private readonly dataSource: DataSource,
     @InjectRepository(Trees)
     private readonly treeRepository: Repository<Trees>,
     @InjectRepository(Coordinates)
@@ -60,53 +61,82 @@ export class TreeService {
       longitude,
       projectId,
       treeTypeName,
+      pathPhoto,
       ...treeData
     } = createTreeDto;
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const coordinates = new Coordinates();
+      coordinates.latitude = latitude;
+      coordinates.longitude = longitude;
+      const savedCoordinates = await queryRunner.manager.save(Coordinates, coordinates);
 
-    const coordinates = new Coordinates();
-    coordinates.latitude = latitude;
-    coordinates.longitude = longitude;
-    const savedCoordinates = await this.coordinatesRepository.save(coordinates);
+      const project = await this.projectService.findProjectById(projectId);
 
-    const project = await this.projectService.findProjectById(projectId);
+      let newTree = this.treeRepository.create({
+        ...treeData,
+        coordinate: savedCoordinates,
+        neighborhood: null,
+        project: project,
+      });
 
-    const newTree = this.treeRepository.create({
-      ...treeData,
-      coordinate: savedCoordinates,
-      neighborhood: null,
-      project: project,
-    });
+      newTree = await queryRunner.manager.save(Trees, newTree);
 
-    await this.treeRepository.save(newTree);
+      await this.saveManyToManyRelations(
+        conflictsNames,
+        this.conflictRepository,
+        this.conflictTreeRepository,
+        newTree,
+        'conflict',
+        queryRunner,
+      );
+      await this.saveManyToManyRelations(
+        diseasesNames,
+        this.diseaseRepository,
+        this.diseaseTreeRepository,
+        newTree,
+        'disease',
+        queryRunner,
+      );
+      await this.saveManyToManyRelations(
+        interventionsNames,
+        this.interventionRepository,
+        this.interventionTreeRepository,
+        newTree,
+        'intervention',
+        queryRunner,
+      );
+      await this.saveManyToManyRelations(pestsNames, this.pestRepository, this.pestTreeRepository, newTree, 'pest', queryRunner);
 
-    await this.saveManyToManyRelations(conflictsNames, this.conflictRepository, this.conflictTreeRepository, newTree, 'conflict');
-    await this.saveManyToManyRelations(diseasesNames, this.diseaseRepository, this.diseaseTreeRepository, newTree, 'disease');
-    await this.saveManyToManyRelations(
-      interventionsNames,
-      this.interventionRepository,
-      this.interventionTreeRepository,
-      newTree,
-      'intervention',
-    );
-    await this.saveManyToManyRelations(pestsNames, this.pestRepository, this.pestTreeRepository, newTree, 'pest');
+      if (createDefectsDtos && createDefectsDtos.length > 0) {
+        for (const defectDto of createDefectsDtos) {
+          let entity = await this.defectRepository.findOne({
+            where: { defectName: defectDto.defectName },
+          });
 
-    if (createDefectsDtos && createDefectsDtos.length > 0) {
-      for (const defectDto of createDefectsDtos) {
-        let entity = await this.defectRepository.findOne({
-          where: { defectName: defectDto.defectName },
-        });
-
-        const defectTree = this.defectTreeRepository.create({
-          tree: newTree,
-          defect: entity,
-          defectValue: defectDto.defectValue,
-          textDefectValue: defectDto.textDefectValue,
-          branches: defectDto.branches,
-        });
-        await this.defectTreeRepository.save(defectTree);
+          const defectTree = this.defectTreeRepository.create({
+            tree: newTree,
+            defect: entity,
+            defectValue: defectDto.defectValue,
+            textDefectValue: defectDto.textDefectValue,
+            branches: defectDto.branches,
+          });
+          await queryRunner.manager.save(DefectTree, defectTree);
+        }
       }
+      await queryRunner.commitTransaction();
+      return newTree.idTree;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      if (pathPhoto) await this.s3Service.deleteFile(pathPhoto);
+
+      throw error;
+    } finally {
+      // Release the query runner
+      await queryRunner.release();
     }
-    return newTree.idTree;
   }
 
   private async saveManyToManyRelations(
@@ -114,7 +144,8 @@ export class TreeService {
     entityRepository: Repository<any>, // Repository for the main entity (e.g., pestRepository, diseaseRepository)
     relationRepository: Repository<any>, // Repository for the relation (e.g., pestTreeRepository)
     tree: Trees, // The tree entity being associated
-    entityField: string, // The field name in the relation entity (e.g., 'pest' or 'disease')
+    entityField: string,
+    queryRunner: any, // The field name in the relation entity (e.g., 'pest' or 'disease')
   ) {
     if (names && names.length > 0) {
       for (const name of names) {
@@ -126,7 +157,7 @@ export class TreeService {
           tree: tree,
           [entityField]: entity, // Dynamically set the field (e.g., 'pest', 'disease')
         });
-        await relationRepository.save(relation);
+        await queryRunner.manager.save(relationRepository.target, relation);
       }
     }
   }
@@ -163,7 +194,8 @@ export class TreeService {
       .leftJoinAndSelect('pestTrees.pest', 'pest')
       .where('tree.idTree = :idTree', { idTree })
       .getOne();
-    const neighborhoodName = tree.neighborhood ? tree.neighborhood.neighborhoodName : null;
+    const neighborhoodName = tree.neighborhood?.neighborhoodName ?? null;
+
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
       datetime: tree.datetime,

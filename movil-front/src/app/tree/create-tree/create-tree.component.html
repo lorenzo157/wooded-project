@@ -111,15 +111,21 @@
           ></ion-input>
         </ion-item>
         <!-- incline -->
+         <!-- <div>
+          <p>{{tiltValues.x}}</p>
+          <p>{{tiltValues.y}}</p>
+          <p>{{tiltValues.z}}</p>
+         </div> -->
         <ion-item lines="none">
           <tilt-measure (tiltChange)="onTiltChange($event)"></tilt-measure>
             <ion-input
               type="number"
-              label="Inclinación"
+              label="Inclinación(ángulo en grados)"
               labelPlacement="floating"
               errorText="Invalid"
               formControlName="incline"
             ></ion-input>
+            
           </ion-item>
         <!-- height -->
         <ion-item lines="none">
@@ -268,7 +274,7 @@
         </ion-item>
         <!-- frequencyUse -->
         <ion-item>
-          <ion-label position="floating">¿Con qué frecuencia se encuentra?</ion-label>
+          <ion-label position="floating">¿Con qué Frecuencia se encuentra?</ion-label>
           <ion-select formControlName="frequencyUse">
             <ion-select-option
               *ngFor="let option of frequencyUseOptions; let i = index"
@@ -280,13 +286,13 @@
         </ion-item>
         <!-- isMovable -->
         <ion-item>
-          <ion-label>¿Se puede mover el blanco bajo del árbol?</ion-label>
+          <ion-label>¿Se puede Mover el blanco bajo del árbol?</ion-label>
           <ion-checkbox formControlName="isMovable"></ion-checkbox>
         </ion-item>
         <!-- isRestrictable -->
         <ion-item>
           <ion-label class="ion-text-center"
-            >¿Se puede restringir el blanco bajo del árbol?</ion-label
+            >¿Se puede Restringir el blanco bajo del árbol?</ion-label
           >
           <ion-checkbox formControlName="isRestrictable"></ion-checkbox>
         </ion-item>

@@ -20,9 +20,15 @@ export class TiltMeasureComponent {
   isMeasuringTilt: boolean = false;
   magnitude: number = 0;
   accelHandler: PluginListenerHandle | null = null;
+  x: number  = 0
+  y: number  = 0
+  z: number  = 0
 
   @Output() tiltChange = new EventEmitter<{
     angle: number;
+    x: number; 
+    y: number; 
+    z: number; 
   }>();
 
   async startMeasuringTilt() {
@@ -33,11 +39,19 @@ export class TiltMeasureComponent {
         let x = event.accelerationIncludingGravity?.x || 0;
         let y = event.accelerationIncludingGravity?.y || 0;
         let z = event.accelerationIncludingGravity?.z || 0;
+
+        this.x= x;
+        this.y= y;
+        this.z= z;
+
         
         this.calculateTiltAngle(x,y,z);
         // Emit updated values
         this.tiltChange.emit({
           angle: this.angle,
+          x: this.x,
+          y: this.y,
+          z: this.z,
         });
       });
     }
@@ -50,11 +64,14 @@ export class TiltMeasureComponent {
       if (this.accelHandler) {
         this.accelHandler.remove();
         this.accelHandler = null;
-        Motion.removeAllListeners();
+        //Motion.removeAllListeners();
       }
 
       this.tiltChange.emit({
         angle: this.angle,
+        x: this.x,
+        y: this.y,
+        z: this.z,
       });
     }
   }

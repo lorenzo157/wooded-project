@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { AuthService } from '../../auth/auth.service'; // Adjust import as necessary
 import { IonicModule } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
-import { UiService } from '../ui.service';
+import { UiService } from 'src/app/utils/ui.service';
+
 
 @Component({
   selector: 'app-navigation',
@@ -22,15 +22,15 @@ export class NavigationComponent {
   // Navigate back to the previous page
   async goBack() {
     await this.uiService.alert(
-      '¿Desea volver a la pantalla anterior?',
-      'Confirme',
+      '¿Volver a la pantalla anterior?',
+      '',
       [
         {
-          text: 'No',
+          text: 'Cancelar',
           role: 'cancel',
         },
         {
-          text: 'Si',
+          text: 'Confirmar',
           handler: () => {
             this.location.back(); // Navigate back if confirmed
           },
@@ -41,15 +41,15 @@ export class NavigationComponent {
 
   async logout() {
     await this.uiService.alert(
-      'Confirme',
-      '¿Desea salir de la aplicación?',
+      '¿Salir de la aplicación?',
+      '',
       [
         {
-          text: 'No',
+          text: 'Cancelar',
           role: 'cancel',
         },
         {
-          text: 'Si',
+          text: 'Confirmar',
           handler: () => {
             this.authService.logout(); // Log out if confirmed
           },
