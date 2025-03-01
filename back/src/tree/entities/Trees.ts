@@ -8,7 +8,7 @@ import { Coordinates } from '../../shared/entities/Coordinates';
 import { Neighborhoods } from '../../unitwork/entities/Neighborhoods';
 import { Projects } from '../../project/entities/Projects';
 
-@Index('trees_pkey', ['idTree'], { unique: true })
+@Index('tree_pkey', ['idTree'], { unique: true })
 @Entity('trees', { schema: 'public' })
 export class Trees {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id_tree' })
@@ -30,28 +30,13 @@ export class Trees {
   @Column('integer', { name: 'city_block' })
   cityBlock: number;
 
-  @Column('numeric', {
-    name: 'perimeter',
-    nullable: true,
-    precision: 7,
-    scale: 5,
-  })
+  @Column('numeric', { name: 'perimeter', nullable: true, precision: 7, scale: 5 })
   perimeter: number | null;
 
-  @Column('numeric', {
-    name: 'height',
-    nullable: true,
-    precision: 8,
-    scale: 5,
-  })
+  @Column('numeric', { name: 'height', nullable: true, precision: 8, scale: 5 })
   height: number | null;
 
-  @Column('numeric', {
-    name: 'incline',
-    nullable: true,
-    precision: 8,
-    scale: 5,
-  })
+  @Column('numeric', { name: 'incline', nullable: true, precision: 8, scale: 5 })
   incline: number | null;
 
   @Column('smallint', { name: 'trees_in_the_block', nullable: true })

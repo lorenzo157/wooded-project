@@ -3,7 +3,9 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local/local-auth.guard'; // We'll create this guard to handle login
 import { JwtAuthGuard } from './jwt/jwt-auth.guard'; // Used for protecting routes
 import { Roles } from './role/role.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -31,6 +33,7 @@ export class AuthController {
   async getProfile(@Request() req) {
     return { idUser: req.user }; // Access to the user info after successful JWT validation
   }
+
   @Get('getStatus')
   async getStatus(@Request() req) {
     return {

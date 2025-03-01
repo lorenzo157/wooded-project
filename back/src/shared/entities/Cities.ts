@@ -4,7 +4,7 @@ import { Neighborhoods } from '../../unitwork/entities/Neighborhoods';
 import { Projects } from '../../project/entities/Projects';
 import { Users } from '../../user/entities/Users';
 
-@Index('cities_pkey', ['idCity'], { unique: true })
+@Index('city_pkey', ['idCity'], { unique: true })
 @Entity('cities', { schema: 'public' })
 export class Cities {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id_city' })
@@ -20,9 +20,9 @@ export class Cities {
   @OneToMany(() => Neighborhoods, (neighborhoods) => neighborhoods.city)
   neighborhoods: Neighborhoods[];
 
-  @OneToMany(() => Projects, (projects) => projects.city)
+  @OneToMany(() => Projects, (project) => project.city)
   projects: Projects[];
 
-  @OneToMany(() => Users, (users) => users.city)
+  @OneToMany(() => Users, (user) => user.city)
   users: Users[];
 }

@@ -19,7 +19,7 @@ export class ConflictTree {
   @JoinColumn([{ name: 'conflict_id', referencedColumnName: 'idConflict' }])
   conflict: Conflicts;
 
-  @ManyToOne(() => Trees, (trees) => trees.conflictTrees)
+  @ManyToOne(() => Trees, (tree) => tree.conflictTrees, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'tree_id', referencedColumnName: 'idTree' }])
   tree: Trees;
 }

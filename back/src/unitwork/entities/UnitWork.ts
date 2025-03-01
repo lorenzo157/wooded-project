@@ -17,9 +17,6 @@ export class UnitWork {
   @Column('integer', { name: 'neighborhood_id', unique: true })
   neighborhoodId: number;
 
-  @Column('integer', { name: 'pruning', default: () => '0' })
-  pruning: number;
-
   @Column('integer', { name: 'cabling', default: () => '0' })
   cabling: number;
 
@@ -56,6 +53,33 @@ export class UnitWork {
   @Column('integer', { name: 'advanced_inspections', default: () => '0' })
   advancedInspections: number;
 
+  @Column('integer', { name: 'pruning_training', default: () => '0' })
+  pruningTraining: number;
+
+  @Column('integer', { name: 'pruning_sanitary', default: () => '0' })
+  pruningSanitary: number;
+
+  @Column('integer', { name: 'pruning_height_reduction', default: () => '0' })
+  pruningHeightReduction: number;
+
+  @Column('integer', { name: 'pruning_branch_thinning', default: () => '0' })
+  pruningBranchThinning: number;
+
+  @Column('integer', { name: 'pruning_sign_clearing', default: () => '0' })
+  pruningSignClearing: number;
+
+  @Column('integer', { name: 'pruning_power_line_clearing', default: () => '0' })
+  pruningPowerLineClearing: number;
+
+  @Column('integer', { name: 'pruning_root_deflectors', default: () => '0' })
+  pruningRootDeflectors: number;
+
+  @Column('integer', { name: 'move_target', default: () => '0' })
+  moveTarget: number;
+
+  @Column('integer', { name: 'restrict_access', default: () => '0' })
+  restrictAccess: number;
+
   @Column('character varying', {
     name: 'campaign_description',
     nullable: true,
@@ -63,15 +87,15 @@ export class UnitWork {
   })
   campaignDescription: string | null;
 
-  @ManyToOne(() => Neighborhoods, (neighborhoods) => neighborhoods.unitWorks)
+  @ManyToOne(() => Neighborhoods, (neighborhoods) => neighborhoods.unitWorks, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'neighborhood_id', referencedColumnName: 'idNeighborhood' }])
   neighborhood: Neighborhoods;
 
-  @ManyToOne(() => Projects, (projects) => projects.unitWorks)
+  @ManyToOne(() => Projects, (project) => project.unitWorks)
   @JoinColumn([{ name: 'project_id', referencedColumnName: 'idProject' }])
   project: Projects;
 
-  @ManyToOne(() => UnitWork, (unitWork) => unitWork.unitWorks)
+  @ManyToOne(() => UnitWork, (unitWork) => unitWork.unitWorks, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'unit_work_id', referencedColumnName: 'idUnitWork' }])
   unitWork_2: UnitWork;
 

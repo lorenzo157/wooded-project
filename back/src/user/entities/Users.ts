@@ -28,7 +28,7 @@ export class Users {
     nullable: true,
     length: 50,
   })
-  phonenumber: string | null;
+  phoneNumber: string | null;
 
   @Column('character varying', {
     name: 'address',

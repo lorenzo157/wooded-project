@@ -1,13 +1,5 @@
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Neighborhoods } from '../../unitwork/entities/Neighborhoods';
-
 
 @Index('coordinates_pkey', ['idCoordinate'], { unique: true })
 @Entity('coordinates', { schema: 'public' })

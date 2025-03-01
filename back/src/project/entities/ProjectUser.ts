@@ -15,11 +15,11 @@ export class ProjectUser {
   @Column('integer', { name: 'project_id', unique: true })
   projectId: number;
 
-  @ManyToOne(() => Projects, (projects) => projects.projectUsers)
+  @ManyToOne(() => Projects, (project) => project.projectUsers, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'project_id', referencedColumnName: 'idProject' }])
   project: Projects;
 
-  @ManyToOne(() => Users, (users) => users.projectUsers)
+  @ManyToOne(() => Users, (user) => user.projectUsers, { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'idUser' }])
   user: Users;
 }

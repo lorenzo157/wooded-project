@@ -10,14 +10,12 @@ export class S3Controller {
 
   @Post('uploadfile')
   async uploadFile(@Body() uploadFileDto: UploadFileDto, @Res() res: Response) {
-    try{
+    try {
       const response = await this.s3Service.uploadFile(uploadFileDto);
-      res.status(HttpStatus.OK).send(response)
+      res.status(HttpStatus.OK).send(response);
       return response;
-    } catch(error) {
+    } catch (error) {
       throw error;
     }
-
   }
-
 }
