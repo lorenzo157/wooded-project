@@ -12,7 +12,7 @@ import { CreateTreeComponent } from './create-tree/create-tree.component';
 import { TiltMeasureComponent } from './create-tree/acelerometer-tilt.component';
 
 @NgModule({
-  declarations: [ListTreesComponent,DetailTreeComponent,CreateTreeComponent],
+  declarations: [ListTreesComponent,CreateTreeComponent,DetailTreeComponent],
   imports: [
     CommonModule,
     TreeRoutingModule,

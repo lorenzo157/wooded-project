@@ -48,9 +48,10 @@ import {
 } from '../../constants/API';
 
 @Component({
-  selector: 'app-create-tree',
-  templateUrl: './create-tree.component.html',
-  styleUrls: ['./create-tree.component.scss'],
+    selector: 'app-create-tree',
+    templateUrl: './create-tree.component.html',
+    styleUrls: ['./create-tree.component.scss'],
+    standalone: false
 })
 export class CreateTreeComponent implements OnInit {
   windExposureOptions = windExposureOptions;
