@@ -26,9 +26,9 @@ export class S3Service {
     const decodeFile = Buffer.from(file, 'base64');
     const params = {
       Bucket: this.bucketName,
-      Key: `trees_photos/${fileName}`, 
+      Key: `trees_photos/${fileName}`,
       Body: decodeFile,
-      ACL: 'public-read', 
+      ACL: 'public-read',
     };
     try {
       const responseS3 = await this.s3.upload(params).promise();
@@ -49,4 +49,3 @@ export class S3Service {
     }
   }
 }
-

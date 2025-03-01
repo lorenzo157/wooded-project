@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TreeService } from './tree.service';
 import { TreeController } from './tree.controller';
@@ -22,9 +22,10 @@ import { S3Module } from '../s3/s3.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Trees,
+      Coordinates,
       Conflicts,
       ConflictTree,
-      Coordinates,
       Defects,
       DefectTree,
       Diseases,
@@ -33,14 +34,15 @@ import { S3Module } from '../s3/s3.module';
       InterventionTree,
       Pests,
       PestTree,
-      Trees,
-      Projects,
       Neighborhoods,
+      Projects,
     ]),
+    forwardRef(() => ProjectModule),
     ProjectModule,
-    S3Module
+    S3Module,
   ], // Importa el repositorio
   providers: [TreeService],
-  controllers: [TreeController]
+  controllers: [TreeController],
+  exports: [TreeService],
 })
 export class TreeModule {}

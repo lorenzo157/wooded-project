@@ -21,7 +21,7 @@ export class InterventionTree {
   @JoinColumn([{ name: 'intervention_id', referencedColumnName: 'idIntervention' }])
   intervention: Interventions;
 
-  @ManyToOne(() => Trees, (trees) => trees.interventionTrees)
+  @ManyToOne(() => Trees, (tree) => tree.interventionTrees, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'tree_id', referencedColumnName: 'idTree' }])
   tree: Trees;
 }

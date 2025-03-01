@@ -11,10 +11,23 @@ import { Roles } from './entities/Roles';
 import { RolePermission } from './entities/RolePermission';
 import { Permissions } from './entities/Permissions';
 import { AuthModule } from '../auth/auth.module';
+import { Neighborhoods } from '../unitwork/entities/Neighborhoods';
+import { Coordinates } from '../shared/entities/Coordinates';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, ProjectUser, Projects, Cities, Provinces, Roles, RolePermission, Permissions]),
+    TypeOrmModule.forFeature([
+      Users,
+      ProjectUser,
+      Projects,
+      Cities,
+      Provinces,
+      Roles,
+      RolePermission,
+      Permissions,
+      Neighborhoods,
+      Coordinates,
+    ]),
   ],
   providers: [UserService],
   controllers: [UserController],

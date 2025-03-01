@@ -11,7 +11,7 @@ import { EnvVars } from '../config-loader';
 @Module({
   imports: [
     UserModule,
-    PassportModule, 
+    PassportModule,
     ConfigModule.forRoot(),
     JwtModule.registerAsync({
       imports: [ConfigModule],

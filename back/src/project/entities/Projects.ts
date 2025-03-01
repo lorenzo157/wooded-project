@@ -5,7 +5,7 @@ import { Users } from '../../user/entities/Users';
 import { Trees } from '../../tree/entities/Trees';
 import { UnitWork } from '../../unitwork/entities/UnitWork';
 
-@Index('projects_pkey', ['idProject'], { unique: true })
+@Index('project_pkey', ['idProject'], { unique: true })
 @Entity('projects', { schema: 'public' })
 export class Projects {
   @PrimaryGeneratedColumn({ type: 'integer', name: 'id_project' })
@@ -37,11 +37,11 @@ export class Projects {
   @JoinColumn([{ name: 'city_id', referencedColumnName: 'idCity' }])
   city: Cities;
 
-  @ManyToOne(() => Users, (users) => users.projects)
+  @ManyToOne(() => Users, (user) => user.projects)
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'idUser' }])
   user: Users;
 
-  @OneToMany(() => Trees, (trees) => trees.project)
+  @OneToMany(() => Trees, (tree) => tree.project)
   trees: Trees[];
 
   @OneToMany(() => UnitWork, (unitWork) => unitWork.project)

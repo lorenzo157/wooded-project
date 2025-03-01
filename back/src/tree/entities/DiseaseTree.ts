@@ -19,7 +19,7 @@ export class DiseaseTree {
   @JoinColumn([{ name: 'disease_id', referencedColumnName: 'idDisease' }])
   disease: Diseases;
 
-  @ManyToOne(() => Trees, (trees) => trees.diseaseTrees)
+  @ManyToOne(() => Trees, (tree) => tree.diseaseTrees, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'tree_id', referencedColumnName: 'idTree' }])
   tree: Trees;
 }
