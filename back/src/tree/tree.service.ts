@@ -57,7 +57,6 @@ export class TreeService {
       longitude,
       projectId,
       treeTypeName,
-      pathPhoto,
       ...treeData
     } = createTreeDto;
 
@@ -124,8 +123,6 @@ export class TreeService {
       return newTree.idTree;
     } catch (error) {
       if (!queryRunnerFromUpdate) await queryRunner.rollbackTransaction();
-      if (pathPhoto) await this.s3Service.deleteFile(pathPhoto);
-
       throw error;
     } finally {
       // Release the query runner
@@ -173,6 +170,7 @@ export class TreeService {
         'coordinate.latitude AS "latitude"',
         'coordinate.longitude AS "longitude"',
       ])
+      .orderBy('tree.idTree', 'ASC')
       .getRawMany();
 
     return trees;
@@ -249,13 +247,13 @@ export class TreeService {
       gender: tree.gender,
       species: tree.species,
       scientificName: tree.scientificName,
-      conflictsNames: tree.conflictTrees.map((conflictTree) => conflictTree.conflict.conflictName),
-      diseasesNames: tree.diseaseTrees.map((diseaseTree) => diseaseTree.disease.diseaseName),
-      interventionsNames: tree.interventionTrees.map((interventionTree) => interventionTree.intervention.interventionName),
-      pestsNames: tree.pestTrees.map((pestTree) => pestTree.pest.pestName),
+      conflictsNames: tree.conflictTrees?.map((conflictTree) => conflictTree.conflict?.conflictName),
+      diseasesNames: tree.diseaseTrees?.map((diseaseTree) => diseaseTree.disease?.diseaseName),
+      interventionsNames: tree.interventionTrees?.map((interventionTree) => interventionTree.intervention?.interventionName),
+      pestsNames: tree.pestTrees?.map((pestTree) => pestTree.pest?.pestName),
       readDefectDto: tree.defectTrees.map((defectTree) => ({
-        defectName: defectTree.defect.defectName,
-        defectZone: defectTree.defect.defectZone,
+        defectName: defectTree.defect?.defectName,
+        defectZone: defectTree.defect?.defectZone,
         defectValue: defectTree.defectValue,
         textDefectValue: defectTree.textDefectValue,
         branches: defectTree.branches,
@@ -413,20 +411,20 @@ export class TreeService {
       streetMateriality: tree.streetMateriality,
       risk: tree.risk,
       address: tree.address,
-      latitude: tree.coordinate.latitude,
-      longitude: tree.coordinate.longitude,
-      neighborhoodName: tree.neighborhood.neighborhoodName,
+      latitude: tree.coordinate?.latitude,
+      longitude: tree.coordinate?.longitude,
+      neighborhoodName: tree.neighborhood?.neighborhoodName,
       treeTypeName: tree.treeTypeName,
       gender: tree.gender,
       species: tree.species,
       scientificName: tree.scientificName,
-      conflictsNames: tree.conflictTrees.map((conflictTree) => conflictTree.conflict.conflictName),
-      diseasesNames: tree.diseaseTrees.map((diseaseTree) => diseaseTree.disease.diseaseName),
-      interventionsNames: tree.interventionTrees.map((interventionTree) => interventionTree.intervention.interventionName),
-      pestsNames: tree.pestTrees.map((pestTree) => pestTree.pest.pestName),
-      readDefectDto: tree.defectTrees.map((defectTree) => ({
-        defectName: defectTree.defect.defectName,
-        defectZone: defectTree.defect.defectZone,
+      conflictsNames: tree.conflictTrees?.map((conflictTree) => conflictTree.conflict?.conflictName),
+      diseasesNames: tree.diseaseTrees?.map((diseaseTree) => diseaseTree.disease?.diseaseName),
+      interventionsNames: tree.interventionTrees?.map((interventionTree) => interventionTree.intervention?.interventionName),
+      pestsNames: tree.pestTrees?.map((pestTree) => pestTree.pest?.pestName),
+      readDefectDto: tree.defectTrees?.map((defectTree) => ({
+        defectName: defectTree.defect?.defectName,
+        defectZone: defectTree.defect?.defectZone,
         defectValue: defectTree.defectValue,
         textDefectValue: defectTree.textDefectValue,
         branches: defectTree.branches,
@@ -438,7 +436,6 @@ export class TreeService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-
     try {
       await this.removeTreeById(idTree, queryRunner);
       const newIdTree = await this.createTree(createTreeDto, queryRunner);
@@ -490,12 +487,10 @@ export class TreeService {
   async removeTreeById(idTree: number, queryRunnerFromUpdate: any = null): Promise<void> {
     let queryRunner = queryRunnerFromUpdate;
     if (!queryRunnerFromUpdate) {
-      console.log('asdda');
       queryRunner = this.dataSource.createQueryRunner();
       await queryRunner.connect();
       await queryRunner.startTransaction();
     }
-
     try {
       const tree = await queryRunner.manager.findOne(Trees, {
         where: { idTree },

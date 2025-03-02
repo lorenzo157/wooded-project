@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, UseGuards } from '@nestjs/common';
 import { S3Service } from './s3.service';
 import { UploadFileDto } from './dto/upload-file.dto';
 import { Response } from 'express';
-import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+//import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 @Controller('s3')
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 

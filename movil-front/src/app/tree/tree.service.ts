@@ -19,7 +19,7 @@ export class TreeService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  createOrUpdateTree(newTree: CreateTreeDto, idTree: number): Observable<number> {
+  createOrUpdateTree(newTree: CreateTreeDto, idTree: number | null): Observable<number> {
     console.log('idTree',idTree)
     if (idTree) return this.http.put<number>(`${this.API_URL}/0/tree/${idTree}`, newTree);
     else return this.http.post<number>(`${this.API_URL}/0/tree`, newTree);
@@ -37,6 +37,7 @@ export class TreeService {
     this.authService.logout();
   }
   sendToBackend(base64File: string, fileName: string): Observable<void> {
+    console.log('base64File',base64File)
     const uploadFileDto = { fileName: fileName, file: base64File };
     return this.http.post<void>(`${API}/s3/uploadfile`, uploadFileDto);
   }
