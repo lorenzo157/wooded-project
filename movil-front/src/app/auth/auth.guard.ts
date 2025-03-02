@@ -31,14 +31,3 @@ export class AuthGuard implements CanActivate {
     );
   }
 }
-
-// .pipe(
-//   catchError((err) => {
-//     if (err.status === 401) {
-//       this.uiService.alert('No se pudieron cargar los proyectos.', 'Error');
-//       this.uiService.alert('Ingrese sus credenciales nuevamente', 'Sesión expirada');
-//       this.authService.logout(); // Clear token and user info
-//     }
-//     return throwError(() => err); // Rethrow other errors
-//   })
-// );

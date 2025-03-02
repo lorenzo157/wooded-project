@@ -43,13 +43,9 @@ export class AuthService {
 
     return {
       idUser: user.idUser,
-      userName: user.userName,
+      firstName: user.firstName,
       role: user.roleName, // 🔹 Asegúrate de que roleName sea el campo correcto
     };
   }
 
-  async validateRoleByUserId(idUser: number, requiredRoles: string[]) {
-    const userRole = await this.userService.findRoleByIdUser(idUser);
-    return requiredRoles.includes(userRole);
-  }
 }

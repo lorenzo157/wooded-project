@@ -159,7 +159,7 @@ export class Trees {
   @OneToMany(() => PestTree, (pestTree) => pestTree.tree, { cascade: true, onDelete: 'CASCADE' })
   pestTrees: PestTree[];
 
-  @OneToOne(() => Coordinates, { cascade: true, onDelete: 'CASCADE' })
+  @OneToOne(() => Coordinates)
   @JoinColumn([{ name: 'coordinate_id', referencedColumnName: 'idCoordinate' }])
   coordinate: Coordinates;
 

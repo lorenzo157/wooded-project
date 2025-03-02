@@ -6,9 +6,10 @@ import { SimplyReadTreeDto } from '../dto/simply-read-tree.dto';
 import { UiService } from '../../utils/ui.service';
 
 @Component({
-  selector: 'app-list-trees',
-  templateUrl: './list-trees.component.html',
-  styleUrls: ['./list-trees.component.scss'],
+    selector: 'app-list-trees',
+    templateUrl: './list-trees.component.html',
+    styleUrls: ['./list-trees.component.scss'],
+    standalone: false
 })
 export class ListTreesComponent implements OnInit {
   idProject!: number;

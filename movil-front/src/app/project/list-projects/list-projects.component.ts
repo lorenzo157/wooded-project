@@ -5,9 +5,10 @@ import { UiService } from '../../utils/ui.service';
 import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
-  selector: 'app-list-projects',
-  templateUrl: './list-projects.component.html',
-  styleUrls: ['./list-projects.component.scss'],
+    selector: 'app-list-projects',
+    templateUrl: './list-projects.component.html',
+    styleUrls: ['./list-projects.component.scss'],
+    standalone: false
 })
 export class ListProjectsComponent implements OnInit {
   projects: ProjectDto[] = []; // Array to hold project data
@@ -41,9 +42,7 @@ export class ListProjectsComponent implements OnInit {
   }
   viewProjectDetails(project: ProjectDto) {
     // Navigating with state to pass the idProject of the selected project
-    this.router.navigate([`project/detailproject/${project.idProject}`], {
-      state: { cityName: project.cityName, provinceName: project.provinceName },
-    });
+    this.router.navigate([`project/detailproject/${project.idProject}`]);
   }
 
   get filteredProjects() {

@@ -4,15 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UiService } from '../../utils/ui.service';
 
 @Component({
-  selector: 'app-detail-project',
-  templateUrl: './detail-project.component.html',
-  styleUrls: ['./detail-project.component.scss'],
+    selector: 'app-detail-project',
+    templateUrl: './detail-project.component.html',
+    styleUrls: ['./detail-project.component.scss'],
+    standalone: false
 })
 export class DetailProjectComponent implements OnInit {
   idProject!: number;
   project!: ProjectDto;
-  provinceName!: string;
-  cityName!: string;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -23,8 +22,6 @@ export class DetailProjectComponent implements OnInit {
   async ngOnInit() {
     await this.uiService.cargando(true);
     // Access the project object from the router state
-    this.cityName = history.state.cityName;
-    this.provinceName = history.state.provinceName;
     this.route.paramMap.subscribe((params) => {
       this.idProject = +params.get('idProject')!; // Retrieve project ID from route
       this.loadProject();

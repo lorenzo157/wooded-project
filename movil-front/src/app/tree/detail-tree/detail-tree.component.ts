@@ -8,6 +8,7 @@ import { UiService } from '../../utils/ui.service';
   selector: 'app-detail-tree',
   templateUrl: './detail-tree.component.html',
   styleUrls: ['./detail-tree.component.scss'],
+  standalone: false
 })
 export class DetailTreeComponent implements OnInit {
   urlAWSCloudBucket: string = 'https://woodedbucket.s3.us-east-1.amazonaws.com/trees_photos/';

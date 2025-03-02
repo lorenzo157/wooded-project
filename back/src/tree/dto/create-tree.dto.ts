@@ -9,11 +9,10 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateDefectTreeDto } from './create-defect-tree.dto';
-
 export class CreateTreeDto {
   @ApiProperty({ description: 'Path to the tree photo', required: false })
-  @IsString()
   @IsOptional()
+  @IsString()
   @MaxLength(255)
   pathPhoto?: string;
 
