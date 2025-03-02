@@ -97,9 +97,9 @@ export class Trees {
   @Column('enum', {
     name: 'growth_space',
     nullable: true,
-    enum: ['sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardín'],
+    enum: ['sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardin'],
   })
-  growthSpace: 'sin cazuela' | 'cazuela = 1 - 2 m2' | 'cazuela > 2 m2' | 'vereda jardín' | null;
+  growthSpace: 'sin cazuela' | 'cazuela = 1 - 2 m2' | 'cazuela > 2 m2' | 'vereda jardin' | null;
 
   @Column('enum', {
     name: 'tree_value',

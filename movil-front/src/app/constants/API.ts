@@ -25,7 +25,6 @@ export const treeValueOptions: string[] = [
   'notable',
   'plaza/parque (ornamental)',
   'reclamo',
-  'alineacion',
 ];
 export const frequencyUseOptions: string[] = ['intermedio', 'ocasional', 'frecuente'];
 export const potentialDamageOptions: string[] = ['menor', 'moderado', 'alto'];

@@ -16,7 +16,7 @@ export class CreateTreeDto {
   @MaxLength(255)
   pathPhoto?: string;
 
-  @ApiProperty({ description: 'City block number' })
+  @ApiProperty({ description: 'City block number', required: false })
   @IsOptional()
   @IsNumber()
   cityBlock: number;
@@ -123,11 +123,11 @@ export class CreateTreeDto {
   @ApiProperty({
     description: 'Growth space',
     required: false,
-    enum: ['sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardín'],
+    enum: ['sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardin'],
   })
   @IsOptional()
-  @IsEnum(['sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardín'])
-  growthSpace?: 'sin cazuela' | 'cazuela = 1 - 2 m2' | 'cazuela > 2 m2' | 'vereda jardín';
+  @IsEnum(['sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardin'])
+  growthSpace?: 'sin cazuela' | 'cazuela = 1 - 2 m2' | 'cazuela > 2 m2' | 'vereda jardin';
 
   @ApiProperty({
     description: 'Tree value',

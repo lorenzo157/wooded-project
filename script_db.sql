@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS unit_work (
 CREATE TYPE wind_exposure_type AS ENUM ('expuesto', 'parcialmente expuesto', 'protegido', 'tunel de viento');
 CREATE TYPE vigor_type AS ENUM ('excelente', 'normal', 'pobre');
 CREATE TYPE canopy_density_type AS ENUM ('escasa', 'normal', 'densa');
-CREATE TYPE growth_space_type AS ENUM ('sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardín');
+CREATE TYPE growth_space_type AS ENUM ('sin cazuela', 'cazuela = 1 - 2 m2', 'cazuela > 2 m2', 'vereda jardin');
 CREATE TYPE tree_value_type AS ENUM ('historico', 'monumental', 'singular', 'notable', 'plaza/parque (ornamental)', 'reclamo');
 CREATE TYPE street_materiality_type AS ENUM ('tierra', 'mejorado petroleo', 'asfalto', 'concreto', 'cordon cuneta');
 CREATE TABLE IF NOT EXISTS trees (
