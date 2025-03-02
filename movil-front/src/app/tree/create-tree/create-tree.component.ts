@@ -575,18 +575,18 @@ export class CreateTreeComponent implements OnInit {
       console.log(this.image ? 'imagen existe' : ' img no existe');
       this.uploadPhoto();
     }
-    console.log(newTree);
+    console.log('newTree',newTree);
 
-    // this.treeService.createOrUpdateTree(newTree, this.idTree).subscribe({
-    //   next: (idTree) => {
-    //     this.uiService.alert(this.operation + ' exitosa', 'Éxito');
-    //     this.router.navigate([
-    //       `/project/${this.idProject}/tree/${
-    //         this.projectType ? 'muestreo' : 'individual'
-    //       }/detailtree/${idTree}`,
-    //     ]);
-    //   },
-    //   error: () => this.uiService.alert(this.operation + ' fallida', 'Error'),
-    // });
+    this.treeService.createOrUpdateTree(newTree, this.idTree).subscribe({
+      next: (idTree) => {
+        this.uiService.alert(this.operation + ' exitosa', 'Éxito');
+        this.router.navigate([
+          `/project/${this.idProject}/tree/${
+            this.projectType ? 'muestreo' : 'individual'
+          }/detailtree/${idTree}`,
+        ]);
+      },
+      error: () => this.uiService.alert(this.operation + ' fallida', 'Error'),
+    });
   }
 }

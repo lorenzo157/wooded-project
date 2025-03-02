@@ -39,6 +39,7 @@ export class TreeController {
   @ApiOperation({ summary: '#M105: Actualiza un  arbol por ID' })
   @Put(':idTree')
   async updateTreeById(@Param('idTree') idTree: number, @Body() updateTreeDto: CreateTreeDto) {
+    console.log('idTree', idTree);
     return this.treeService.updateTreeById(idTree, updateTreeDto); // Convert id to number and pass it to the service
   }
 

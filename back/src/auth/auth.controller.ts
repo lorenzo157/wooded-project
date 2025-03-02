@@ -21,7 +21,7 @@ export class AuthController {
       statusCode: 200,
       result: {
         access_token,
-        userName: user.userName,
+        userName: user.firstName,
         idUser: user.idUser,
       },
     };

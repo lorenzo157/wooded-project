@@ -20,6 +20,7 @@ export class TreeService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   createOrUpdateTree(newTree: CreateTreeDto, idTree: number): Observable<number> {
+    console.log('idTree',idTree)
     if (idTree) return this.http.put<number>(`${this.API_URL}/0/tree/${idTree}`, newTree);
     else return this.http.post<number>(`${this.API_URL}/0/tree`, newTree);
   }
