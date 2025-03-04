@@ -144,19 +144,19 @@ export class Trees {
   })
   scientificName: string | null;
 
-  @OneToMany(() => ConflictTree, (conflictTree) => conflictTree.tree, { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => ConflictTree, (conflictTree) => conflictTree.tree)
   conflictTrees: ConflictTree[];
 
-  @OneToMany(() => DefectTree, (defectTree) => defectTree.tree, { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => DefectTree, (defectTree) => defectTree.tree)
   defectTrees: DefectTree[];
 
-  @OneToMany(() => DiseaseTree, (diseaseTree) => diseaseTree.tree, { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => DiseaseTree, (diseaseTree) => diseaseTree.tree)
   diseaseTrees: DiseaseTree[];
 
-  @OneToMany(() => InterventionTree, (interventionTree) => interventionTree.tree, { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => InterventionTree, (interventionTree) => interventionTree.tree)
   interventionTrees: InterventionTree[];
 
-  @OneToMany(() => PestTree, (pestTree) => pestTree.tree, { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => PestTree, (pestTree) => pestTree.tree)
   pestTrees: PestTree[];
 
   @OneToOne(() => Coordinates)

@@ -87,7 +87,7 @@ export class UnitWork {
   })
   campaignDescription: string | null;
 
-  @ManyToOne(() => Neighborhoods, (neighborhoods) => neighborhoods.unitWorks, { cascade: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Neighborhoods, (neighborhoods) => neighborhoods.unitWorks)
   @JoinColumn([{ name: 'neighborhood_id', referencedColumnName: 'idNeighborhood' }])
   neighborhood: Neighborhoods;
 

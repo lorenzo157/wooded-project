@@ -628,8 +628,6 @@ export class CreateTreeComponent implements OnInit {
         (createDefectDto) => createDefectDto.defectValue > 2
       );
     } // end if
-
-    console.log('operation', this.operation);
     console.log('newTree', newTree);
 
     this.treeService.createOrUpdateTree(newTree, this.idTree).subscribe({

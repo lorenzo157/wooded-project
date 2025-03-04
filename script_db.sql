@@ -276,7 +276,6 @@ INSERT INTO conflicts (conflict_name) VALUES
 INSERT INTO interventions (intervention_name) VALUES
 ('extraccion del arbol'),
 ('plantacion de arbol faltante'),
-('poda'),
 ('cableado'),
 ('sujecion'),
 ('apuntalamiento'),
@@ -287,7 +286,15 @@ INSERT INTO interventions (intervention_name) VALUES
 ('abertura de cazuela en vereda'),
 ('mover el blanco'),
 ('restringir acceso'),
-('requiere inspeccion avanzada');
+('requiere inspeccion avanzada'),
+('poda (formacion)'),
+('poda (sanitaria)'),
+('poda (reduccion de altura)'),
+('poda (raleo de ramas)'),
+('poda (despeje de señaletica)'),
+('poda (despeje de conductores electricos)'),
+('poda (radicular + uso de deflectores)');
+
 
 INSERT INTO defects (defect_name,defect_zone) VALUES
 ('cuerpos fructiferos de hongos en raices','raiz'),
@@ -304,8 +311,7 @@ INSERT INTO defects (defect_name,defect_zone) VALUES
 ('heridas de tronco','tronco'),
 ('horqueta de tronco','tronco'),
 ('inclinacion','tronco'),
-('pudricion de madera','tronco'),
-('rajaduras de tronco','tronco'),
+('pudricion de madera en ramas','tronco'),
 ('cancros de rama','rama'),
 ('cavidades de rama','rama'),
 ('cuerpos fructiferos de hongos en rama','rama'),
@@ -314,5 +320,5 @@ INSERT INTO defects (defect_name,defect_zone) VALUES
 ('ramas muertas','rama'),
 ('ramas sobre extendidas','rama'),
 ('rajaduras de rama','rama'),
-('pudricion de madera','rama'),
+('pudricion de madera en tronco','rama'),
 ('interferencia con red electrica','rama');

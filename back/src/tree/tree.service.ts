@@ -741,7 +741,7 @@ export class TreeService {
     }
 
     return results.map((result) => ({
-      isMovable: result.isMovable === true ? 'Sí' : result.isMovable === false ? 'No' : 'No especifica',
+      isMovable: result.isMovable ? 'Sí' : result.isMovable === false ? 'No' : 'No especifica',
     }));
   }
 
@@ -769,7 +769,7 @@ export class TreeService {
     }
 
     return results.map((result) => ({
-      potentialDamage: result.potentialDamage !== null ? result.potentialDamage : 'No especifica',
+      potentialDamage: result.potentialDamage ? result.potentialDamage : 'No especifica',
     }));
   }
 
@@ -1031,9 +1031,8 @@ export class TreeService {
         .orderBy('pest.pestName', 'ASC')
         .getRawMany();
     }
-
     return results.map((result) => ({
-      pests: result.pests !== null ? result.pests : 'No especifica',
+      pests: result.pests ? result.pests : 'No especifica',
     }));
   }
 

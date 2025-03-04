@@ -29,7 +29,6 @@ export class StorageService {
 
   // Clear all values from storage
   public async clear() {
-    console.log('CLEAR storage')
     await this._storage?.clear();
   }
 
