@@ -8,10 +8,11 @@ import { UiService } from '../../utils/ui.service';
   selector: 'app-detail-tree',
   templateUrl: './detail-tree.component.html',
   styleUrls: ['./detail-tree.component.scss'],
-  standalone: false
+  standalone: false,
 })
 export class DetailTreeComponent implements OnInit {
-  urlAWSCloudBucket: string = 'https://woodedbucket.s3.us-east-1.amazonaws.com/trees_photos/';
+  urlAWSCloudBucket: string =
+    'https://woodedbucket.s3.us-east-1.amazonaws.com/trees_photos/';
   idTree!: number;
   idProject!: number;
   tree!: ReadTreeDto;
@@ -30,7 +31,7 @@ export class DetailTreeComponent implements OnInit {
   async ngOnInit() {
     await this.uiService.cargando(true);
     await this.route.paramMap.subscribe((params) => {
-      this.idTree = +params.get('idTree')!; 
+      this.idTree = +params.get('idTree')!;
       this.idProject = +params.get('idProject')!;
       this.projectType = params.get('projectType') === 'muestreo';
       this.loadTree();
@@ -42,17 +43,23 @@ export class DetailTreeComponent implements OnInit {
       next: (tree) => {
         this.uiService.cargando(false);
         this.tree = tree; // Load tree details
-        this.tree.pathPhoto = this.urlAWSCloudBucket+this.tree.pathPhoto
-        this.tree.perimeter = Number(Number(tree.perimeter).toFixed(2))
-        this.tree.height = Number(Number(tree.height).toFixed(2))
-        this.tree.incline = Number(Number(tree.incline).toFixed(2))
-        this.defectDtoRoots = tree.readDefectDto.filter(defect => defect.defectZone === 'raiz');
-        this.defectDtoTrunk = tree.readDefectDto.filter(defect => defect.defectZone === 'tronco');
-        this.defectDtoBranches= tree.readDefectDto.filter(defect => defect.defectZone === 'rama');
-        console.log(this.tree.pathPhoto)
+        this.tree.photoFileName =
+          this.urlAWSCloudBucket + this.tree.photoFileName;
+        this.tree.perimeter = Number(Number(tree.perimeter).toFixed(2));
+        this.tree.height = Number(Number(tree.height).toFixed(2));
+        this.tree.incline = Number(Number(tree.incline).toFixed(2));
+        this.defectDtoRoots = tree.readDefectDto.filter(
+          (defect) => defect.defectZone === 'raiz',
+        );
+        this.defectDtoTrunk = tree.readDefectDto.filter(
+          (defect) => defect.defectZone === 'tronco',
+        );
+        this.defectDtoBranches = tree.readDefectDto.filter(
+          (defect) => defect.defectZone === 'rama',
+        );
+        console.log(this.tree.photoFileName);
       },
       error: (error) => {
-        
         this.uiService.alert('No se pudo cargar el árbol.', 'Error');
         this.uiService.cargando(false);
       },
@@ -60,12 +67,12 @@ export class DetailTreeComponent implements OnInit {
   }
   updateTree() {
     this.router.navigate([
-      `/project/${this.idProject}/tree/${this.projectType? 'muestreo':'individual'}/createtree/${this.idTree}`,
-    ]); 
+      `/project/${this.idProject}/tree/${this.projectType ? 'muestreo' : 'individual'}/createtree/${this.idTree}`,
+    ]);
   }
   createTree() {
     this.router.navigate([
-      `/project/${this.idProject}/tree/${this.projectType? 'muestreo':'individual'}/createtree/0`,
+      `/project/${this.idProject}/tree/${this.projectType ? 'muestreo' : 'individual'}/createtree/0`,
     ]);
   }
 }

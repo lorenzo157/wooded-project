@@ -3,12 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { UiService } from '../../utils/ui.service';
-
+import { App } from '@capacitor/app';
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: false,
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -17,7 +17,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private uiService: UiService
+    private uiService: UiService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -41,5 +41,8 @@ export class LoginComponent {
           },
         });
     }
+  }
+  exitApp() {
+    App.exitApp(); // Closes the application
   }
 }

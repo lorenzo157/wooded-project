@@ -5,10 +5,10 @@ import { UiService } from '../../utils/ui.service';
 import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
-    selector: 'app-list-projects',
-    templateUrl: './list-projects.component.html',
-    styleUrls: ['./list-projects.component.scss'],
-    standalone: false
+  selector: 'app-list-projects',
+  templateUrl: './list-projects.component.html',
+  styleUrls: ['./list-projects.component.scss'],
+  standalone: false,
 })
 export class ListProjectsComponent implements OnInit {
   projects: ProjectDto[] = []; // Array to hold project data
@@ -19,11 +19,11 @@ export class ListProjectsComponent implements OnInit {
     private projectService: ProjectService,
     private router: Router,
     private uiService: UiService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
     authService.getUserName().subscribe({
       next: (userName) => (this.userName = userName),
-      error: (error) => (this.userName = 'Sin nombre'), 
+      error: (error) => (this.userName = 'Sin nombre'),
     });
   }
 
@@ -48,7 +48,9 @@ export class ListProjectsComponent implements OnInit {
   get filteredProjects() {
     return this.filterProjectName
       ? this.projects.filter((project) =>
-          project.projectName.toLowerCase().includes(this.filterProjectName.trim().toLowerCase())
+          project.projectName
+            .toLowerCase()
+            .includes(this.filterProjectName.trim().toLowerCase()),
         )
       : this.projects;
   }

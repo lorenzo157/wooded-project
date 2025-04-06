@@ -2,7 +2,8 @@ import { CreateDefectTreeDto } from './create-defect-tree.dto';
 
 export class CreateTreeDto {
   datetime?: Date;
-  pathPhoto?: string | null;
+  photoFileName?: string | null;
+  photoFile?: string;
   cityBlock!: number;
   perimeter?: number | null;
   height?: number | null;

@@ -21,7 +21,10 @@ export interface ProjectDto {
 export class ProjectService {
   private readonly API_URL = `${API}/project`; // Base URL for the project API
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {}
 
   // Method to get assigned projects by user ID
   getAssignedProjects(): Observable<ProjectDto[]> {
@@ -31,8 +34,10 @@ export class ProjectService {
         if (idUser == null) {
           throw new Error('User ID is missing or could not be retrieved');
         }
-        return this.http.get<ProjectDto[]>(`${this.API_URL}/assignedproject/${idUser}`);
-      })
+        return this.http.get<ProjectDto[]>(
+          `${this.API_URL}/assignedproject/${idUser}`,
+        );
+      }),
     );
   }
 

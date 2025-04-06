@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private uiService: UiService
+    private uiService: UiService,
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
@@ -21,13 +21,18 @@ export class AuthGuard implements CanActivate {
         //return true;
         console.log('guard on, verify if token exist', token ? true : false);
         if (token) {
-          if (!this.authService.isTokenExpired(token)) return true; // Allow access
-          else this.uiService.alert('Ingrese sus credenciales nuevamente', 'Sesión expirada');
+          if (!this.authService.isTokenExpired(token))
+            return true; // Allow access
+          else
+            this.uiService.alert(
+              'Ingrese sus credenciales nuevamente',
+              'Sesión expirada',
+            );
         } else {
           this.uiService.alert('Ingrese sus credenciales', 'No authorizado');
         }
         return this.router.createUrlTree(['/auth']); // Redirect to login
-      })
+      }),
     );
   }
 }

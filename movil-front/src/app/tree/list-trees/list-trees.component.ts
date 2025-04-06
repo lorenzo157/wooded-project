@@ -6,10 +6,10 @@ import { SimplyReadTreeDto } from '../dto/simply-read-tree.dto';
 import { UiService } from '../../utils/ui.service';
 
 @Component({
-    selector: 'app-list-trees',
-    templateUrl: './list-trees.component.html',
-    styleUrls: ['./list-trees.component.scss'],
-    standalone: false
+  selector: 'app-list-trees',
+  templateUrl: './list-trees.component.html',
+  styleUrls: ['./list-trees.component.scss'],
+  standalone: false,
 })
 export class ListTreesComponent implements OnInit {
   idProject!: number;
@@ -20,7 +20,7 @@ export class ListTreesComponent implements OnInit {
     private route: ActivatedRoute,
     private treeService: TreeService,
     private router: Router,
-    private uiService: UiService
+    private uiService: UiService,
   ) {}
 
   async ngOnInit() {
@@ -46,12 +46,12 @@ export class ListTreesComponent implements OnInit {
   }
   viewTreeDetails(idTree: number) {
     this.router.navigate([
-      `/project/${this.idProject}/tree/${this.projectType? 'muestreo':'individual'}/detailtree/${idTree}`
-    ]);  // Navigate with both projectId and idTree
+      `/project/${this.idProject}/tree/${this.projectType ? 'muestreo' : 'individual'}/detailtree/${idTree}`,
+    ]); // Navigate with both projectId and idTree
   }
   get filteredTrees() {
-    return this.filterId 
-      ? this.trees.filter(tree => tree.idTree === this.filterId) 
+    return this.filterId
+      ? this.trees.filter((tree) => tree.idTree === this.filterId)
       : this.trees;
   }
 }

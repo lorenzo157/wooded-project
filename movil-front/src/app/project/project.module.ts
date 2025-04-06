@@ -10,9 +10,15 @@ import { NavigationComponent } from '../shared/navigation/navigation.component';
 import { DetailProjectComponent } from './detail-project/detail-project.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, ProjectRoutingModule,AuthModule,NavigationComponent],
-  declarations: [ListProjectsComponent,DetailProjectComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    ProjectRoutingModule,
+    AuthModule,
+    NavigationComponent,
+  ],
+  declarations: [ListProjectsComponent, DetailProjectComponent],
   providers: [ProjectService],
 })
 export class ProjectModule {}
-

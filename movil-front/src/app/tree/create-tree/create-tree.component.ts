@@ -68,17 +68,17 @@ export class CreateTreeComponent implements OnInit {
   pestOptions = pestOptions;
   // DEFECTOS EN LAS RAICES
   fruitingBodiesOfFungiOnNeckOrRootsEntries = Object.entries(
-    fruitingBodiesOfFungiOnNeckOrRoots
+    fruitingBodiesOfFungiOnNeckOrRoots,
   );
   mechanicalDamageToRootsEntries = Object.entries(mechanicalDamageToRoots);
   stranglingRootsEntries = Object.entries(stranglingRoots);
   deadRootsEntries = Object.entries(deadRoots);
   symptomsDiseaseOfRootsInCrownEntries = Object.entries(
-    symptomsDiseaseOfRootsInCrown
+    symptomsDiseaseOfRootsInCrown,
   );
   // DEFECTOS EN TRONCO Y CUELLO
   gallsTermiteMoundsAnthillsEntries = Object.entries(
-    gallsTermiteMoundsAnthills
+    gallsTermiteMoundsAnthills,
   );
   cankersTrunkEntries = Object.entries(cankersTrunk);
   multipleTrunksEntries = Object.entries(multipleTrunks);
@@ -94,7 +94,7 @@ export class CreateTreeComponent implements OnInit {
   fissuresEntries = Object.entries(fissures);
   woodRotEntries = Object.entries(woodRot);
   interferenceWithTheElectricalGridEntries = Object.entries(
-    interferenceWithTheElectricalGrid
+    interferenceWithTheElectricalGrid,
   );
 
   private idProject!: number;
@@ -119,10 +119,10 @@ export class CreateTreeComponent implements OnInit {
     private treeService: TreeService,
     private router: Router,
     private fb: FormBuilder,
-    private uiService: UiService
+    private uiService: UiService,
   ) {
     this.treeForm = this.fb.group({
-      pathPhoto: [null],
+      photoFileName: [null],
       cityBlock: [null],
       perimeter: [null, Validators.required],
       height: [null, Validators.required],
@@ -271,7 +271,7 @@ export class CreateTreeComponent implements OnInit {
   }
   addItem(nameArray: string) {
     (this as any)[nameArray + 'Names'].push(
-      this.fb.control('', Validators.required)
+      this.fb.control('', Validators.required),
     );
   }
   removeItem(index: number, nameArray: string) {
@@ -320,7 +320,7 @@ export class CreateTreeComponent implements OnInit {
     // If there are invalid fields, create and present a warning message
     if (invalidFields.length > 0) {
       const message = `Por favor completa los siguiente campos requeridos: ${invalidFields.join(
-        ', '
+        ', ',
       )}`;
 
       await this.uiService.toast(message, 'danger');
@@ -337,7 +337,7 @@ export class CreateTreeComponent implements OnInit {
         source: CameraSource.Camera,
       });
       this.treeForm
-        .get('pathPhoto')
+        .get('photoFileName')
         ?.setValue(`tree_${Date.now() - 1734000000000}.jpg`);
     } catch (error) {
       this.uiService.alert('Error al tomar la foto', 'Error');
@@ -362,7 +362,7 @@ export class CreateTreeComponent implements OnInit {
               this.createTree();
             },
           },
-        ]
+        ],
       );
     } else {
       this.displayWarningSign();
@@ -373,7 +373,7 @@ export class CreateTreeComponent implements OnInit {
     newTree.isMissing = this.treeForm.get('isMissing')?.value;
     newTree.isDead = this.treeForm.get('isDead')?.value;
     newTree.projectId = this.idProject;
-    newTree.pathPhoto = this.treeForm.get('pathPhoto')?.value;
+    newTree.photoFileName = this.treeForm.get('photoFileName')?.value;
     newTree.cityBlock = this.treeForm.get('cityBlock')?.value;
     newTree.address = this.treeForm.get('address')?.value;
     newTree.latitude = this.treeForm.get('latitude')?.value;
@@ -411,7 +411,7 @@ export class CreateTreeComponent implements OnInit {
         defectName: string,
         defectValue: number,
         mapping: { [key: number]: string },
-        branches?: number
+        branches?: number,
       ) => {
         if (defectValue > 1)
           newTree.createDefectDto.push({
@@ -424,99 +424,99 @@ export class CreateTreeComponent implements OnInit {
       addDefect(
         'cuerpos fructiferos de hongos en raices',
         this.treeForm.get('fruitingBodiesOfFungiOnNeckOrRoots')?.value,
-        fruitingBodiesOfFungiOnNeckOrRoots
+        fruitingBodiesOfFungiOnNeckOrRoots,
       );
       addDefect(
         'daño mecanico a raices',
         this.treeForm.get('mechanicalDamageToRoots')?.value,
-        mechanicalDamageToRoots
+        mechanicalDamageToRoots,
       );
       addDefect(
         'raices estrangulantes',
         this.treeForm.get('stranglingRoots')?.value,
-        stranglingRoots
+        stranglingRoots,
       );
       addDefect(
         'raices muertas',
         this.treeForm.get('deadRoots')?.value,
-        deadRoots
+        deadRoots,
       );
       addDefect(
         'sintomas de enfermedad radicular en copa',
         this.treeForm.get('symptomsDiseaseOfRootsInCrown')?.value,
-        symptomsDiseaseOfRootsInCrown
+        symptomsDiseaseOfRootsInCrown,
       );
       addDefect(
         'agallas, termiteros, hormigueros',
         this.treeForm.get('gallsTermiteMoundsAnthills')?.value,
-        gallsTermiteMoundsAnthills
+        gallsTermiteMoundsAnthills,
       );
       addDefect(
         'cancros de tronco',
         this.treeForm.get('cankersTrunk')?.value,
-        cankersTrunk
+        cankersTrunk,
       );
       addDefect(
         'fustes miltiples',
         this.treeForm.get('multipleTrunks')?.value,
-        multipleTrunks
+        multipleTrunks,
       );
       addDefect(
         'horqueta de tronco',
         this.treeForm.get('forkTrunk')?.value,
-        forkTrunk
+        forkTrunk,
       );
       addDefect(
         'cancros de rama',
         this.treeForm.get('cankersBranch')?.value,
-        cankersBranch
+        cankersBranch,
       );
       addDefect(
         'cavidades de rama',
         this.treeForm.get('cavitiesBranches')?.value,
-        cavitiesBranches
+        cavitiesBranches,
       );
       addDefect(
         'cuerpos fructiferos de hongos en rama',
         this.treeForm.get('fruitingBodiesOfFungi')?.value,
-        fruitingBodiesOfFungi
+        fruitingBodiesOfFungi,
       );
       addDefect(
         'horqueta de rama',
         this.treeForm.get('forkBranch')?.value,
-        forkBranch
+        forkBranch,
       );
       addDefect(
         'ramas colgantes o quebradas',
         this.treeForm.get('hangingOrBrokenBranches')?.value,
         hangingOrBrokenBranches,
-        this.treeForm.get('hangingOrBrokenBranches_branches')?.value
+        this.treeForm.get('hangingOrBrokenBranches_branches')?.value,
       );
       addDefect(
         'ramas muertas',
         this.treeForm.get('deadBranches')?.value,
         deadBranches,
-        this.treeForm.get('deadBranches_branches')?.value
+        this.treeForm.get('deadBranches_branches')?.value,
       );
       addDefect(
         'ramas sobre extendidas',
         this.treeForm.get('overExtendedBranches')?.value,
-        overExtendedBranches
+        overExtendedBranches,
       );
       addDefect(
         'rajaduras de rama',
         this.treeForm.get('fissures')?.value,
-        fissures
+        fissures,
       );
       addDefect(
         'pudricion de madera en ramas',
         this.treeForm.get('woodRot')?.value,
-        woodRot
+        woodRot,
       );
       addDefect(
         'interferencia con red electrica',
         this.treeForm.get('interferenceWithTheElectricalGrid')?.value,
-        interferenceWithTheElectricalGrid
+        interferenceWithTheElectricalGrid,
       );
 
       const cavitiesTrunk_t = this.treeForm.get('cavitiesTrunk_t')?.value;
@@ -549,12 +549,12 @@ export class CreateTreeComponent implements OnInit {
         addDefect(
           'coeficiente de esbeltez',
           defectValue,
-          slendernessCoefficent
+          slendernessCoefficent,
         );
       }
       console.log(slendernessCoefficent_number, 'esbeltez');
       const lostOrDeadBarkWidht = this.treeForm.get(
-        'lostOrDeadBark_width'
+        'lostOrDeadBark_width',
       )?.value;
       if (lostOrDeadBarkWidht && newTree.perimeter) {
         const lostOrDeadBark_number = lostOrDeadBarkWidht / newTree.perimeter;
@@ -590,7 +590,7 @@ export class CreateTreeComponent implements OnInit {
           't_woodroot, perimeter, coef_esbeltez',
           t,
           newTree.perimeter,
-          slendernessCoefficent_number
+          slendernessCoefficent_number,
         );
         if (this.treeForm.get('isWoodRoot_fruitingBodies')?.value)
           defectValue = 4;
@@ -605,7 +605,7 @@ export class CreateTreeComponent implements OnInit {
 
       console.log(newTree.createDefectDto);
       const defectValues = newTree.createDefectDto.map(
-        (createDefectDto) => createDefectDto.defectValue
+        (createDefectDto) => createDefectDto.defectValue,
       );
       let maxDefectValue = defectValues.length
         ? Math.max(...defectValues)
@@ -625,39 +625,26 @@ export class CreateTreeComponent implements OnInit {
       console.log(newTree.risk, '  risk');
 
       newTree.createDefectDto = newTree.createDefectDto.filter(
-        (createDefectDto) => createDefectDto.defectValue > 2
+        (createDefectDto) => createDefectDto.defectValue > 2,
       );
     } // end if
+
+    if (this.image) newTree.photoFile = this.image.dataUrl?.split(',')[1];
     console.log('newTree', newTree);
 
     this.treeService.createOrUpdateTree(newTree, this.idTree).subscribe({
       next: (idTree) => {
-        console.log(this.image ? 'imagen existe' : ' img no existe');
-        if (this.image) {
-          const base64String = this.image.dataUrl?.split(',')[1];
-          this.treeService
-            .sendToBackend(base64String, this.treeForm.get('pathPhoto')?.value)
-            .subscribe({
-              next: () => this.handleSuccess(idTree),
-              error: () =>
-                this.uiService.alert(
-                  this.operation + ' fallida, error al guardar la foto',
-                  'Error'
-                ),
-            });
-        } else {
-          this.handleSuccess(idTree);
-        }
+        this.uiService.alert(`${this.operation} exitosa`, 'Éxito');
+        this.router.navigate(
+          [
+            `/project/${this.idProject}/tree/${
+              this.projectType ? 'muestreo' : 'individual'
+            }/detailtree/${idTree}`,
+          ],
+          { replaceUrl: true },
+        );
       },
       error: () => this.uiService.alert(this.operation + ' fallida', 'Error'),
     });
-  }
-  private handleSuccess(idTree: number) {
-    this.uiService.alert(`${this.operation} exitosa`, 'Éxito');
-    this.router.navigate([
-      `/project/${this.idProject}/tree/${
-        this.projectType ? 'muestreo' : 'individual'
-      }/detailtree/${idTree}`,
-    ]);
   }
 }

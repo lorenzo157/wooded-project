@@ -7,8 +7,14 @@ import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, AuthRoutingModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule,
+    AuthRoutingModule,
+  ],
   declarations: [LoginComponent],
   providers: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

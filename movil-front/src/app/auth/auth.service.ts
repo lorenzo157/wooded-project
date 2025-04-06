@@ -28,10 +28,13 @@ export class AuthService {
   constructor(
     private storageService: StorageService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) {}
 
-  login(email: string, password: string): Observable<ApiResponse<LoginResponse>> {
+  login(
+    email: string,
+    password: string,
+  ): Observable<ApiResponse<LoginResponse>> {
     return this.http
       .post<ApiResponse<LoginResponse>>(`${this.API_URL}/login`, {
         email,
@@ -43,7 +46,7 @@ export class AuthService {
             this.storageService.set('auth.token', value.result.access_token);
             this.storageService.set('auth.user', value.result.userName);
           }
-        })
+        }),
       );
   }
   logout() {
@@ -62,14 +65,14 @@ export class AuthService {
         if (!token) return null; // Handle the case when the token is null
         const decoded = jwtDecode<DecodedToken>(token);
         return decoded.idUser;
-      })
+      }),
     );
   }
   isTokenExpired(token: string): boolean {
     try {
       const decoded: any = jwtDecode(token);
       const now = Math.floor(new Date().getTime() / 1000);
-      console.log(decoded.exp - now)
+      console.log(decoded.exp - now);
       return decoded.exp - now < 3; // Refresh if token will expire in the next 3 seconds
     } catch (error) {
       return true; // Consider the token invalid if decoding fails

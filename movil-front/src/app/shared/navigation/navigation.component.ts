@@ -16,14 +16,15 @@ export class NavigationComponent {
     private location: Location,
     private authService: AuthService,
     private uiService: UiService,
-    private router: Router
+    private router: Router,
   ) {}
 
   // Navigate back to the previous page
   async goBack() {
     const currentRoute = this.router.url;
-    console.log(currentRoute)
-    if (this.router.url.includes('/createtree/')) {  // only apply for create or edit tree routes
+    console.log(currentRoute);
+    if (this.router.url.includes('/createtree/')) {
+      // only apply for create or edit tree routes
       await this.uiService.alert('¿Volver a la pantalla anterior?', '', [
         {
           text: 'Cancelar',

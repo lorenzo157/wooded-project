@@ -38,15 +38,30 @@
 
       <ion-item>
         <ion-label><strong>Tipo de proyecto:</strong></ion-label>
-        <ion-text>{{ project.projectType ? "Muestreo" : "Individual" }}</ion-text>
+        <ion-text>{{
+          project.projectType ? "Muestreo" : "Individual"
+        }}</ion-text>
       </ion-item>
 
       <ion-row class="ion-justify-content-center button-container">
-        <ion-button class="button" expand="block" color="primary" (click)="createTree()">
-          Registrar Árbol
+        <ion-button
+          class="button"
+          expand="block"
+          color="primary"
+          (click)="createTree()"
+        >
+          <ion-icon name="leaf"></ion-icon>
+          <ion-label>Registrar Árbol</ion-label>
         </ion-button>
-        <ion-button class="button" expand="block" color="secondary" (click)="showAllTrees()">
-          Ver Árboles del Proyecto
+
+        <ion-button
+          class="button"
+          expand="block"
+          color="secondary"
+          (click)="showAllTrees()"
+        >
+          <ion-icon name="leaf-outline"></ion-icon>
+          <ion-label>Ver Árboles del Proyecto</ion-label>
         </ion-button>
       </ion-row>
     </ion-card-content>

@@ -17,15 +17,24 @@ export interface NumberToStringMap {
 export class TreeService {
   private readonly API_URL = `${API}/project`; // Base URL for the project API
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {}
 
-  createOrUpdateTree(newTree: CreateTreeDto, idTree: number | null): Observable<number> {
-    if (idTree) return this.http.put<number>(`${this.API_URL}/0/tree/${idTree}`, newTree);
+  createOrUpdateTree(
+    newTree: CreateTreeDto,
+    idTree: number | null,
+  ): Observable<number> {
+    if (idTree)
+      return this.http.put<number>(`${this.API_URL}/0/tree/${idTree}`, newTree);
     else return this.http.post<number>(`${this.API_URL}/0/tree`, newTree);
   }
   // Method to get assigned projects by user ID
   getTreesByProjectId(idProject: number): Observable<SimplyReadTreeDto[]> {
-    return this.http.get<SimplyReadTreeDto[]>(`${this.API_URL}/${idProject}/tree`);
+    return this.http.get<SimplyReadTreeDto[]>(
+      `${this.API_URL}/${idProject}/tree`,
+    );
   }
 
   getTreeById(idTree: number): Observable<ReadTreeDto> {
@@ -34,9 +43,5 @@ export class TreeService {
 
   logout() {
     this.authService.logout();
-  }
-  sendToBackend(base64File: string, fileName: string): Observable<void> {
-    const uploadFileDto = { fileName: fileName, file: base64File };
-    return this.http.post<void>(`${API}/s3/uploadfile`, uploadFileDto);
   }
 }

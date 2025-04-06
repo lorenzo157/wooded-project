@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UiService } from '../../utils/ui.service';
 
 @Component({
-    selector: 'app-detail-project',
-    templateUrl: './detail-project.component.html',
-    styleUrls: ['./detail-project.component.scss'],
-    standalone: false
+  selector: 'app-detail-project',
+  templateUrl: './detail-project.component.html',
+  styleUrls: ['./detail-project.component.scss'],
+  standalone: false,
 })
 export class DetailProjectComponent implements OnInit {
   idProject!: number;
@@ -16,7 +16,7 @@ export class DetailProjectComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private projectService: ProjectService,
-    private uiService: UiService
+    private uiService: UiService,
   ) {}
 
   async ngOnInit() {
@@ -42,11 +42,17 @@ export class DetailProjectComponent implements OnInit {
   }
   createTree() {
     this.router.navigate([
-      `/project/${this.idProject}/tree/${this.project.projectType? 'muestreo':'individual'}/createtree/0`,
+      `/project/${this.idProject}/tree/${
+        this.project.projectType ? 'muestreo' : 'individual'
+      }/createtree/0`,
     ]);
   }
 
   showAllTrees() {
-    this.router.navigate([`/project/${this.idProject}/tree/${this.project.projectType? 'muestreo':'individual'}/listtree`]); // Navigates with project ID
+    this.router.navigate([
+      `/project/${this.idProject}/tree/${
+        this.project.projectType ? 'muestreo' : 'individual'
+      }/listtree`,
+    ]);
   }
 }
