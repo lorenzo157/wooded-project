@@ -6,7 +6,7 @@
   "semi": true,
   "useTabs": false,
   "endOfLine": "lf",
-  "printWidth": 130,
+  "printWidth": 140,
   "overrides": [
     {
       "files": "*.json",

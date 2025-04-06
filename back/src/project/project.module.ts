@@ -13,10 +13,7 @@ import { Provinces } from '../shared/entities/Provinces';
 import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Projects, Trees, Users, ProjectUser, Cities, UnitWork, Neighborhoods, Provinces]),
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Projects, Trees, Users, ProjectUser, Cities, UnitWork, Neighborhoods, Provinces]), UserModule],
   providers: [ProjectService],
   controllers: [ProjectController],
   exports: [ProjectService],

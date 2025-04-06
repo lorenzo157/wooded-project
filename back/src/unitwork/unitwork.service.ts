@@ -168,10 +168,7 @@ export class UnitWorkService {
         cabling: await this.obtainCablingQtyInUnitWork(idProject, neighborhood.neighborhoodId),
         fastening: await this.obtainFasteningQtyInUnitWork(idProject, neighborhood.neighborhoodId),
         propping: await this.obtainProppingQtyInUnitWork(idProject, neighborhood.neighborhoodId),
-        permeableSurfaceIncreases: await this.obtainPermeableSurfaceIncreasesQtyInUnitWork(
-          idProject,
-          neighborhood.neighborhoodId,
-        ),
+        permeableSurfaceIncreases: await this.obtainPermeableSurfaceIncreasesQtyInUnitWork(idProject, neighborhood.neighborhoodId),
         fertilizations: await this.obtainFertilizationsQtyInUnitWork(idProject, neighborhood.neighborhoodId),
         descompression: await this.obtainDescompressionQtyInUnitWork(idProject, neighborhood.neighborhoodId),
         drains: await this.obtainDrainsQtyInUnitWork(idProject, neighborhood.neighborhoodId),
@@ -192,22 +189,16 @@ export class UnitWorkService {
 
       newUnitWork.pruningTraining = Math.round((newUnitWork.pruningTraining / treeQtyOfSample) * populationTreesQty);
       newUnitWork.pruningSanitary = Math.round((newUnitWork.pruningSanitary / treeQtyOfSample) * populationTreesQty);
-      newUnitWork.pruningHeightReduction = Math.round(
-        (newUnitWork.pruningHeightReduction / treeQtyOfSample) * populationTreesQty,
-      );
+      newUnitWork.pruningHeightReduction = Math.round((newUnitWork.pruningHeightReduction / treeQtyOfSample) * populationTreesQty);
       newUnitWork.pruningBranchThinning = Math.round((newUnitWork.pruningBranchThinning / treeQtyOfSample) * populationTreesQty);
       newUnitWork.pruningSignClearing = Math.round((newUnitWork.pruningSignClearing / treeQtyOfSample) * populationTreesQty);
-      newUnitWork.pruningPowerLineClearing = Math.round(
-        (newUnitWork.pruningPowerLineClearing / treeQtyOfSample) * populationTreesQty,
-      );
+      newUnitWork.pruningPowerLineClearing = Math.round((newUnitWork.pruningPowerLineClearing / treeQtyOfSample) * populationTreesQty);
       newUnitWork.pruningRootDeflectors = Math.round((newUnitWork.pruningRootDeflectors / treeQtyOfSample) * populationTreesQty);
 
       newUnitWork.cabling = Math.round((newUnitWork.cabling / treeQtyOfSample) * populationTreesQty);
       newUnitWork.fastening = Math.round((newUnitWork.fastening / treeQtyOfSample) * populationTreesQty);
       newUnitWork.propping = Math.round((newUnitWork.propping / treeQtyOfSample) * populationTreesQty);
-      newUnitWork.permeableSurfaceIncreases = Math.round(
-        (newUnitWork.permeableSurfaceIncreases / treeQtyOfSample) * populationTreesQty,
-      );
+      newUnitWork.permeableSurfaceIncreases = Math.round((newUnitWork.permeableSurfaceIncreases / treeQtyOfSample) * populationTreesQty);
       newUnitWork.moveTarget = Math.round((newUnitWork.moveTarget / treeQtyOfSample) * populationTreesQty);
       newUnitWork.restrictAccess = Math.round((newUnitWork.restrictAccess / treeQtyOfSample) * populationTreesQty);
       newUnitWork.fertilizations = Math.round((newUnitWork.fertilizations / treeQtyOfSample) * populationTreesQty);
@@ -391,8 +382,7 @@ export class UnitWorkService {
           ? (campaign.pruningSignClearing || 0) + pruningSignClearing
           : campaign.pruningSignClearing,
       pruningPowerLineClearing:
-        pruningPowerLineClearing &&
-        campaign.pruningPowerLineClearing + pruningPowerLineClearing <= unitWork.pruningPowerLineClearingUW
+        pruningPowerLineClearing && campaign.pruningPowerLineClearing + pruningPowerLineClearing <= unitWork.pruningPowerLineClearingUW
           ? (campaign.pruningPowerLineClearing || 0) + pruningPowerLineClearing
           : campaign.pruningPowerLineClearing,
       pruningRootDeflectors:
@@ -401,14 +391,10 @@ export class UnitWorkService {
           : campaign.pruningRootDeflectors,
       cabling: cabling && campaign.cabling + cabling <= unitWork.cablingUW ? (campaign.cabling || 0) + cabling : campaign.cabling,
       fastening:
-        fastening && campaign.fastening + fastening <= unitWork.fasteningUW
-          ? (campaign.fastening || 0) + fastening
-          : campaign.fastening,
-      propping:
-        propping && campaign.propping + propping <= unitWork.proppingUW ? (campaign.propping || 0) + propping : campaign.propping,
+        fastening && campaign.fastening + fastening <= unitWork.fasteningUW ? (campaign.fastening || 0) + fastening : campaign.fastening,
+      propping: propping && campaign.propping + propping <= unitWork.proppingUW ? (campaign.propping || 0) + propping : campaign.propping,
       permeableSurfaceIncreases:
-        permeableSurfaceIncreases &&
-        campaign.permeableSurfaceIncreases + permeableSurfaceIncreases <= unitWork.permeableSurfaceIncreasesUW
+        permeableSurfaceIncreases && campaign.permeableSurfaceIncreases + permeableSurfaceIncreases <= unitWork.permeableSurfaceIncreasesUW
           ? (campaign.permeableSurfaceIncreases || 0) + permeableSurfaceIncreases
           : campaign.permeableSurfaceIncreases,
       moveTarget:
@@ -1261,11 +1247,7 @@ export class UnitWorkService {
       })
       .where('coordinates.neighborhood_id = :idNeighborhood', { idNeighborhood })
       .andWhere('trees.id_tree IS NULL')
-      .select([
-        'coordinates.id_coordinate AS "idCoordinate"',
-        'coordinates.latitude AS "latitude"',
-        'coordinates.longitude AS "longitude"',
-      ])
+      .select(['coordinates.id_coordinate AS "idCoordinate"', 'coordinates.latitude AS "latitude"', 'coordinates.longitude AS "longitude"'])
       .orderBy('coordinates.id_coordinate', 'ASC')
       .getRawMany();
 

@@ -21,23 +21,20 @@ module.exports = {
     'prettier/prettier': [
       'error',
       {
-        printWidth: 120,
+        printWidth: 140,
         tabWidth: 2,
         useTabs: false,
         semi: true,
         singleQuote: true,
         trailingComma: 'all',
         bracketSpacing: true,
-        arrowParens: 'avoid',
-        proseWrap: 'never',
         endOfLine: 'lf',
-        bracketSameLine: true,
       },
     ],
     'max-len': [
       'error',
       {
-        code: 120,
+        code: 140,
         ignoreUrls: true,
         ignoreStrings: true,
         ignoreTemplateLiterals: true,

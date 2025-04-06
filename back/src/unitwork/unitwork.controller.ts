@@ -96,11 +96,7 @@ export class UnitWorkController {
 
   @ApiOperation({ summary: '#M413: Calcula los valores del trabajo restante de la Unidad de Trabajo' })
   @Get('apply-filters')
-  async applyFilters(
-    @Param('idProject') idProject: number,
-    @Param('idUnitWork') idUnitWork: number,
-    @Body() readFilterDto: ReadFilterDto,
-  ) {
+  async applyFilters(@Param('idProject') idProject: number, @Param('idUnitWork') idUnitWork: number, @Body() readFilterDto: ReadFilterDto) {
     return this.unitworkService.applyFilters(idProject, idUnitWork, readFilterDto);
   }
 

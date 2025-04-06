@@ -523,14 +523,7 @@ export class TreeService {
         queryRunner,
       );
 
-      await this.saveManyToManyRelations(
-        pestsNames,
-        this.pestRepository,
-        this.pestTreeRepository,
-        updatedTree,
-        'pest',
-        queryRunner,
-      );
+      await this.saveManyToManyRelations(pestsNames, this.pestRepository, this.pestTreeRepository, updatedTree, 'pest', queryRunner);
 
       // Handle defects
       if (createDefectsDtos && createDefectsDtos.length > 0) {
@@ -669,11 +662,7 @@ export class TreeService {
     return await query.getRawMany();
   }
 
-  async getFiltersByProjectAndNeighborhood(
-    idProject: number,
-    idUnitWork: number,
-    filterNames: string | string[],
-  ): Promise<Filter[]> {
+  async getFiltersByProjectAndNeighborhood(idProject: number, idUnitWork: number, filterNames: string | string[]): Promise<Filter[]> {
     const filterNamesArray = typeof filterNames === 'string' ? [filterNames] : filterNames;
     let idNeighborhood = 0;
 
