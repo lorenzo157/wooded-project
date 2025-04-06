@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTreeDto } from './dto/create-tree.dto';
 import { DataSource, Repository } from 'typeorm';
 import { Filter } from './dto/filter';
@@ -18,7 +18,8 @@ import { Diseases } from './entities/Diseases';
 import { DiseaseTree } from './entities/DiseaseTree';
 import { SimplyReadTreeDto } from './dto/simply-read-tree.dto';
 import { ReadTreeDto } from './dto/read-tree.dto';
-import { S3Service } from '../s3/s3.service';
+import { S3Service } from '../utils/s3.service';
+import { PATH_TREES_PHOTOS } from '../utils/constants';
 @Injectable()
 export class TreeService {
   constructor(
@@ -39,13 +40,10 @@ export class TreeService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async createTree(createTreeDto: CreateTreeDto, queryRunnerFromUpdate: any = null) {
-    let queryRunner = queryRunnerFromUpdate;
-    if (!queryRunner) {
-      queryRunner = this.dataSource.createQueryRunner();
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
-    }
+  async createTree(createTreeDto: CreateTreeDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
     const {
       conflictsNames,
@@ -56,10 +54,10 @@ export class TreeService {
       latitude,
       longitude,
       projectId,
-      treeTypeName,
+      photoFileName,
+      photoFile,
       ...treeData
     } = createTreeDto;
-
     try {
       const coordinates = new Coordinates();
       coordinates.latitude = latitude;
@@ -70,9 +68,10 @@ export class TreeService {
 
       let newTree = this.treeRepository.create({
         ...treeData,
+        photoFileName,
         coordinate: savedCoordinates,
         neighborhood: null,
-        project: project,
+        project,
       });
 
       newTree = await queryRunner.manager.save(Trees, newTree);
@@ -105,7 +104,7 @@ export class TreeService {
 
       if (createDefectsDtos && createDefectsDtos.length > 0) {
         for (const defectDto of createDefectsDtos) {
-          let entity = await this.defectRepository.findOne({
+          const entity = await this.defectRepository.findOne({
             where: { defectName: defectDto.defectName },
           });
 
@@ -119,14 +118,17 @@ export class TreeService {
           await queryRunner.manager.save(DefectTree, defectTree);
         }
       }
-      if (!queryRunnerFromUpdate) await queryRunner.commitTransaction();
+      if (photoFile && photoFileName) {
+        const pathFile = `${PATH_TREES_PHOTOS}${photoFileName}`;
+        await this.s3Service.uploadPhotoFile(photoFile, pathFile);
+      }
+      await queryRunner.commitTransaction();
       return newTree.idTree;
     } catch (error) {
-      if (!queryRunnerFromUpdate) await queryRunner.rollbackTransaction();
+      await queryRunner.rollbackTransaction();
       throw error;
     } finally {
-      // Release the query runner
-      if (!queryRunnerFromUpdate) await queryRunner.release();
+      await queryRunner.release();
     }
   }
 
@@ -140,7 +142,7 @@ export class TreeService {
   ) {
     if (names && names.length > 0) {
       for (const name of names) {
-        let entity = await entityRepository.findOne({
+        const entity = await entityRepository.findOne({
           where: { [entityField + 'Name']: name },
         });
 
@@ -217,7 +219,7 @@ export class TreeService {
     const readTreeDto: ReadTreeDto = {
       idTree: tree.idTree,
       datetime: tree.datetime,
-      pathPhoto: tree.pathPhoto,
+      photoFileName: tree.photoFileName,
       cityBlock: tree.cityBlock,
       perimeter: tree.perimeter,
       height: tree.height,
@@ -388,7 +390,7 @@ export class TreeService {
       idTree: tree.idTree,
       treeName: tree.treeName,
       datetime: tree.datetime,
-      pathPhoto: tree.pathPhoto,
+      photoFileName: tree.photoFileName,
       cityBlock: tree.cityBlock,
       perimeter: tree.perimeter,
       height: tree.height,
@@ -436,46 +438,123 @@ export class TreeService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
+    const {
+      conflictsNames,
+      createDefectsDtos,
+      diseasesNames,
+      interventionsNames,
+      pestsNames,
+      latitude,
+      longitude,
+      projectId,
+      photoFileName,
+      photoFile,
+      ...treeData
+    } = createTreeDto;
+
     try {
-      await this.removeTreeById(idTree, queryRunner);
-      const newIdTree = await this.createTree(createTreeDto, queryRunner);
+      // Find existing tree with all relations
+      const existingTree = await queryRunner.manager.findOne(Trees, {
+        where: { idTree },
+        relations: ['coordinate', 'project', 'conflictTrees', 'diseaseTrees', 'interventionTrees', 'pestTrees', 'defectTrees'],
+      });
 
-      const repositories = [
-        this.pestTreeRepository,
-        this.diseaseTreeRepository,
+      if (!existingTree) {
+        throw new Error('Tree not found');
+      }
+
+      // Update coordinates
+      if (latitude && longitude) {
+        existingTree.coordinate.latitude = latitude;
+        existingTree.coordinate.longitude = longitude;
+        await queryRunner.manager.save(Coordinates, existingTree.coordinate);
+      }
+
+      // Update project if changed
+      if (projectId) {
+        const project = await this.projectService.findProject(projectId);
+        await queryRunner.manager.update(Trees, { idTree }, { project });
+      }
+
+      // Update tree data
+      Object.assign(existingTree, treeData);
+      if (photoFile && photoFileName) {
+        await this.s3Service.deleteFile(`${PATH_TREES_PHOTOS}${existingTree.photoFileName}`);
+        existingTree.photoFileName = photoFileName;
+      }
+
+      // Save updated tree
+      const updatedTree = await queryRunner.manager.save(Trees, existingTree);
+
+      // Update many-to-many relations
+      // First, remove existing relations
+      await queryRunner.manager.delete(ConflictTree, { tree: { idTree } });
+      await queryRunner.manager.delete(DiseaseTree, { tree: { idTree } });
+      await queryRunner.manager.delete(InterventionTree, { tree: { idTree } });
+      await queryRunner.manager.delete(PestTree, { tree: { idTree } });
+      await queryRunner.manager.delete(DefectTree, { tree: { idTree } });
+
+      // Then create new relations
+      await this.saveManyToManyRelations(
+        conflictsNames,
+        this.conflictRepository,
         this.conflictTreeRepository,
+        updatedTree,
+        'conflict',
+        queryRunner,
+      );
+
+      await this.saveManyToManyRelations(
+        diseasesNames,
+        this.diseaseRepository,
+        this.diseaseTreeRepository,
+        updatedTree,
+        'disease',
+        queryRunner,
+      );
+
+      await this.saveManyToManyRelations(
+        interventionsNames,
+        this.interventionRepository,
         this.interventionTreeRepository,
-        this.defectTreeRepository,
-      ];
-      // Set treeId to null for all related entities
-      for (const repo of repositories) {
-        await queryRunner.manager
-          .createQueryBuilder()
-          .update(repo.metadata.target)
-          .set({ treeId: null })
-          .where('treeId = :newIdTree', { newIdTree })
-          .execute();
-      }
-      // Update the tree with the old id
-      await queryRunner.manager
-        .createQueryBuilder()
-        .update(Trees)
-        .set({ idTree: idTree })
-        .where('idTree = :newIdTree', { newIdTree })
-        .execute();
+        updatedTree,
+        'intervention',
+        queryRunner,
+      );
 
-      // Restore the treeId for related entities
-      for (const repo of repositories) {
-        await queryRunner.manager
-          .createQueryBuilder()
-          .update(repo.metadata.target)
-          .set({ treeId: idTree })
-          .where('treeId IS NULL')
-          .execute();
-      }
+      await this.saveManyToManyRelations(
+        pestsNames,
+        this.pestRepository,
+        this.pestTreeRepository,
+        updatedTree,
+        'pest',
+        queryRunner,
+      );
 
+      // Handle defects
+      if (createDefectsDtos && createDefectsDtos.length > 0) {
+        for (const defectDto of createDefectsDtos) {
+          const entity = await this.defectRepository.findOne({
+            where: { defectName: defectDto.defectName },
+          });
+
+          const defectTree = this.defectTreeRepository.create({
+            tree: updatedTree,
+            defect: entity,
+            defectValue: defectDto.defectValue,
+            textDefectValue: defectDto.textDefectValue,
+            branches: defectDto.branches,
+          });
+          await queryRunner.manager.save(DefectTree, defectTree);
+        }
+      }
+      if (photoFile && photoFileName) {
+        const pathFile = `${PATH_TREES_PHOTOS}${photoFileName}`;
+        await this.s3Service.uploadPhotoFile(photoFile, pathFile);
+      }
       await queryRunner.commitTransaction();
-      return idTree;
+      return updatedTree.idTree;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -484,13 +563,11 @@ export class TreeService {
     }
   }
 
-  async removeTreeById(idTree: number, queryRunnerFromUpdate: any = null): Promise<void> {
-    let queryRunner = queryRunnerFromUpdate;
-    if (!queryRunnerFromUpdate) {
-      queryRunner = this.dataSource.createQueryRunner();
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
-    }
+  async removeTreeById(idTree: number): Promise<void> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
     try {
       const tree = await queryRunner.manager.findOne(Trees, {
         where: { idTree },
@@ -504,20 +581,20 @@ export class TreeService {
       if (tree.coordinate) {
         await queryRunner.manager.remove(tree.coordinate);
       }
-      if (tree.pathPhoto) {
-        await this.s3Service.deleteFile(tree.pathPhoto);
+      if (tree.photoFileName) {
+        await this.s3Service.deleteFile(`${PATH_TREES_PHOTOS}${tree.photoFileName}`);
       }
-      if (!queryRunnerFromUpdate) await queryRunner.commitTransaction();
+      await queryRunner.commitTransaction();
     } catch (error) {
-      if (!queryRunnerFromUpdate) await queryRunner.rollbackTransaction();
+      await queryRunner.rollbackTransaction();
       throw error;
     } finally {
-      if (!queryRunnerFromUpdate) await queryRunner.release();
+      await queryRunner.release();
     }
   }
 
   async getNeighborhoodIdByUnitWork(idProject: number, idUnitWork: number) {
-    var results = await this.treeRepository
+    const results = await this.treeRepository
       .createQueryBuilder('tree')
       .leftJoinAndSelect('tree.project', 'project')
       .leftJoinAndSelect('project.unitWork', 'unit_work')
@@ -533,7 +610,7 @@ export class TreeService {
   async getFilteredTrees(idProject: number, idUnitWork: number, filterNames: string | string[]) {
     const filterNamesArray = typeof filterNames === 'string' ? [filterNames] : filterNames;
 
-    let idNeighborhood = idUnitWork == 0 ? 0 : (await this.getNeighborhoodIdByUnitWork(idProject, idUnitWork)).idNeighborhood;
+    const idNeighborhood = idUnitWork == 0 ? 0 : (await this.getNeighborhoodIdByUnitWork(idProject, idUnitWork)).idNeighborhood;
 
     const filters: Record<string, any> = {};
     filterNamesArray.forEach((filter) => {

@@ -21,11 +21,11 @@ export class Trees {
   datetime: Date;
 
   @Column('character varying', {
-    name: 'path_photo',
+    name: 'photo_file_name',
     nullable: true,
     length: 255,
   })
-  pathPhoto: string | null;
+  photoFileName: string | null;
 
   @Column('integer', { name: 'city_block' })
   cityBlock: number;

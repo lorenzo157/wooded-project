@@ -11,7 +11,7 @@ export interface ApiResponse<T = any> {
   statusCode: HttpStatusCode;
 }
 export interface LoginResponse {
-  userName: string;
+  firstName: string;
   access_token: string;
 }
 interface DecodedToken {
@@ -44,7 +44,7 @@ export class AuthService {
         tap((value) => {
           if (value.statusCode === HttpStatusCode.Ok) {
             this.storageService.set('auth.token', value.result.access_token);
-            this.storageService.set('auth.user', value.result.userName);
+            this.storageService.set('auth.user', value.result.firstName);
           }
         }),
       );

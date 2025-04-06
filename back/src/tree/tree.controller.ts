@@ -1,7 +1,6 @@
-import { Controller, Get, Patch, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { TreeService } from './tree.service';
 import { CreateTreeDto } from './dto/create-tree.dto';
-import { TreeRequestData } from './dto/TreeRequestData';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Tree')

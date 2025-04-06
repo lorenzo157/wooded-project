@@ -17,7 +17,7 @@ import { Pests } from './entities/Pests';
 import { PestTree } from './entities/PestTree';
 import { Neighborhoods } from '../unitwork/entities/Neighborhoods';
 import { ProjectModule } from '../project/project.module';
-import { S3Module } from '../s3/s3.module';
+import { UtilsModule } from '../utils/utils.module';
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { S3Module } from '../s3/s3.module';
     ]),
     forwardRef(() => ProjectModule),
     ProjectModule,
-    S3Module,
+    UtilsModule,
   ], // Importa el repositorio
   providers: [TreeService],
   controllers: [TreeController],

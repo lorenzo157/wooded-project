@@ -87,7 +87,7 @@ export class UserService {
   }
 
   async findUserById(idUser: number): Promise<ReadUserDto> {
-    var user = await this.userRepository
+    const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.role', 'role')
       .leftJoinAndSelect('user.city', 'city')
@@ -95,11 +95,10 @@ export class UserService {
       .where('user.idUser = :idUser', { idUser })
       .select([
         'user.idUser AS "idUser"',
-        'user.userName AS "userName"',
+        'user.firstName AS "firstName"',
         'user.lastName AS "lastName"',
         'user.email AS "email"',
         'user.password AS "password"',
-        'role.roleName AS "roleName"',
         'user.phoneNumber AS "phoneNumber"',
         'user.address AS "address"',
         'city.cityName AS "cityName"',

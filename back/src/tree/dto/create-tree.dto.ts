@@ -1,20 +1,17 @@
-import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsBase64, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateDefectTreeDto } from './create-defect-tree.dto';
 export class CreateTreeDto {
-  @ApiProperty({ description: 'Path to the tree photo', required: false })
+  @ApiProperty({ description: 'Name to the tree photo file', required: false })
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  pathPhoto?: string;
+  photoFileName?: string;
+
+  @ApiProperty({ description: 'Tree photo file', required: false })
+  @IsBase64()
+  @IsOptional()
+  photoFile: string;
 
   @ApiProperty({ description: 'City block number', required: false })
   @IsOptional()

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UploadFileDto } from './dto/upload-file.dto';
 import * as AWS from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
 import { EnvVars } from '../config-loader';
@@ -21,12 +20,11 @@ export class S3Service {
     this.s3 = new AWS.S3();
   }
   // Upload method
-  async uploadFile(uploadFileDto: UploadFileDto) {
-    const { file, fileName } = uploadFileDto;
-    const decodeFile = Buffer.from(file, 'base64');
+  async uploadPhotoFile(photoFile: string, pathPhotoFile: string) {
+    const decodeFile = Buffer.from(photoFile, 'base64');
     const params = {
       Bucket: this.bucketName,
-      Key: `trees_photos/${fileName}`,
+      Key: pathPhotoFile,
       Body: decodeFile,
       ACL: 'public-read',
     };
@@ -37,10 +35,10 @@ export class S3Service {
       throw error;
     }
   }
-  async deleteFile(fileName: string): Promise<void> {
+  async deleteFile(pathFile: string): Promise<void> {
     const params = {
       Bucket: this.bucketName,
-      Key: `trees_photos/${fileName}`,
+      Key: pathFile,
     };
     try {
       await this.s3.deleteObject(params).promise();

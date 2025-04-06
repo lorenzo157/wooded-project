@@ -23,8 +23,6 @@ export class ProjectService {
   ) {}
 
   async createProject(createProjectDto: CreateProjectDto) {
-    const { projectName, projectDescription, startDate, endDate, projectType, cityId, userId, ...projectData } = createProjectDto;
-
     const city = await this.cityRepository.findOne({ where: { idCity: createProjectDto.cityId } });
 
     if (!city) {
@@ -46,7 +44,7 @@ export class ProjectService {
     project.projectType = createProjectDto.projectType;
     project.user = user;
 
-    var newProject = this.projectRepository.create(project);
+    const newProject = this.projectRepository.create(project);
 
     this.projectRepository.save(newProject);
 
@@ -141,7 +139,7 @@ export class ProjectService {
       .where('project_user.projectId = :idProject', { idProject })
       .select([
         'user.idUser AS "idUser"',
-        'user.userName AS "userName"',
+        'user.first AS "firstName"',
         'user.lastName AS "lastName"',
         'user.email AS "email"',
         'user.password AS "password"',

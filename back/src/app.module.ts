@@ -9,7 +9,8 @@ import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
-import { S3Module } from './s3/s3.module';
+import { UtilsModule } from './utils/utils.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,7 +23,7 @@ import { S3Module } from './s3/s3.module';
     UserModule,
     AuthModule,
     UnitWorkModule,
-    S3Module,
+    UtilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

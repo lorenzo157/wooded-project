@@ -173,7 +173,7 @@ CREATE TYPE street_materiality_type AS ENUM ('tierra', 'mejorado petroleo', 'asf
 CREATE TABLE IF NOT EXISTS trees (
     id_tree SERIAL PRIMARY KEY,
     datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    path_photo VARCHAR(255),
+    photo_file_name VARCHAR(255),
     city_block INTEGER,
     perimeter NUMERIC(8, 5),
     height NUMERIC(8, 5),
@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS trees (
 
 CREATE TABLE IF NOT EXISTS pest_tree (
     id_pest_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER,
+    tree_id INTEGER NOT NULL,
     pest_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_pest FOREIGN KEY (pest_id) REFERENCES pests(id_pest),
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS pest_tree (
 
 CREATE TABLE IF NOT EXISTS conflict_tree (
     id_conflict_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER,
+    tree_id INTEGER NOT NULL,
     conflict_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_conflict FOREIGN KEY (conflict_id) REFERENCES conflicts(id_conflict),
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS conflict_tree (
 
 CREATE TABLE IF NOT EXISTS disease_tree (
     id_disease_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER,
+    tree_id INTEGER NOT NULL,
     disease_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_disease FOREIGN KEY (disease_id) REFERENCES diseases(id_disease),
@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS disease_tree (
 
 CREATE TABLE IF NOT EXISTS intervention_tree (
     id_intervention_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER,
+    tree_id INTEGER NOT NULL,
     intervention_id INTEGER NOT NULL,
     CONSTRAINT fk_tree FOREIGN KEY (tree_id) REFERENCES trees(id_tree) ON DELETE CASCADE,
     CONSTRAINT fk_intervention FOREIGN KEY (intervention_id) REFERENCES interventions(id_intervention),
@@ -248,7 +248,7 @@ CREATE TABLE IF NOT EXISTS intervention_tree (
 
 CREATE TABLE IF NOT EXISTS defect_tree (
     id_defect_tree SERIAL PRIMARY KEY,
-    tree_id INTEGER,
+    tree_id INTEGER NOT NULL,
     defect_id INTEGER NOT NULL,
     defect_value SMALLINT NOT NULL,
     text_defect_value VARCHAR(100) NOT NULL,

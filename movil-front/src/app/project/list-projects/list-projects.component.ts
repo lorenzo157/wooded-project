@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class ListProjectsComponent implements OnInit {
   projects: ProjectDto[] = []; // Array to hold project data
   filterProjectName!: string;
-  userName!: string;
+  firstName!: string;
 
   constructor(
     private projectService: ProjectService,
@@ -21,9 +21,9 @@ export class ListProjectsComponent implements OnInit {
     private uiService: UiService,
     private authService: AuthService,
   ) {
-    authService.getUserName().subscribe({
-      next: (userName) => (this.userName = userName),
-      error: (error) => (this.userName = 'Sin nombre'),
+    this.authService.getUserName().subscribe({
+      next: (firstName) => (this.firstName = firstName),
+      error: (error) => (this.firstName = 'Sin nombre'),
     });
   }
 

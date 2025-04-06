@@ -47,5 +47,4 @@ export class AuthService {
       role: user.roleName, // 🔹 Asegúrate de que roleName sea el campo correcto
     };
   }
-
 }
